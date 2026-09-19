@@ -84,8 +84,8 @@ const fmtData = s => (s && /^\d{4}-\d{2}-\d{2}/.test(s)) ? s.slice(8, 10) + "/" 
 const plural = (n, um, varios) => n + " " + (n === 1 ? um : varios);
 
 const slug = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-const pill = (classe, texto) => '<span class="pill ' + slug(classe) + '">' + esc(texto) + "</span>";
-const etiquetaExemplo = linha => linha && linha.exemplo ? '<span class="pill exemplo">exemplo</span>' : "";
+const pill = (classe, texto) => '<span class="pill p-' + slug(classe) + '">' + esc(texto) + "</span>"; /* prefixo p- evita conflito com outras classes da página */
+const etiquetaExemplo = linha => linha && linha.exemplo ? '<span class="pill p-exemplo">exemplo</span>' : "";
 
 /* Aviso rápido no pé da tela. */
 let toastTimer = null;
@@ -531,11 +531,11 @@ ACOES.testarTranca = async () => {
     else if (erroAnon) { texto = "Trancada. Quem está deslogado é barrado."; classe = "pago"; }
     else if (logada > 0) { texto = "Trancada. Você vê " + logada + " linha(s) e quem está deslogado vê 0."; classe = "pago"; }
     else { texto = "Sem dados nesta tabela, então não dá para provar ainda. Adicione uma linha e teste de novo."; classe = "pendente"; }
-    linhas.push('<div class="linha"><span>' + nome + '</span><span class="pill ' + classe + '" style="white-space:normal">' + esc(texto) + "</span></div>");
+    linhas.push('<div class="linha"><span>' + nome + '</span><span class="pill p-' + classe + '" style="white-space:normal">' + esc(texto) + "</span></div>");
   }
   try {
     const r = await anonimo.rpc("videos_do_site");
-    linhas.push('<div class="linha"><span>janelinha do site</span><span class="pill pago" style="white-space:normal">' + (r.error ? esc("Não respondeu: " + r.error.message) : "Responde para o site e devolve só os vídeos visíveis (" + (r.data || []).length + " agora).") + "</span></div>");
+    linhas.push('<div class="linha"><span>janelinha do site</span><span class="pill p-pago" style="white-space:normal">' + (r.error ? esc("Não respondeu: " + r.error.message) : "Responde para o site e devolve só os vídeos visíveis (" + (r.data || []).length + " agora).") + "</span></div>");
   } catch (e) {}
   alvo.innerHTML = linhas.join("");
 };
