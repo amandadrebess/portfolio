@@ -69,7 +69,8 @@ const ICONES = {
   chevR: '<path d="m9 6 6 6-6 6"/>',
   chat: '<path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>',
   link: '<path d="M14 4h6v6M20 4l-8 8"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
-  shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/>'
+  shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>'
 };
 const CHEIOS = { grip: 1, star: 0 };
 const ic = (nome, cheio) => '<svg class="ic' + (cheio || CHEIOS[nome] ? " cheio" : "") + '" viewBox="0 0 24 24" aria-hidden="true">' + ICONES[nome] + "</svg>";
@@ -208,11 +209,11 @@ function baixarCSV(nome, cabecalho, linhas) {
    3. DADOS
    --------------------------------------------------------------- */
 const estado = {
-  aba: "portfolio", videos: [], marcas: [], calendario: [], campanhas: [], marcados: {}, visitas: [],
+  aba: "portfolio", videos: [], marcas: [], cupons: [], calendario: [], campanhas: [], marcados: {}, visitas: [],
   problemas: {} /* tabela -> aviso. Se faltar tabela ou campo, o painel avisa e segue funcionando. */
 };
 const ui = {
-  vBusca: "", mBusca: "", mFiltro: "todas", cBusca: "", cFiltro: "todas", cOrdem: { col: "prazo", dir: 1 },
+  vBusca: "", cupBusca: "", cupFiltro: "ativos", mBusca: "", mFiltro: "todas", cBusca: "", cFiltro: "todas", cOrdem: { col: "prazo", dir: 1 },
   calFiltro: "todos", cal: { ano: new Date().getFullYear(), mes: new Date().getMonth() },
   cl: { sub: "checklist", abertos: {}, estilo: "todos", aud: "todas" }, revisao: {}
 };
@@ -233,12 +234,13 @@ async function buscar(tabela, consulta) {
 }
 
 async function carregar(quais) {
-  const lista = quais || ["videos", "marcas", "calendario", "campanhas", "marcados", "visitas"];
+  const lista = quais || ["videos", "marcas", "cupons", "calendario", "campanhas", "marcados", "visitas"];
   await Promise.all(lista.map(async nome => {
     if (nome === "videos") estado.videos = await buscar("videos", db.from("videos").select("*").order("ordem", { ascending: true }).order("criado_em", { ascending: true }));
     if (nome === "marcas") estado.marcas = await buscar("marcas", db.from("marcas").select("*").order("criado_em", { ascending: false }));
     if (nome === "calendario") estado.calendario = await buscar("calendario", db.from("calendario").select("*").order("data", { ascending: true }));
     if (nome === "campanhas") estado.campanhas = await buscar("campanhas", db.from("campanhas").select("*").order("criado_em", { ascending: false }));
+    if (nome === "cupons") estado.cupons = await buscar("cupons", db.from("cupons").select("*").order("criado_em", { ascending: false }));
     if (nome === "marcados") {
       const linhas = await buscar("marcados", db.from("marcados").select("chave,marcado"));
       estado.marcados = {}; linhas.forEach(l => { if (l.marcado) estado.marcados[l.chave] = true; });
@@ -275,7 +277,7 @@ async function atualizarCampo(tabela, id, valores) {
 /* ---------------------------------------------------------------
    INÍCIO DO PAINEL: menu, rotas e eventos
    --------------------------------------------------------------- */
-const TITULOS = { portfolio: "Portfólio", marcas: "Marcas", calendario: "Calendário", campanhas: "Campanhas", checklist: "Checklist portfólio" };
+const TITULOS = { portfolio: "Portfólio", marcas: "Marcas", cupons: "Cupons", calendario: "Calendário", campanhas: "Campanhas", checklist: "Checklist portfólio" };
 const TELAS = {}; // preenchido mais abaixo: TELAS.portfolio = telaPortfolio ...
 
 async function iniciar(usuario) {
@@ -565,7 +567,7 @@ ACOES.testarTranca = async () => {
   const anonimo = BANCO.criarCliente({ auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: "teste-sem-login" } });
   if (!anonimo) { alvo.innerHTML = '<p class="vazio">Não consegui montar o teste agora.</p>'; return; }
   const linhas = [];
-  for (const nome of ["videos", "marcas", "calendario", "campanhas", "marcados", "visitas"]) {
+  for (const nome of ["videos", "marcas", "cupons", "calendario", "campanhas", "marcados", "visitas"]) {
     let logada = 0, erroLogada = null, lidas = 0, erroAnon = null;
     try { const r = await db.from(nome).select("*", { count: "exact", head: true }); if (r.error) erroLogada = r.error; else logada = r.count || 0; } catch (e) { erroLogada = e; }
     try { const r = await anonimo.from(nome).select("*").limit(5); erroAnon = r.error; lidas = r.data ? r.data.length : 0; } catch (e) { erroAnon = e; }
@@ -677,6 +679,119 @@ ACOES.baixarMarcas = () => {
 };
 TELAS.marcas = telaMarcas;
 
+/* ===================================================================
+   4F. CUPONS (cupons ativos das marcas, com o nome do cupom e o link)
+   =================================================================== */
+async function copiarTexto(texto) {
+  try { await navigator.clipboard.writeText(texto); return true; }
+  catch (e) {
+    try {
+      const a = document.createElement("textarea");
+      a.value = texto; a.style.position = "fixed"; a.style.opacity = "0";
+      document.body.appendChild(a); a.select();
+      const ok = document.execCommand("copy"); a.remove(); return ok;
+    } catch (x) { return false; }
+  }
+}
+const hostDoLink = l => { try { return new URL(l).hostname.replace(/^www\./, ""); } catch (e) { return l; } };
+const diasParaVencer = c => c.validade ? diasEntre(String(c.validade).slice(0, 10), hojeISO()) : null;
+function avisoValidade(c) {
+  if (!c.ativo) return "";
+  const d = diasParaVencer(c); if (d === null) return "";
+  if (d < 0) return '<span class="etq atraso">venceu há ' + plural(-d, "dia", "dias") + "</span>";
+  if (d <= 7) return '<span class="etq perto">' + (d === 0 ? "vence hoje" : "vence em " + plural(d, "dia", "dias")) + "</span>";
+  return "";
+}
+function cuponsFiltrados() {
+  const q = ui.cupBusca.trim().toLowerCase();
+  return estado.cupons.filter(c => {
+    if (ui.cupFiltro === "ativos" && !c.ativo) return false;
+    if (ui.cupFiltro === "inativos" && c.ativo) return false;
+    if (!q) return true;
+    return [c.marca, c.cupom, c.link].some(x => String(x || "").toLowerCase().indexOf(q) > -1);
+  });
+}
+function desenharListaCupons() {
+  const lista = cuponsFiltrados();
+  $("#contaCupons").textContent = plural(lista.length, "cupom", "cupons");
+  if (!estado.cupons.length) { $("#listaCupons").innerHTML = '<p class="vazio">Nenhum cupom ainda. Clique em "Adicionar cupom" para cadastrar o primeiro.</p>'; return; }
+  if (!lista.length) { $("#listaCupons").innerHTML = '<p class="vazio">Nenhum cupom encontrado com esse filtro.</p>'; return; }
+  $("#listaCupons").innerHTML = '<div class="rolagem"><table class="tabela"><thead><tr><th>Marca</th><th>Cupom</th><th>Link</th><th>Desconto</th><th>Validade</th><th>Situação</th></tr></thead><tbody>' +
+    lista.map(c =>
+      '<tr class="clicavel' + (c.ativo ? "" : " escondido") + '" data-acao="editarCupom" data-id="' + esc(c.id) + '">' +
+      "<td><b>" + esc(c.marca) + "</b>" + etiquetaExemplo(c) + "</td>" +
+      '<td><code class="cupom">' + esc(c.cupom) + '</code><button class="icone-btn" data-acao="copiarCupom" data-id="' + esc(c.id) + '" title="Copiar o cupom" aria-label="Copiar o cupom">' + ic("copy") + "</button></td>" +
+      "<td>" + (c.link ? '<a class="discreto" href="' + esc(c.link) + '" target="_blank" rel="noopener" title="' + esc(c.link) + '">' + esc(hostDoLink(c.link)) + '</a><button class="icone-btn" data-acao="copiarLink" data-id="' + esc(c.id) + '" title="Copiar o link" aria-label="Copiar o link">' + ic("copy") + "</button>" : "") + "</td>" +
+      "<td>" + esc(c.desconto || "") + "</td>" +
+      "<td>" + esc(fmtData(c.validade)) + avisoValidade(c) + "</td>" +
+      '<td><button class="icone-btn" data-acao="alternarCupom" data-id="' + esc(c.id) + '" title="Clique para ativar ou desativar" aria-label="Ativar ou desativar">' + pill(c.ativo ? "pago" : "parada", c.ativo ? "Ativo" : "Inativo") + "</button></td></tr>").join("") +
+    "</tbody></table></div>";
+}
+function telaCupons() {
+  const ativos = estado.cupons.filter(c => c.ativo);
+  const vencendo = ativos.filter(c => { const d = diasParaVencer(c); return d !== null && d >= 0 && d <= 7; }).length;
+  const vencidos = ativos.filter(c => { const d = diasParaVencer(c); return d !== null && d < 0; }).length;
+  $("#tela").innerHTML =
+    '<div class="faixa-num">' +
+    "<div><small>Cupons ativos</small><strong>" + ativos.length + "</strong></div>" +
+    "<div><small>Vencem em 7 dias</small><strong>" + vencendo + "</strong></div>" +
+    "<div><small>Ativos já vencidos</small><strong>" + vencidos + "</strong></div>" +
+    "<div><small>Total cadastrados</small><strong>" + estado.cupons.length + "</strong></div></div>" +
+    '<div class="cartao"><div class="ferram">' +
+    '<div class="chips" role="group" aria-label="Filtrar cupons">' + [["ativos", "Ativos"], ["todos", "Todos"], ["inativos", "Inativos"]].map(f => '<button class="' + (ui.cupFiltro === f[0] ? "ativo" : "") + '" data-acao="filtroCup" data-tipo="' + f[0] + '">' + f[1] + "</button>").join("") + "</div>" +
+    '<label class="campo-busca">' + ic("search") + '<input type="search" placeholder="Buscar marca, cupom ou link" data-campo="cupBusca" value="' + esc(ui.cupBusca) + '" aria-label="Buscar cupom"></label>' +
+    '<span class="dica" id="contaCupons" style="margin:0"></span><span class="espaco"></span>' +
+    '<button class="btn" data-acao="baixarCupons">' + ic("download") + "Baixar CSV</button>" +
+    '<button class="btn amarelo" data-acao="novoCupom">' + ic("plus") + "Adicionar cupom</button></div>" +
+    '<div id="listaCupons"></div>' +
+    '<p class="dica">Clique numa linha para editar. Os ícones de cópia copiam o cupom ou o link. Clique em "Ativo" para desativar sem apagar.</p></div>';
+  desenharListaCupons();
+}
+CAMPOS.cupBusca = el => { ui.cupBusca = el.value; desenharListaCupons(); };
+ACOES.filtroCup = el => { ui.cupFiltro = el.dataset.tipo; desenhar(); };
+function camposCupom() {
+  return [
+    { k: "marca", rotulo: "Marca", tipo: "texto", obrigatorio: true, lista: Array.from(new Set(estado.marcas.map(m => m.nome).concat(estado.cupons.map(c => c.marca)).filter(Boolean))) },
+    { k: "cupom", rotulo: "Nome do cupom", tipo: "texto", obrigatorio: true, dica: "Exatamente como a pessoa digita. Ex: AMANDA10" },
+    { k: "link", rotulo: "Link do cupom", tipo: "url", inteira: true, dica: "O link que leva para a loja, se tiver." },
+    { k: "desconto", rotulo: "Desconto", tipo: "texto", dica: "Ex: 10% ou R$ 20" },
+    { k: "validade", rotulo: "Vale até", tipo: "data" },
+    { k: "obs", rotulo: "Observação", tipo: "area" },
+    { k: "ativo", rotulo: "Cupom ativo", tipo: "caixa", inteira: true }
+  ];
+}
+ACOES.novoCupom = () => abrirForm({
+  titulo: "Adicionar cupom", campos: camposCupom(), valores: { ativo: true },
+  onSalvar: async d => { await gravar("cupons", null, d); await carregar(["cupons"]); desenhar(); avisar("Cupom adicionado"); }
+});
+ACOES.editarCupom = el => {
+  const c = estado.cupons.find(x => String(x.id) === el.dataset.id); if (!c) return;
+  abrirForm({
+    titulo: "Editar cupom", campos: camposCupom(), valores: c,
+    aviso: c.exemplo ? "Este é um cupom de exemplo. Ao salvar com os seus dados, ele deixa de ser exemplo." : "",
+    onSalvar: async d => { await gravar("cupons", c.id, d); await carregar(["cupons"]); desenhar(); avisar("Cupom salvo"); },
+    onApagar: async () => { await remover("cupons", c.id); await carregar(["cupons"]); desenhar(); avisar("Cupom apagado"); }
+  });
+};
+ACOES.copiarCupom = async el => {
+  const c = estado.cupons.find(x => String(x.id) === el.dataset.id); if (!c) return;
+  avisar(await copiarTexto(c.cupom) ? "Cupom copiado: " + c.cupom : "Não consegui copiar. Selecione e copie à mão.", "");
+};
+ACOES.copiarLink = async el => {
+  const c = estado.cupons.find(x => String(x.id) === el.dataset.id); if (!c || !c.link) return;
+  avisar(await copiarTexto(c.link) ? "Link copiado" : "Não consegui copiar. Selecione e copie à mão.", "");
+};
+ACOES.alternarCupom = async el => {
+  const c = estado.cupons.find(x => String(x.id) === el.dataset.id); if (!c) return;
+  if (await atualizarCampo("cupons", c.id, { ativo: !c.ativo })) { await carregar(["cupons"]); desenhar(); avisar(c.ativo ? "Cupom desativado" : "Cupom ativado"); }
+};
+ACOES.baixarCupons = () => {
+  const lista = cuponsFiltrados();
+  if (!lista.length) { avisar("Não há cupons para baixar", "erro"); return; }
+  baixarCSV("cupons-" + hojeISO() + ".csv", ["Marca", "Cupom", "Link", "Desconto", "Validade", "Ativo", "Observação"],
+    lista.map(c => [c.marca, c.cupom, c.link, c.desconto, fmtData(c.validade), c.ativo ? "Sim" : "Não", c.obs]));
+};
+TELAS.cupons = telaCupons;
 /* ===================================================================
    4C. CALENDÁRIO
    =================================================================== */
