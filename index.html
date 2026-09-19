@@ -211,7 +211,7 @@ section{scroll-margin-top:var(--nav-h)}
 .play.sm svg{width:22px;height:22px}
 .work-vid:hover .play{transform:translate(-50%,-50%) scale(1.12)}
 .vmodal{z-index:110}
-.vbox{position:relative;width:min(420px,100%,calc((100vh - 130px) * 9 / 16));width:min(420px,100%,calc((100dvh - 130px) * 9 / 16))}
+.vbox{position:relative;width:min(560px,100%,calc((100vh - 130px) * 9 / 16));width:min(560px,100%,calc((100dvh - 130px) * 9 / 16))}
 .vframe{aspect-ratio:9/16;width:100%;border-radius:18px;overflow:hidden;background:#000}
 .vframe iframe{width:100%;height:100%;border:0;display:block}
 .vbox .close{top:-54px;right:0;background:#fff}
@@ -636,7 +636,14 @@ const TRABALHOS = [
 const NICHOS = [...new Set(TRABALHOS.map(t => t.nicho))];
 /* Pega o código do vídeo no link do YouTube e monta a capa automática */
 const ytId = url => (String(url).match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
-const ytThumb = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+/* Capa em alta resolução do YouTube (1280x720). Se não existir, cai sozinha para a versão menor. */
+const ytThumb = id => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+function capaReserva(img) {
+  const id = img.dataset.yt;
+  if (id && !img.dataset.reserva) { img.dataset.reserva = "1"; img.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`; }
+}
+document.addEventListener("error", e => { if (e.target.tagName === "IMG") capaReserva(e.target); }, true);
+document.addEventListener("load", e => { if (e.target.tagName === "IMG" && e.target.naturalWidth > 0 && e.target.naturalWidth <= 120) capaReserva(e.target); }, true);
 
 /* Seis serviços */
 const SERVICOS = [
@@ -711,7 +718,7 @@ $("#highlights").innerHTML = DESTAQUES.map((d, i) => `
   <!-- DESTAQUE ${i + 1}: o link do vídeo fica em "link" e a capa vertical 9:16 em "capa", no array DESTAQUES -->
   <a class="hl glass reveal js-video" href="${esc(d.link)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(d.titulo)}, ${esc(d.numero)} ${esc(d.rotulo)}">
     <div class="ph" style="${grad(i)}">
-      <img src="${esc(d.capa || ytThumb(ytId(d.link)))}" alt="Capa do vídeo ${esc(d.titulo)}" loading="lazy">
+      <img src="${esc(d.capa || ytThumb(ytId(d.link)))}" ${d.capa ? "" : `data-yt="${ytId(d.link)}"`} alt="Capa do vídeo ${esc(d.titulo)}" loading="lazy">
       <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
 
     </div>
@@ -733,7 +740,7 @@ function mostrar(nicho) {
     const id = ytId(t.video), capa = t.capa || ytThumb(id), nome = t.titulo || `Vídeo de ${t.nicho}`;
     return `<figure class="work">
       <a class="ph work-vid js-video" style="${grad(i)}" href="${esc(t.video)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(nome)}">
-        <img src="${esc(capa)}" alt="Capa do vídeo ${esc(nome)}, nicho ${esc(t.nicho)}" loading="lazy">
+        <img src="${esc(capa)}" ${t.capa ? "" : `data-yt="${id}"`} alt="Capa do vídeo ${esc(nome)}, nicho ${esc(t.nicho)}" loading="lazy">
         <span class="play sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
       </a>
       <figcaption class="meta">
@@ -845,7 +852,7 @@ function abrirVideo(url) {
   const id = ytId(url);
   if (!id) return false;
   vFoco = document.activeElement;
-  vFrame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1" title="Vídeo da Amanda Drebes" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  vFrame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1&hl=pt-BR&modestbranding=1&iv_load_policy=3" title="Vídeo da Amanda Drebes" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
   vOv.classList.add("open");
   vOv.setAttribute("aria-hidden", "false");
   $("#vClose").focus();
