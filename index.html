@@ -154,6 +154,8 @@ section{scroll-margin-top:var(--nav-h)}
 .track ul{display:flex;align-items:center;flex-shrink:0}
 .track li{padding:0 12px;display:block}
 .logo{width:104px;height:104px;border-radius:50%;background:#fff;display:grid;place-items:center;border:1px solid var(--glass-line);box-shadow:0 6px 16px rgba(31,42,68,.12);overflow:hidden;padding:12px}
+.logo.cheio{padding:0}
+.logo.cheio img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover}
 .logo img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
 
 
@@ -588,7 +590,8 @@ const NUMEROS_CAPA = [
 
 /* Marcas da faixa da capa: cada uma aparece numa bolinha branca com o logo.
    Para adicionar uma marca: salve o logo na pasta "logos" (ex.: logos/gocase.png) e acrescente uma linha abaixo.
-   Ainda sem logo: Fita Up, Rituaria, Gocase, Desinchá, Plant Power e Ricca. */
+   cheio: true preenche a bolinha inteira com a cor do logo (use quando o logo tem fundo colorido).
+   Ainda sem logo: Fita Up, Gocase e Ricca. */
 const MARCAS = [
   { nome: "Vichy",       logo: "logos/vichy.png" },
   { nome: "L'Oréal Paris", logo: "logos/loreal.png" },
@@ -596,10 +599,14 @@ const MARCAS = [
   { nome: "Oster",       logo: "logos/oster.png" },
   { nome: "Monange",     logo: "logos/monange.png" },
   { nome: "Pantene",     logo: "logos/pantene.png" },
-  { nome: "O Boticário", logo: "logos/o-boticario.png" },
+  { nome: "O Boticário", logo: "logos/o-boticario.png", cheio: true },
   { nome: "Eudora",      logo: "logos/eudora.png" },
   { nome: "Garnier",     logo: "logos/garnier.png" },
-  { nome: "Amazon",      logo: "logos/amazon.png" }
+  { nome: "Amazon",      logo: "logos/amazon.png" },
+  { nome: "Barbour's Beauty", logo: "logos/barbours.png" },
+  { nome: "Desinchá",    logo: "logos/desincha.png" },
+  { nome: "Plant Power", logo: "logos/plant-power.png", cheio: true },
+  { nome: "Rituária",    logo: "logos/rituaria.png" }
 ];
 
 /* Os 3 conteúdos de destaque.
@@ -692,11 +699,12 @@ $("#heroStats").innerHTML = NUMEROS_CAPA.map(n =>
 
 /* Faixa de marcas (lista duplicada para o loop ficar contínuo) */
 const listaMarcas = `<ul>${MARCAS.map(m => {
-  const nome = typeof m === "string" ? m : m.nome, logo = typeof m === "string" ? "" : m.logo;
-  return `<li>${logo ? `<div class="logo"><img src="${esc(logo)}" alt="${esc(nome)}"></div>` : `<div class="logo" role="img" aria-label="${esc(nome)}"></div>`}</li>`;
+  const nome = typeof m === "string" ? m : m.nome, logo = typeof m === "string" ? "" : m.logo, cheio = typeof m === "object" && m.cheio;
+  return `<li>${logo ? `<div class="logo${cheio ? " cheio" : ""}"><img src="${esc(logo)}" alt="${esc(nome)}"></div>` : `<div class="logo" role="img" aria-label="${esc(nome)}"></div>`}</li>`;
 }).join("")}</ul>`;
 /* A fila se repete 6 vezes para nunca aparecer espaço vazio; só a primeira é lida por leitores de tela */
 $("#brandTrack").innerHTML = listaMarcas + listaMarcas.replace("<ul>", '<ul aria-hidden="true">').repeat(5);
+$("#brandTrack").style.animationDuration = (MARCAS.length * 3.2) + "s"; /* velocidade constante, mesmo com mais marcas */
 
 /* Destaques */
 $("#highlights").innerHTML = DESTAQUES.map((d, i) => `
