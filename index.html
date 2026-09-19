@@ -148,17 +148,16 @@ section{scroll-margin-top:var(--nav-h)}
 
 /* faixa de marcas */
 .strip{
-  border-block:1px solid var(--glass-line);background:#ffe680;overflow:hidden;padding:18px 0;
+  border-block:1px solid var(--glass-line);background:#ffe680;overflow:hidden;padding:20px 0;
 }
 .track{display:flex;gap:0;width:max-content;animation:marquee 32s linear infinite}
 .track ul{display:flex;align-items:center;flex-shrink:0}
-.track li{
-  font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;
-  padding:0 26px;white-space:nowrap;color:var(--cream);
-}
-.track li img{height:34px;width:auto;display:block}
-.track li::after{content:"✦";color:var(--red);margin-left:52px}
-@keyframes marquee{to{transform:translateX(-50%)}}
+.track li{padding:0 12px;display:block}
+.logo{width:88px;height:88px;border-radius:50%;background:#fff;display:grid;place-items:center;border:1px solid var(--glass-line);box-shadow:0 6px 16px rgba(31,42,68,.12);overflow:hidden;padding:14px}
+.logo img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+
+
+@keyframes marquee{to{transform:translateX(calc(-100% / 6))}}
 
 /* sobre */
 .about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(28px,5vw,72px);align-items:center}
@@ -342,7 +341,8 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none !important;transition:none !important}
   .reveal{opacity:1;transform:none}
-  .track{flex-wrap:wrap;width:auto}
+  .track{flex-wrap:wrap;width:auto;justify-content:center}
+  .track ul[aria-hidden="true"]{display:none}
 }
 </style>
 </head>
@@ -588,7 +588,7 @@ const NUMEROS_CAPA = [
 
 /* Marcas da faixa da capa.
    Para mostrar o logo no lugar do nome, troque "Fita Up" por { nome: "Fita Up", logo: "logos/fita-up.png" }
-   (o arquivo do logo fica na pasta "logos"). Sem logo, aparece o nome em texto. */
+   (o arquivo do logo fica na pasta "logos"). Cada marca aparece numa bolinha branca passando em fila; sem logo, a bolinha fica vazia. */
 const MARCAS = ["Fita Up", "Rituaria", "Gocase", "Desinchá", "Plant Power", "Loreal", "Ricca", "O Boticário"];
 
 /* Os 3 conteúdos de destaque.
@@ -682,9 +682,10 @@ $("#heroStats").innerHTML = NUMEROS_CAPA.map(n =>
 /* Faixa de marcas (lista duplicada para o loop ficar contínuo) */
 const listaMarcas = `<ul>${MARCAS.map(m => {
   const nome = typeof m === "string" ? m : m.nome, logo = typeof m === "string" ? "" : m.logo;
-  return `<li>${logo ? `<img src="${esc(logo)}" alt="${esc(nome)}" height="34" loading="lazy">` : esc(nome)}</li>`;
+  return `<li>${logo ? `<div class="logo"><img src="${esc(logo)}" alt="${esc(nome)}" loading="lazy"></div>` : `<div class="logo" role="img" aria-label="${esc(nome)}"></div>`}</li>`;
 }).join("")}</ul>`;
-$("#brandTrack").innerHTML = listaMarcas + listaMarcas.replace("<ul>", '<ul aria-hidden="true">');
+/* A fila se repete 6 vezes para nunca aparecer espaço vazio; só a primeira é lida por leitores de tela */
+$("#brandTrack").innerHTML = listaMarcas + listaMarcas.replace("<ul>", '<ul aria-hidden="true">').repeat(5);
 
 /* Destaques */
 $("#highlights").innerHTML = DESTAQUES.map((d, i) => `
