@@ -359,6 +359,7 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
         <a href="#servicos">Serviços</a>
         <a href="#numeros">Números</a>
         <a href="#contato">Contato</a>
+        <a href="metricas.html">Métricas</a>
       </div>
     </nav>
   </div>
@@ -465,6 +466,7 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
       <h2 class="title">Resultado que <em>se vê e se ouve</em></h2>
     </div>
     <div class="metrics" id="metrics"></div>
+    <p class="reveal" style="margin:-24px 0 clamp(36px,5vw,60px)"><a class="btn btn-ghost" href="metricas.html">Ver métricas do Instagram</a></p>
     <h3 class="sub-title reveal">Resultados de campanha</h3>
     <div class="results" id="results"></div>
     <h3 class="sub-title reveal">Quem já trabalhou comigo</h3>
@@ -665,7 +667,7 @@ const igLink = `https://instagram.com/${PERFIL.instagram.replace("@", "")}`;
 $("#linkWa").href = waLink;
 $("#linkMail").href = `mailto:${PERFIL.email}`;
 $("#linkIg").href = igLink;
-$("#footLinks").innerHTML =
+$("#footLinks").innerHTML = `<li><a href="metricas.html">Métricas</a></li>` +
   `<li><a href="${igLink}" target="_blank" rel="noopener">Instagram ${esc(PERFIL.instagram)}</a></li>` +
   `<li><a href="${waLink}" target="_blank" rel="noopener">WhatsApp</a></li>` +
   `<li><a href="mailto:${PERFIL.email}">E-mail</a></li>`;
