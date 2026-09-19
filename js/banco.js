@@ -79,14 +79,14 @@
 
   /* Registro simples de visita: uma linha na tabela "visitas".
      Não usa serviço de fora, não usa cookie e não pede nada ao visitante.
-     Não conta quando você mesma está logada no painel neste navegador,
-     e conta só uma vez por aba aberta. */
+     Quando você mesma está logada no painel neste navegador, a visita é contada
+     e marcada como "Você (logada)", para você poder testar e distinguir.
+     Cada aba conta só uma vez por página (atualizar a página não conta de novo). */
   BANCO.registrarVisita = function () {
     try {
       var logada = Object.keys(localStorage).some(function (k) {
         return k.indexOf("sb-") === 0 && k.slice(-11) === "-auth-token";
       });
-      if (logada) return;
       var pagina = (location.pathname || "/").slice(0, 200);
       var marca = "visita:" + pagina;
       if (sessionStorage.getItem(marca)) return;
@@ -94,7 +94,7 @@
       BANCO.rest("visitas", {
         method: "POST",
         headers: { Prefer: "return=minimal" },
-        body: JSON.stringify({ pagina: pagina, origem: descobrirOrigem() }),
+        body: JSON.stringify({ pagina: pagina, origem: logada ? "Você (logada)" : descobrirOrigem() }),
         keepalive: true
       }).catch(function () {});
     } catch (e) { /* visita não registrada, sem problema */ }

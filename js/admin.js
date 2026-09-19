@@ -315,6 +315,20 @@ function desenhar() {
   }
 }
 
+/* Recarrega os dados do banco. No modo silencioso, não mexe na tela se você estiver digitando ou com uma janela aberta. */
+let atualizando = false;
+async function atualizarTudo(silencioso) {
+  if (atualizando) return;
+  atualizando = true;
+  try {
+    await carregar();
+    const digitando = /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "");
+    const janelaAberta = $("#fundoModal").classList.contains("aberto");
+    if (!silencioso || (!digitando && !janelaAberta)) desenhar();
+    if (!silencioso) avisar("Dados atualizados");
+  } finally { atualizando = false; }
+}
+
 function abrirGaveta() { $("#lateral").classList.add("aberta"); $("#fundoGaveta").classList.add("aberta"); }
 function fecharGaveta() { $("#lateral").classList.remove("aberta"); $("#fundoGaveta").classList.remove("aberta"); }
 
@@ -329,6 +343,11 @@ function ligarEventos() {
   $("#modalFechar").addEventListener("click", fecharModal);
   $("#fundoModal").addEventListener("click", e => { if (e.target.id === "fundoModal") fecharModal(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape") { fecharModal(); fecharGaveta(); } });
+
+  /* Atualização: botão, ao voltar para a aba e a cada 30 segundos. */
+  $("#btnAtualizar").addEventListener("click", () => atualizarTudo(false));
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) atualizarTudo(true); });
+  setInterval(() => { if (!document.hidden) atualizarTudo(true); }, 30000);
 
   const tela = $("#tela");
   tela.addEventListener("click", tratarClique);
@@ -374,13 +393,14 @@ function maiorChave(obj) {
 function telaPortfolio() {
   const dias = ultimosDias(14), hoje = hojeISO();
   const cont = {}; dias.forEach(d => { cont[d] = 0; });
-  const origens = {}; let total = 0;
+  const origens = {}; let total = 0, suas = 0, suasHoje = 0;
   estado.visitas.forEach(v => {
     const d = iso(new Date(v.data));
     if (!(d in cont)) return;
     cont[d]++; total++;
     const o = v.origem || "Direto";
-    if (o !== "Interno") origens[o] = (origens[o] || 0) + 1;
+    if (o === "Você (logada)") { suas++; if (d === hoje) suasHoje++; }
+    if (o !== "Interno" && o !== "Você (logada)") origens[o] = (origens[o] || 0) + 1;
   });
   const noAr = estado.videos.filter(v => v.visivel).length;
   const porNicho = {};
@@ -413,13 +433,13 @@ function telaPortfolio() {
 
   $("#tela").innerHTML =
     '<div class="faixa-num">' +
-    "<div><small>Visitas em 14 dias</small><strong>" + total + "</strong></div>" +
-    "<div><small>Visitas hoje</small><strong>" + (cont[hoje] || 0) + "</strong></div>" +
+    "<div><small>Visitas em 14 dias</small><strong>" + total + "</strong>" + (suas ? "<em>inclui " + suas + " suas</em>" : "") + "</div>" +
+    "<div><small>Visitas hoje</small><strong>" + (cont[hoje] || 0) + "</strong>" + (suasHoje ? "<em>inclui " + suasHoje + " suas</em>" : "") + "</div>" +
     "<div><small>Vídeos no ar</small><strong>" + noAr + "</strong></div>" +
     "<div><small>Nicho mais forte</small><strong>" + esc(nichoTop ? nichoTop.chave : "nenhum ainda") + "</strong>" + (nichoTop ? "<em>" + plural(nichoTop.n, "vídeo", "vídeos") + "</em>" : "") + "</div>" +
     "<div><small>De onde mais vêm</small><strong>" + esc(origemTop ? origemTop.chave : "nenhuma ainda") + "</strong>" + (origemTop ? "<em>" + plural(origemTop.n, "visita", "visitas") + "</em>" : "") + "</div>" +
     "</div>" +
-    '<div class="grade-2"><div class="cartao"><div class="cab"><h2>Visitas nos últimos 14 dias</h2></div>' + grafico + '<p class="dica">As suas próprias visitas, com você logada neste navegador, não são contadas. Para testar, abra o portfólio no celular ou numa janela anônima.</p></div>' +
+    '<div class="grade-2"><div class="cartao"><div class="cab"><h2>Visitas nos últimos 14 dias</h2></div>' + grafico + '<p class="dica">As suas próprias visitas (com você logada neste navegador) também são contadas e ficam marcadas como "Você (logada)". Atualizar a mesma aba não conta de novo: abra uma aba nova para testar.</p></div>' +
     '<div class="cartao"><div class="cab"><h2>Por onde chegaram</h2></div>' + listaOrigens + "</div></div>" +
     '<div class="cartao"><div class="cab"><h2>Meus vídeos</h2><button class="btn amarelo" data-acao="novoVideo">' + ic("plus") + "Adicionar vídeo</button></div>" +
     (estado.videos.some(v => !v.exemplo) ? "" : '<p class="nota">Os vídeos que estão no seu portfólio ainda não foram trazidos para cá. <button class="btn pequeno amarelo" data-acao="importarVideos">Importar os meus 10 vídeos</button></p>') +
