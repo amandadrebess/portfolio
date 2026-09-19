@@ -173,7 +173,7 @@ section{scroll-margin-top:var(--nav-h)}
 
 /* destaques */
 .sec-head{margin-bottom:clamp(30px,5vw,54px)}
-.hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin-inline:auto}
 .hl{display:block;text-decoration:none;padding:14px;transition:transform .25s,border-color .25s}
 .hl:hover{transform:translateY(-8px);border-color:var(--teal)}
 .hl .ph{aspect-ratio:9/16;width:100%}
@@ -198,7 +198,7 @@ section{scroll-margin-top:var(--nav-h)}
 .chip::first-letter{text-transform:uppercase}
 .chip:hover{border-color:var(--pink)}
 .chip[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#1f2a44;font-weight:600}
-.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
 .work{margin:0;animation:pop .45s both}
 .work .ph{aspect-ratio:9/16;width:100%;text-decoration:none}
 .work .meta{padding:12px 4px 0}
@@ -211,7 +211,7 @@ section{scroll-margin-top:var(--nav-h)}
 .play.sm svg{width:22px;height:22px}
 .work-vid:hover .play{transform:translate(-50%,-50%) scale(1.12)}
 .vmodal{z-index:110}
-.vbox{position:relative;width:min(560px,100%,calc((100vh - 130px) * 9 / 16));width:min(560px,100%,calc((100dvh - 130px) * 9 / 16))}
+.vbox{position:relative;width:min(440px,100%,calc((100vh - 130px) * 9 / 16));width:min(440px,100%,calc((100dvh - 130px) * 9 / 16))}
 .vframe{aspect-ratio:9/16;width:100%;border-radius:18px;overflow:hidden;background:#000}
 .vframe iframe{width:100%;height:100%;border:0;display:block}
 .vbox .close{top:-54px;right:0;background:#fff}
@@ -313,7 +313,7 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
 
 /* responsivo */
 @media (max-width:1020px){
-  .gallery{grid-template-columns:repeat(3,1fr)}
+  .gallery{grid-template-columns:repeat(4,1fr)}
   .services{grid-template-columns:repeat(2,1fr)}
   .metrics{grid-template-columns:repeat(2,1fr)}
 }
@@ -328,7 +328,8 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
   .menu a{padding:14px 12px;font-size:1rem;border-radius:12px}
   .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr}
   .hero-photo-wrap{order:-1;max-width:320px;margin-inline:auto;width:100%}
-  .hl-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
+  .hl-grid{grid-template-columns:1fr;max-width:320px;margin-inline:auto}
+  .gallery{grid-template-columns:repeat(3,1fr)}
   .results,.quotes{grid-template-columns:1fr}
 }
 @media (max-width:620px){
