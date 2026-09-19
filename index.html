@@ -173,9 +173,7 @@ section{scroll-margin-top:var(--nav-h)}
 .hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .hl{display:block;text-decoration:none;padding:14px;transition:transform .25s,border-color .25s}
 .hl:hover{transform:translateY(-8px);border-color:var(--teal)}
-.hl .ph{position:relative;overflow:hidden;border-radius:var(--radius);background:var(--c,#ffe680);display:flex;align-items:flex-end;justify-content:flex-start}
-.ph::before{content:"";position:absolute;width:72%;aspect-ratio:1;border-radius:50%;right:-18%;top:-8%;background:var(--c2,#ee8fc0)}
-.ph::after{content:"";position:absolute;width:30%;aspect-ratio:1;border-radius:20px;left:10%;top:16%;transform:rotate(12deg);background:var(--c3,rgba(255,255,255,.55))}
+.hl .ph{aspect-ratio:9/16;width:100%}
 .play{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:76px;height:76px;border-radius:50%;
   background:var(--red);display:grid;place-items:center;box-shadow:0 0 0 10px rgba(232,40,58,.22);transition:transform .25s;
@@ -198,15 +196,21 @@ section{scroll-margin-top:var(--nav-h)}
 .chip[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#1f2a44;font-weight:600}
 .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .work{margin:0;animation:pop .45s both}
-.work .ph{position:relative;overflow:hidden;border-radius:var(--radius);background:var(--c,#ffe680);display:flex;align-items:flex-end;justify-content:flex-start}
-.ph::before{content:"";position:absolute;width:72%;aspect-ratio:1;border-radius:50%;right:-18%;top:-8%;background:var(--c2,#ee8fc0)}
-.ph::after{content:"";position:absolute;width:30%;aspect-ratio:1;border-radius:20px;left:10%;top:16%;transform:rotate(12deg);background:var(--c3,rgba(255,255,255,.55))}
+.work .ph{aspect-ratio:9/16;width:100%;text-decoration:none}
 .work .meta{padding:12px 4px 0}
 .work .niche{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-d);font-weight:600}
 .work h3{font-size:1rem;margin-top:2px}
 .work .brandname{font-size:.85rem;color:var(--muted)}
 @keyframes pop{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:none}}
 .empty{color:var(--muted);padding:20px 0}
+.play.sm{width:56px;height:56px;box-shadow:0 0 0 7px rgba(232,40,58,.22)}
+.play.sm svg{width:22px;height:22px}
+.work-vid:hover .play{transform:translate(-50%,-50%) scale(1.12)}
+.vmodal{z-index:110}
+.vbox{position:relative;width:min(420px,100%,calc((100vh - 96px) * 9 / 16));width:min(420px,100%,calc((100dvh - 96px) * 9 / 16))}
+.vframe{aspect-ratio:9/16;width:100%;border-radius:18px;overflow:hidden;background:#000}
+.vframe iframe{width:100%;height:100%;border:0;display:block}
+.vbox .close{top:-52px;right:0;background:#fff}
 
 /* serviços */
 .services{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -520,6 +524,14 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
   </div>
 </footer>
 
+<!-- PLAYER DE VÍDEO: abre ao clicar em qualquer vídeo -->
+<div class="overlay vmodal" id="vOverlay" aria-hidden="true">
+  <div class="vbox" role="dialog" aria-modal="true" aria-label="Player de vídeo">
+    <button class="close" id="vClose" aria-label="Fechar vídeo">×</button>
+    <div class="vframe" id="vFrame"></div>
+  </div>
+</div>
+
 <!-- CARD DE CAPTURA (aparece após 7 segundos, uma vez por visita) -->
 <div class="overlay" id="overlay" aria-hidden="true">
   <div class="capture glass" role="dialog" aria-modal="true" aria-labelledby="capTitle">
@@ -574,30 +586,32 @@ const MARCAS = ["Fita Up", "Rituaria", "Gocase", "Desinchá", "Plant Power", "Lo
 
 /* Os 3 conteúdos de destaque.
    link = endereço do vídeo (o card inteiro abre este link)
-   capa = endereço da imagem vertical 9:16 (deixe "" para mostrar o bloco com degradê) */
+   capa = endereço da imagem vertical 9:16 (deixe "" para usar a capa automática do YouTube) */
 const DESTAQUES = [
-  { link: "https://youtube.com/shorts/ZZoSb8IljPw?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Título do conteúdo 01", contexto: "Marca 01 · descreva aqui o contexto da campanha" },
-  { link: "https://youtube.com/shorts/TX4IBQr0ZE4?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Título do conteúdo 02", contexto: "Marca 02 · descreva aqui o contexto da campanha" },
-  { link: "https://youtube.com/shorts/JOZyCMSgrLg?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Título do conteúdo 03", contexto: "Marca 03 · descreva aqui o contexto da campanha" }
+  { link: "https://youtube.com/shorts/ZZoSb8IljPw?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de skincare", contexto: "Skincare · descreva aqui o contexto da campanha" },
+  { link: "https://youtube.com/shorts/TX4IBQr0ZE4?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de casa e decoração", contexto: "Casa e decoração · descreva aqui o contexto da campanha" },
+  { link: "https://youtube.com/shorts/JOZyCMSgrLg?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de moda", contexto: "Moda · descreva aqui o contexto da campanha" }
 ];
 
-/* Trabalhos da galeria. nicho precisa ser igual a um dos nichos abaixo.
-   imagem = endereço da foto ou capa (deixe "" para mostrar o bloco com degradê) */
-const NICHOS = ["beleza", "skincare", "moda", "comida", "casa e decoração", "fitness", "tech"];
+/* Vídeos da galeria (Shorts do YouTube). Para adicionar um vídeo: copie uma linha, cole o link em "video" e escolha o "nicho".
+   Os botões de filtro são criados sozinhos a partir dos nichos usados aqui.
+   titulo e marca são opcionais. capa: deixe "" para usar a capa automática do YouTube, ou coloque o endereço de uma imagem 9:16. */
 const TRABALHOS = [
-  { nicho: "beleza",           titulo: "Título do trabalho 01", marca: "Marca 01", formato: "vídeo 9:16",  imagem: "" },
-  { nicho: "skincare",         titulo: "Título do trabalho 02", marca: "Marca 02", formato: "vídeo 9:16",  imagem: "" },
-  { nicho: "moda",             titulo: "Título do trabalho 03", marca: "Marca 03", formato: "foto 4:5",    imagem: "" },
-  { nicho: "comida",           titulo: "Título do trabalho 04", marca: "Marca 04", formato: "vídeo 9:16",  imagem: "" },
-  { nicho: "casa e decoração", titulo: "Título do trabalho 05", marca: "Marca 05", formato: "foto 4:5",    imagem: "" },
-  { nicho: "fitness",          titulo: "Título do trabalho 06", marca: "Marca 06", formato: "vídeo 9:16",  imagem: "" },
-  { nicho: "tech",             titulo: "Título do trabalho 07", marca: "Marca 07", formato: "vídeo 9:16",  imagem: "" },
-  { nicho: "beleza",           titulo: "Título do trabalho 08", marca: "Marca 08", formato: "foto 4:5",    imagem: "" },
-  { nicho: "skincare",         titulo: "Título do trabalho 09", marca: "Marca 09", formato: "foto 4:5",    imagem: "" },
-  { nicho: "moda",             titulo: "Título do trabalho 10", marca: "Marca 10", formato: "vídeo 9:16",  imagem: "" },
-  { nicho: "comida",           titulo: "Título do trabalho 11", marca: "Marca 11", formato: "foto 4:5",    imagem: "" },
-  { nicho: "fitness",          titulo: "Título do trabalho 12", marca: "Marca 12", formato: "foto 4:5",    imagem: "" }
+  { nicho: "skincare",         titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/ZZoSb8IljPw", capa: "" },
+  { nicho: "casa e decoração", titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/TX4IBQr0ZE4", capa: "" },
+  { nicho: "moda",             titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/JOZyCMSgrLg", capa: "" },
+  { nicho: "moda",             titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/-_1NY4habg0", capa: "" },
+  { nicho: "casa e decoração", titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/5ooUE9kIQ88", capa: "" },
+  { nicho: "app",              titulo: "Vídeo de aplicativo",              marca: "",      video: "https://youtube.com/shorts/N_6Ys6f2R34", capa: "" },
+  { nicho: "cabelos",          titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/t49i1IJJZ68", capa: "" },
+  { nicho: "acessórios",       titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/f-olPvZghdQ", capa: "" },
+  { nicho: "skincare",         titulo: "Novo lançamento babado de Vichy",  marca: "Vichy", video: "https://youtube.com/shorts/gZfgKa4RVZQ", capa: "" },
+  { nicho: "cabelos",          titulo: "Seca em minutos",                  marca: "",      video: "https://youtube.com/shorts/O8kRgkeMjYU", capa: "" }
 ];
+const NICHOS = [...new Set(TRABALHOS.map(t => t.nicho))];
+/* Pega o código do vídeo no link do YouTube e monta a capa automática */
+const ytId = url => (String(url).match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
+const ytThumb = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 
 /* Seis serviços */
 const SERVICOS = [
@@ -665,11 +679,11 @@ $("#brandTrack").innerHTML = listaMarcas + listaMarcas.replace("<ul>", '<ul aria
 /* Destaques */
 $("#highlights").innerHTML = DESTAQUES.map((d, i) => `
   <!-- DESTAQUE ${i + 1}: o link do vídeo fica em "link" e a capa vertical 9:16 em "capa", no array DESTAQUES -->
-  <a class="hl glass reveal" href="${esc(d.link)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(d.titulo)}, ${esc(d.numero)} ${esc(d.rotulo)}">
+  <a class="hl glass reveal js-video" href="${esc(d.link)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(d.titulo)}, ${esc(d.numero)} ${esc(d.rotulo)}">
     <div class="ph" style="${grad(i)}">
-      ${d.capa ? `<img src="${esc(d.capa)}" alt="Capa do vídeo ${esc(d.titulo)}" loading="lazy">` : ""}
+      <img src="${esc(d.capa || ytThumb(ytId(d.link)))}" alt="Capa do vídeo ${esc(d.titulo)}" loading="lazy">
       <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
-      <span class="cap">${d.capa ? "vídeo" : "capa vertical 9:16"}</span>
+
     </div>
     <div class="hl-body">
       <div class="big">${esc(d.numero)}</div>
@@ -684,22 +698,21 @@ const filtros = $("#filters"), galeria = $("#gallery");
 filtros.innerHTML = ["todos", ...NICHOS].map((n, i) =>
   `<button type="button" class="chip" data-n="${esc(n)}" aria-pressed="${i === 0}">${esc(n)}</button>`).join("");
 function mostrar(nicho) {
-  const lista = TRABALHOS.map((t, i) => ({ ...t, i })).filter(t => nicho === "todos" || t.nicho === nicho);
-  galeria.innerHTML = lista.length ? lista.map(t => `
-    <figure class="work">
-      <!--
-        Para usar foto ou capa real, preencha "imagem" em TRABALHOS com o endereço do arquivo
-        (formato 4:5). Sem imagem, aparece o bloco com degradê.
-      -->
-      <div class="ph" style="${grad(t.i)}" ${t.imagem ? "" : `role="img" aria-label="Espaço reservado: ${esc(t.formato)}"`}>
-        ${t.imagem ? `<img src="${esc(t.imagem)}" alt="${esc(t.titulo)}, trabalho de ${esc(t.nicho)} para ${esc(t.marca)}" loading="lazy">` : `<span class="cap">${esc(t.formato)}</span>`}
-      </div>
+  const lista = TRABALHOS.filter(t => nicho === "todos" || t.nicho === nicho);
+  galeria.innerHTML = lista.length ? lista.map((t, i) => {
+    const id = ytId(t.video), capa = t.capa || ytThumb(id), nome = t.titulo || `Vídeo de ${t.nicho}`;
+    return `<figure class="work">
+      <a class="ph work-vid js-video" style="${grad(i)}" href="${esc(t.video)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(nome)}">
+        <img src="${esc(capa)}" alt="Capa do vídeo ${esc(nome)}, nicho ${esc(t.nicho)}" loading="lazy">
+        <span class="play sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
+      </a>
       <figcaption class="meta">
         <div class="niche">${esc(t.nicho)}</div>
-        <h3>${esc(t.titulo)}</h3>
-        <div class="brandname">${esc(t.marca)}</div>
+        <h3>${esc(nome)}</h3>
+        ${t.marca ? `<div class="brandname">${esc(t.marca)}</div>` : ""}
       </figcaption>
-    </figure>`).join("") : `<p class="empty">Ainda não há trabalhos neste nicho.</p>`;
+    </figure>`;
+  }).join("") : `<p class="empty">Ainda não há vídeos neste nicho.</p>`;
 }
 filtros.addEventListener("click", e => {
   const b = e.target.closest(".chip");
@@ -795,6 +808,34 @@ form.addEventListener("submit", e => {
   c.focus();
 });
 
+/* Player de vídeo dentro do site */
+const vOv = $("#vOverlay"), vFrame = $("#vFrame");
+let vFoco = null;
+function abrirVideo(url) {
+  const id = ytId(url);
+  if (!id) return false;
+  vFoco = document.activeElement;
+  vFrame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1" title="Vídeo da Amanda Drebes" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  vOv.classList.add("open");
+  vOv.setAttribute("aria-hidden", "false");
+  $("#vClose").focus();
+  return true;
+}
+function fecharVideo() {
+  vOv.classList.remove("open");
+  vOv.setAttribute("aria-hidden", "true");
+  vFrame.innerHTML = "";
+  if (vFoco && vFoco.focus) vFoco.focus();
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.js-video");
+  if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  if (abrirVideo(a.href)) e.preventDefault();
+});
+$("#vClose").addEventListener("click", fecharVideo);
+vOv.addEventListener("click", e => { if (e.target === vOv) fecharVideo(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && vOv.classList.contains("open")) fecharVideo(); });
+
 /* Card de captura: 7 segundos, uma vez por visita */
 const overlay = $("#overlay");
 let ultimoFoco = null;
@@ -812,10 +853,12 @@ function fecharCard() {
 let jaViu = false;
 try { jaViu = sessionStorage.getItem("capturaVista") === "1"; } catch (e) {}
 if (!jaViu) {
-  setTimeout(() => {
+  const mostrarCard = () => {
+    if (vOv.classList.contains("open")) { setTimeout(mostrarCard, 5000); return; }
     abrirCard();
     try { sessionStorage.setItem("capturaVista", "1"); } catch (e) {}
-  }, 7000);
+  };
+  setTimeout(mostrarCard, 7000);
 }
 $("#capClose").addEventListener("click", fecharCard);
 overlay.addEventListener("click", e => { if (e.target === overlay) fecharCard(); });
