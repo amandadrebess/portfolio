@@ -217,7 +217,7 @@ section{scroll-margin-top:var(--nav-h)}
 .vbox .close{top:-54px;right:0;background:#fff}
 
 /* serviços */
-.services{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.services{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .svc{padding:30px 26px;position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
 .svc:hover{transform:translateY(-6px);border-color:var(--pink)}
 .svc .n{display:grid;place-items:center;width:58px;height:58px;border-radius:16px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.3rem;color:#1f2a44;background:var(--lime);margin-bottom:18px}
@@ -455,7 +455,7 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="eyebrow">Como eu te ajudo</span>
-      <h2 class="title">Seis jeitos de <em>trabalharmos juntas</em></h2>
+      <h2 class="title">Quatro jeitos de <em>trabalharmos juntas</em></h2>
     </div>
     <div class="services" id="services"></div>
   </div>
@@ -645,16 +645,13 @@ function capaReserva(img) {
 document.addEventListener("error", e => { if (e.target.tagName === "IMG") capaReserva(e.target); }, true);
 document.addEventListener("load", e => { if (e.target.tagName === "IMG" && e.target.naturalWidth > 0 && e.target.naturalWidth <= 120) capaReserva(e.target); }, true);
 
-/* Seis serviços */
+/* Serviços (pode ter quantos quiser; a grade se ajusta sozinha) */
 const SERVICOS = [
-  { titulo: "Vídeos UGC", texto: "Vídeo com roteiro, gravação e edição, no estilo de quem usa o produto de verdade." },
+  { titulo: "Vídeos UGC", texto: "Vídeo com roteiro, gravação e edição, no estilo de quem usa o produto de verdade. Inclui unboxing e primeiras impressões." },
   { titulo: "Clips", texto: "Cortes rápidos e edições dinâmicas, com trilha e legenda, para Reels, TikTok e anúncios." },
   { titulo: "Influencer", texto: "Divulgo o seu produto para a minha audiência no @amandadrebess, com cupom de desconto e link de compra." },
-  { titulo: "Fotos", texto: "Fotos do produto com luz natural e cenário do dia a dia, para o feed, a loja e os anúncios." },
-  { titulo: "Unboxing", texto: "Abertura e primeira impressão, com a emoção de quem acabou de receber." },
-  { titulo: "Pacote mensal", texto: "Conteúdo recorrente todo mês, com valor combinado e calendário fixo." }
-];
-/* Quatro métricas com contador */
+  { titulo: "Fotos", texto: "Fotos do produto com luz natural e cenário do dia a dia, para o feed, a loja e os anúncios." }
+];/* Quatro métricas com contador */
 const METRICAS = [
   { valor: 300, prefixo: "+", sufixo: "",  rotulo: "vídeos entregues" },
   { valor: 100, prefixo: "+", sufixo: "",  rotulo: "marcas atendidas" },
