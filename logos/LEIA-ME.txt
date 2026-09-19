@@ -1,0 +1,1 @@
+PASTA DE LOGOS DAS MARCAS. Coloque aqui o logo de cada marca com quem voce ja trabalhou. Nome do arquivo em letras minusculas, sem acento e sem espaco, usando hifen. Exemplos: fita-up.png, rituaria.png, gocase.png, desincha.png, plant-power.png, loreal.png, ricca.png, o-boticario.png. Formato ideal: PNG com fundo transparente ou SVG, com ate 400 px de largura.
