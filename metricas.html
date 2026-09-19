@@ -497,6 +497,7 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
   </div>
 </footer>
 
+<script src="js/banco.js"></script>
 <script>
 /* =====================================================
    DADOS PARA EDITAR (não precisa mexer no HTML)
@@ -609,6 +610,7 @@ if (reduzir || !("IntersectionObserver" in window)) {
   }, { threshold: .15 });
   alvos.forEach(e => io.observe(e));
 }
+if (window.BANCO) BANCO.registrarVisita(); /* conta a visita na tabela visitas do painel */
 </script>
 </body>
 </html>

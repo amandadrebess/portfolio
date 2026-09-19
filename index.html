@@ -567,6 +567,7 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
   </div>
 </div>
 
+<script src="js/banco.js"></script>
 <script>
 /* =====================================================
    DADOS PARA EDITAR (não precisa mexer no HTML)
@@ -612,7 +613,7 @@ const MARCAS = [
 /* Os 3 conteúdos de destaque.
    link = endereço do vídeo (o card inteiro abre este link)
    capa = endereço da imagem vertical 9:16 (deixe "" para usar a capa automática do YouTube) */
-const DESTAQUES = [
+let DESTAQUES = [
   { link: "https://youtube.com/shorts/ZZoSb8IljPw?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de skincare", contexto: "Skincare · descreva aqui o contexto da campanha" },
   { link: "https://youtube.com/shorts/TX4IBQr0ZE4?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de casa e decoração", contexto: "Casa e decoração · descreva aqui o contexto da campanha" },
   { link: "https://youtube.com/shorts/JOZyCMSgrLg?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de moda", contexto: "Moda · descreva aqui o contexto da campanha" }
@@ -621,7 +622,7 @@ const DESTAQUES = [
 /* Vídeos da galeria (Shorts do YouTube). Para adicionar um vídeo: copie uma linha, cole o link em "video" e escolha o "nicho".
    Os botões de filtro são criados sozinhos a partir dos nichos usados aqui.
    titulo e marca são opcionais. capa: deixe "" para usar a capa automática do YouTube, ou coloque o endereço de uma imagem 9:16. */
-const TRABALHOS = [
+let TRABALHOS = [
   { nicho: "skincare",         titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/ZZoSb8IljPw", capa: "" },
   { nicho: "casa e decoração", titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/TX4IBQr0ZE4", capa: "" },
   { nicho: "moda",             titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/JOZyCMSgrLg", capa: "" },
@@ -633,7 +634,7 @@ const TRABALHOS = [
   { nicho: "skincare",         titulo: "Novo lançamento babado de Vichy",  marca: "Vichy", video: "https://youtube.com/shorts/gZfgKa4RVZQ", capa: "" },
   { nicho: "cabelos",          titulo: "Seca em minutos",                  marca: "",      video: "https://youtube.com/shorts/O8kRgkeMjYU", capa: "" }
 ];
-const NICHOS = [...new Set(TRABALHOS.map(t => t.nicho))];
+let NICHOS = [...new Set(TRABALHOS.map(t => t.nicho))];
 /* Pega o código do vídeo no link do YouTube e monta a capa automática */
 const ytId = url => (String(url).match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
 /* Capa em alta resolução do YouTube (1280x720). Se não existir, cai sozinha para a versão menor. */
@@ -709,14 +710,15 @@ const listaMarcas = `<ul>${MARCAS.map(m => {
 $("#brandTrack").innerHTML = listaMarcas + listaMarcas.replace("<ul>", '<ul aria-hidden="true">').repeat(5);
 $("#brandTrack").style.animationDuration = (MARCAS.length * 3.2) + "s"; /* velocidade constante, mesmo com mais marcas */
 
-/* Destaques */
-$("#highlights").innerHTML = DESTAQUES.map((d, i) => `
-  <!-- DESTAQUE ${i + 1}: o link do vídeo fica em "link" e a capa vertical 9:16 em "capa", no array DESTAQUES -->
+/* Destaques (o painel pode trocar estes cards; se ele ainda não tiver vídeos, ficam os de cima) */
+function montarDestaques() {
+  $("#highlights").innerHTML = DESTAQUES.map((d, i) => {
+    const id = ytId(d.link), capa = d.capa || (id ? ytThumb(id) : "");
+    return `
   <a class="hl glass reveal js-video" href="${esc(d.link)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(d.titulo)}, ${esc(d.numero)} ${esc(d.rotulo)}">
     <div class="ph" style="${grad(i)}">
-      <img src="${esc(d.capa || ytThumb(ytId(d.link)))}" ${d.capa ? "" : `data-yt="${ytId(d.link)}"`} alt="Capa do vídeo ${esc(d.titulo)}" loading="lazy">
+      ${capa ? `<img src="${esc(capa)}" ${d.capa ? "" : `data-yt="${id}"`} alt="Capa do vídeo ${esc(d.titulo)}" loading="lazy">` : ""}
       <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
-
     </div>
     <div class="hl-body">
       <div class="big">${esc(d.numero)}</div>
@@ -724,19 +726,27 @@ $("#highlights").innerHTML = DESTAQUES.map((d, i) => `
       <h3>${esc(d.titulo)}</h3>
       <p>${esc(d.contexto)}</p>
     </div>
-  </a>`).join("");
+  </a>`;
+  }).join("");
+}
+montarDestaques();
 
 /* Galeria com filtro */
 const filtros = $("#filters"), galeria = $("#gallery");
-filtros.innerHTML = ["todos", ...NICHOS].map((n, i) =>
-  `<button type="button" class="chip" data-n="${esc(n)}" aria-pressed="${i === 0}">${esc(n)}</button>`).join("");
+let nichoAtual = "todos";
+function montarFiltros() {
+  if (!["todos", ...NICHOS].includes(nichoAtual)) nichoAtual = "todos";
+  filtros.innerHTML = ["todos", ...NICHOS].map(n =>
+    `<button type="button" class="chip" data-n="${esc(n)}" aria-pressed="${n === nichoAtual}">${esc(n)}</button>`).join("");
+}
 function mostrar(nicho) {
+  nichoAtual = nicho;
   const lista = TRABALHOS.filter(t => nicho === "todos" || t.nicho === nicho);
   galeria.innerHTML = lista.length ? lista.map((t, i) => {
-    const id = ytId(t.video), capa = t.capa || ytThumb(id), nome = t.titulo || `Vídeo de ${t.nicho}`;
+    const id = ytId(t.video), capa = t.capa || (id ? ytThumb(id) : ""), nome = t.titulo || `Vídeo de ${t.nicho}`;
     return `<figure class="work">
       <a class="ph work-vid js-video" style="${grad(i)}" href="${esc(t.video)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(nome)}">
-        <img src="${esc(capa)}" ${t.capa ? "" : `data-yt="${id}"`} alt="Capa do vídeo ${esc(nome)}, nicho ${esc(t.nicho)}" loading="lazy">
+        ${capa ? `<img src="${esc(capa)}" ${t.capa ? "" : `data-yt="${id}"`} alt="Capa do vídeo ${esc(nome)}, nicho ${esc(t.nicho)}" loading="lazy">` : ""}
         <span class="play sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
       </a>
       <figcaption class="meta">
@@ -753,6 +763,7 @@ filtros.addEventListener("click", e => {
   filtros.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
   mostrar(b.dataset.n);
 });
+montarFiltros();
 mostrar("todos");
 
 /* Serviços */
@@ -829,18 +840,66 @@ const revelar = els => {
 };
 revelar(document.querySelectorAll(".reveal"));
 
-/* Formulário de contato (confirmação na própria tela) */
+/* ---- Vídeos vindos do painel (tabela "videos" do Supabase) ----
+   Se o painel ainda não tiver vídeos visíveis, ou se a internet falhar, o site
+   continua mostrando a lista que está mais acima neste arquivo. */
+function aplicarVideosDoPainel(linhas) {
+  linhas = Array.isArray(linhas) ? linhas.filter(v => v && v.link) : [];
+  if (!linhas.length) return false;
+  TRABALHOS = linhas.map(v => ({ nicho: v.nicho || "outros", titulo: v.titulo || "", marca: v.marca || "", video: v.link, capa: "" }));
+  NICHOS = [...new Set(TRABALHOS.map(t => t.nicho))];
+  const comDestaque = linhas.filter(v => v.destaque && String(v.destaque).trim()).slice(0, 3);
+  if (comDestaque.length) {
+    DESTAQUES = comDestaque.map(v => {
+      const partes = String(v.destaque).trim().split(/\s+/);
+      return {
+        link: v.link, capa: "", numero: /^\+/.test(partes[0]) ? partes[0] : "+" + partes[0],
+        rotulo: partes.slice(1).join(" ") || "views", titulo: v.titulo || ("Vídeo de " + (v.nicho || "destaque")),
+        contexto: [v.nicho, v.marca].filter(Boolean).join(" · ")
+      };
+    });
+    montarDestaques();
+    revelar(document.querySelectorAll("#highlights .reveal"));
+  }
+  montarFiltros();
+  mostrar(nichoAtual);
+  return true;
+}
+try { aplicarVideosDoPainel(JSON.parse(localStorage.getItem("videosDoPainel") || "null")); } catch (e) {} // mostra rápido a última lista conhecida
+if (window.BANCO) {
+  BANCO.videosDoSite().then(linhas => {
+    try {
+      if (aplicarVideosDoPainel(linhas)) localStorage.setItem("videosDoPainel", JSON.stringify(linhas));
+      else localStorage.removeItem("videosDoPainel");
+    } catch (e) {}
+  }).catch(() => {}); // sem painel ou sem internet: fica a lista de cima
+  BANCO.registrarVisita(); // uma linha na tabela "visitas", sem serviço de fora e sem pedir nada ao visitante
+}
+
+/* Formulário de contato: grava na tabela "marcas" do painel como Lead e confirma na própria tela */
 const form = $("#contactForm");
-form.addEventListener("submit", e => {
+form.addEventListener("submit", async e => {
   e.preventDefault();
   const ok = form.nome.value.trim() && /^\S+@\S+\.\S+$/.test(form.email.value) && form.mensagem.value.trim();
   if (!ok) { $("#cErr").textContent = "Preencha nome, um e-mail válido e a mensagem."; return; }
-  form.style.display = "none";
-  const c = $("#contactOk");
-  c.classList.add("show");
-  c.focus();
+  const botao = form.querySelector('button[type="submit"]');
+  botao.disabled = true;
+  $("#cErr").textContent = "";
+  const agora = new Date(), hoje = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2, "0") + "-" + String(agora.getDate()).padStart(2, "0");
+  try {
+    await BANCO.enviarContato({
+      nome: form.nome.value.trim().slice(0, 120), email: form.email.value.trim().slice(0, 200),
+      obs: ("Mensagem pelo site: " + form.mensagem.value.trim()).slice(0, 2000), situacao: "lead", ultimo_contato: hoje
+    });
+    form.style.display = "none";
+    const c = $("#contactOk");
+    c.classList.add("show");
+    c.focus();
+  } catch (erro) {
+    $("#cErr").textContent = "Não consegui enviar agora. Me chame pelo WhatsApp ou pelo e-mail ao lado.";
+    botao.disabled = false;
+  }
 });
-
 /* Player de vídeo dentro do site */
 const vOv = $("#vOverlay"), vFrame = $("#vFrame");
 let vFoco = null;
@@ -906,16 +965,22 @@ document.addEventListener("keydown", e => {
     else if (!e.shiftKey && document.activeElement === u) { e.preventDefault(); p.focus(); }
   }
 });
-$("#capForm").addEventListener("submit", e => {
+$("#capForm").addEventListener("submit", async e => {
   e.preventDefault();
   if (!$("#kNome").value.trim() || !/^\S+@\S+\.\S+$/.test($("#kEmail").value)) {
     $("#kErr").textContent = "Informe seu nome e um e-mail válido.";
     return;
   }
+  const agora = new Date(), hoje = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2, "0") + "-" + String(agora.getDate()).padStart(2, "0");
+  try {
+    await BANCO.enviarContato({ nome: $("#kNome").value.trim().slice(0, 120), email: $("#kEmail").value.trim().slice(0, 200), obs: "Pediu o mídia kit pelo site", situacao: "lead", ultimo_contato: hoje });
+  } catch (erro) {
+    $("#kErr").textContent = "Não consegui enviar agora. Tente de novo em instantes.";
+    return;
+  }
   $("#capBody").style.display = "none";
   $("#capOk").classList.add("show");
   setTimeout(fecharCard, 2600);
-});
-</script>
+});</script>
 </body>
 </html>
