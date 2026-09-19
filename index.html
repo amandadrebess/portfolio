@@ -156,6 +156,7 @@ section{scroll-margin-top:var(--nav-h)}
   font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;
   padding:0 26px;white-space:nowrap;color:var(--cream);
 }
+.track li img{height:34px;width:auto;display:block}
 .track li::after{content:"✦";color:var(--red);margin-left:52px}
 @keyframes marquee{to{transform:translateX(-50%)}}
 
@@ -585,7 +586,9 @@ const NUMEROS_CAPA = [
   { valor: 1,   prefixo: "+", sufixo: "M", rotulo: "views somadas" }
 ];
 
-/* Marcas da faixa da capa */
+/* Marcas da faixa da capa.
+   Para mostrar o logo no lugar do nome, troque "Fita Up" por { nome: "Fita Up", logo: "logos/fita-up.png" }
+   (o arquivo do logo fica na pasta "logos"). Sem logo, aparece o nome em texto. */
 const MARCAS = ["Fita Up", "Rituaria", "Gocase", "Desinchá", "Plant Power", "Loreal", "Ricca", "O Boticário"];
 
 /* Os 3 conteúdos de destaque.
@@ -677,7 +680,10 @@ $("#heroStats").innerHTML = NUMEROS_CAPA.map(n =>
   `<div class="stat glass"><strong data-count="${n.valor}" data-pre="${n.prefixo}" data-suf="${n.sufixo}">${n.prefixo}${fmt(n.valor)}${n.sufixo}</strong><span>${esc(n.rotulo)}</span></div>`).join("");
 
 /* Faixa de marcas (lista duplicada para o loop ficar contínuo) */
-const listaMarcas = `<ul>${MARCAS.map(m => `<li>${esc(m)}</li>`).join("")}</ul>`;
+const listaMarcas = `<ul>${MARCAS.map(m => {
+  const nome = typeof m === "string" ? m : m.nome, logo = typeof m === "string" ? "" : m.logo;
+  return `<li>${logo ? `<img src="${esc(logo)}" alt="${esc(nome)}" height="34" loading="lazy">` : esc(nome)}</li>`;
+}).join("")}</ul>`;
 $("#brandTrack").innerHTML = listaMarcas + listaMarcas.replace("<ul>", '<ul aria-hidden="true">');
 
 /* Destaques */
