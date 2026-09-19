@@ -419,9 +419,10 @@ function telaPortfolio() {
     "<div><small>Nicho mais forte</small><strong>" + esc(nichoTop ? nichoTop.chave : "nenhum ainda") + "</strong>" + (nichoTop ? "<em>" + plural(nichoTop.n, "vídeo", "vídeos") + "</em>" : "") + "</div>" +
     "<div><small>De onde mais vêm</small><strong>" + esc(origemTop ? origemTop.chave : "nenhuma ainda") + "</strong>" + (origemTop ? "<em>" + plural(origemTop.n, "visita", "visitas") + "</em>" : "") + "</div>" +
     "</div>" +
-    '<div class="grade-2"><div class="cartao"><div class="cab"><h2>Visitas nos últimos 14 dias</h2></div>' + grafico + "</div>" +
+    '<div class="grade-2"><div class="cartao"><div class="cab"><h2>Visitas nos últimos 14 dias</h2></div>' + grafico + '<p class="dica">As suas próprias visitas, com você logada neste navegador, não são contadas. Para testar, abra o portfólio no celular ou numa janela anônima.</p></div>' +
     '<div class="cartao"><div class="cab"><h2>Por onde chegaram</h2></div>' + listaOrigens + "</div></div>" +
     '<div class="cartao"><div class="cab"><h2>Meus vídeos</h2><button class="btn amarelo" data-acao="novoVideo">' + ic("plus") + "Adicionar vídeo</button></div>" +
+    (estado.videos.some(v => !v.exemplo) ? "" : '<p class="nota">Os vídeos que estão no seu portfólio ainda não foram trazidos para cá. <button class="btn pequeno amarelo" data-acao="importarVideos">Importar os meus 10 vídeos</button></p>') +
     (estado.videos.length
       ? '<div class="rolagem"><table class="tabela" id="tabVideos"><thead><tr><th></th><th>Título</th><th>Nicho</th><th>Formato</th><th>Marca</th><th>Destaque</th><th class="num">Ordem</th><th></th></tr></thead><tbody id="corpoVideos">' + linhas + "</tbody></table></div>"
       : '<p class="vazio">Nenhum vídeo ainda. Clique em "Adicionar vídeo" para começar.</p>') +
@@ -445,6 +446,29 @@ function camposVideo() {
   ];
 }
 
+/* Os 10 vídeos que já estavam no portfólio, para importar com um clique. */
+const VIDEOS_ATUAIS = [
+  ["Vídeo de skincare", "https://youtube.com/shorts/ZZoSb8IljPw", "skincare", "", "+1.000 views"],
+  ["Vídeo de casa e decoração", "https://youtube.com/shorts/TX4IBQr0ZE4", "casa e decoração", "", "+1.000 views"],
+  ["Vídeo de moda", "https://youtube.com/shorts/JOZyCMSgrLg", "moda", "", "+1.000 views"],
+  ["Vídeo de moda", "https://youtube.com/shorts/-_1NY4habg0", "moda", "", ""],
+  ["Vídeo de casa e decoração", "https://youtube.com/shorts/5ooUE9kIQ88", "casa e decoração", "", ""],
+  ["Vídeo de aplicativo", "https://youtube.com/shorts/N_6Ys6f2R34", "app", "", ""],
+  ["Vídeo de cabelos", "https://youtube.com/shorts/t49i1IJJZ68", "cabelos", "", ""],
+  ["Vídeo de acessórios", "https://youtube.com/shorts/f-olPvZghdQ", "acessórios", "", ""],
+  ["Novo lançamento babado de Vichy", "https://youtube.com/shorts/gZfgKa4RVZQ", "skincare", "Vichy", ""],
+  ["Seca em minutos", "https://youtube.com/shorts/O8kRgkeMjYU", "cabelos", "", ""]
+];
+ACOES.importarVideos = async () => {
+  if (estado.videos.some(v => v.link === VIDEOS_ATUAIS[0][1])) { avisar("Esses vídeos já estão aqui", "erro"); return; }
+  if (!confirm("Trazer para o painel os 10 vídeos que já estão no seu portfólio?")) return;
+  const base = estado.videos.reduce((m, v) => Math.max(m, numero(v.ordem)), 0);
+  const linhas = VIDEOS_ATUAIS.map((v, i) => ({ titulo: v[0], link: v[1], nicho: v[2], formato: "vídeo 9:16", marca: v[3] || null, destaque: v[4] || null, ordem: base + i + 1, visivel: true, exemplo: false }));
+  let r;
+  try { r = await db.from("videos").insert(linhas); } catch (e) { r = { error: e }; }
+  if (r.error) { avisar(traduzirErro(r.error, "videos"), "erro"); return; }
+  await carregar(["videos"]); desenhar(); avisar("10 vídeos importados");
+};
 ACOES.novoVideo = () => {
   const proxima = estado.videos.reduce((m, v) => Math.max(m, numero(v.ordem)), 0) + 1;
   abrirForm({
