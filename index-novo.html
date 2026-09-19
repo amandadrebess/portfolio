@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AMANDA DREBES | Portfólio UGC</title>
+<meta name="description" content="Portfólio de Amanda Drebes, UGC Creator em Curitiba: vídeos autênticos, cortes para anúncio e fotos de produto para marcas.">
+<meta name="theme-color" content="#fffaf0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fffaf0;
+  --bg-2:#ffedcf;
+  --pink:#ee8fc0;
+  --pink-soft:#d8351f;
+  --lime:#f7d117;
+  --teal:#1160b8;
+  --teal-d:#0d4f9a;
+  --orange:#f05a28;
+  --red:#e8283a;
+  --mustard:#d29a00;
+  --cream:#1f2a44;
+  --muted:#525c73;
+  --glass:rgba(255,255,255,.72);
+  --glass-line:rgba(31,42,68,.14);
+  --radius:22px;
+  --nav-h:72px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--cream);
+  font-family:'Poppins',system-ui,sans-serif;font-size:1rem;line-height:1.65;
+  overflow-x:hidden;
+}
+img,svg{max-width:100%;display:block}
+h1,h2,h3,h4{font-family:'Montserrat',sans-serif;line-height:1.1;margin:0}
+p{margin:0}
+a{color:inherit}
+ul{margin:0;padding:0;list-style:none}
+section{scroll-margin-top:var(--nav-h)}
+:focus-visible{outline:3px solid var(--teal-d);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1180px,100% - 32px);margin-inline:auto}
+.sec{padding:clamp(64px,9vw,120px) 0;position:relative}
+.eyebrow{
+  display:inline-block;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.78rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--teal-d);margin-bottom:14px;
+}
+.title{font-weight:900;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.02em;margin-bottom:16px}
+.title em{font-style:normal;color:var(--pink-soft)}
+.lead{color:var(--muted);max-width:60ch}
+.glass{
+  background:var(--glass);border:1px solid var(--glass-line);border-radius:var(--radius);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.glow-pink,.glow-lime{position:absolute;border-radius:50%;pointer-events:none;z-index:0;opacity:.32}
+.glow-pink{background:var(--pink)}
+.glow-lime{background:var(--lime)}
+.sec > .wrap{position:relative;z-index:1}
+
+.glass{box-shadow:0 10px 30px rgba(31,42,68,.08)}
+#destaques{background:#fff3c4}
+#servicos{background:#fdeaf4}
+#numeros{background:#e8f0fb}
+.bar{display:flex;height:12px}
+.bar i{flex:1}
+.bar i:nth-child(1){background:#f7d117}.bar i:nth-child(2){background:#d29a00}.bar i:nth-child(3){background:#1160b8}.bar i:nth-child(4){background:#ee8fc0}.bar i:nth-child(5){background:#f05a28}.bar i:nth-child(6){background:#e8283a}
+/* botões */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-family:'Montserrat',sans-serif;font-weight:800;font-size:.95rem;text-decoration:none;
+  padding:15px 28px;border-radius:999px;border:2px solid transparent;cursor:pointer;
+  transition:transform .2s,box-shadow .2s,background .2s;
+}
+.btn:hover{transform:translateY(-3px)}
+.btn-lime{background:var(--lime);color:#1f2a44}
+.btn-lime:hover{background:#ffe04a}
+.btn-pink{background:var(--pink);color:#1f2a44}
+.btn-ghost{background:var(--glass);border-color:var(--teal);color:var(--cream);backdrop-filter:blur(10px)}
+.btn-ghost:hover{background:rgba(238,143,192,.3)}
+
+/* menu */
+.nav{
+  position:fixed;inset:0 0 auto 0;height:var(--nav-h);z-index:50;
+  background:rgba(255,247,232,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--glass-line);
+}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:100%}
+.brand{font-family:'Montserrat',sans-serif;font-weight:900;letter-spacing:.04em;text-decoration:none;font-size:1.05rem}
+.brand span{color:var(--pink-soft)}
+.menu{display:flex;gap:6px;align-items:center}
+.menu a{
+  text-decoration:none;font-weight:500;font-size:.9rem;padding:8px 14px;border-radius:999px;color:var(--muted);
+  transition:color .2s,background .2s;
+}
+.menu a:hover{color:#1f2a44;background:var(--lime)}
+.burger{
+  display:none;width:46px;height:46px;border-radius:14px;border:1px solid var(--glass-line);
+  background:var(--glass);cursor:pointer;padding:0;position:relative;
+}
+.burger span{position:absolute;left:12px;right:12px;height:2px;background:var(--cream);border-radius:2px;transition:transform .25s,opacity .25s,top .25s}
+.burger span:nth-child(1){top:15px}.burger span:nth-child(2){top:22px}.burger span:nth-child(3){top:29px}
+.burger[aria-expanded="true"] span:nth-child(1){top:22px;transform:rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){top:22px;transform:rotate(-45deg)}
+
+/* capa */
+.hero{
+  padding-top:calc(var(--nav-h) + clamp(40px,7vw,90px));padding-bottom:clamp(48px,7vw,90px);
+  position:relative;overflow:hidden;
+}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,5vw,64px);align-items:center}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;
+  font-size:.82rem;font-weight:500;margin-bottom:22px;
+}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal)}
+.hero h1{
+  font-weight:900;font-size:clamp(2.7rem,9.5vw,6.4rem);letter-spacing:-.03em;text-transform:uppercase;margin-bottom:22px;
+}
+.hero h1 .l2{display:block;color:var(--pink-soft)}
+.hero p.sub{font-size:clamp(1.05rem,2vw,1.3rem);max-width:34ch;margin-bottom:32px}
+.hero p.sub b{color:var(--teal-d);font-weight:600}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:38px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{padding:18px 14px;text-align:center}
+.stat strong{display:block;font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.5rem,3.4vw,2.2rem);color:var(--teal-d)}
+.stat span{font-size:.8rem;color:var(--muted);line-height:1.3;display:block}
+
+/* blocos de foto/vídeo (placeholders) */
+.ph{position:relative;overflow:hidden;border-radius:var(--radius);background:var(--c,#ffe680);display:flex;align-items:flex-end;justify-content:flex-start}
+.ph::before{content:"";position:absolute;width:72%;aspect-ratio:1;border-radius:50%;right:-18%;top:-8%;background:var(--c2,#ee8fc0)}
+.ph::after{content:"";position:absolute;width:30%;aspect-ratio:1;border-radius:20px;left:10%;top:16%;transform:rotate(12deg);background:var(--c3,rgba(255,255,255,.55))}
+.ph img{z-index:1;position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.work-vid img,.hl .ph img{transform:scale(1.05)}
+.ph figcaption,.ph .cap{
+  position:relative;z-index:2;margin:14px;padding:6px 12px;border-radius:999px;font-size:.74rem;font-weight:500;
+  background:rgba(31,42,68,.8);color:#fff;border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px);
+}
+.hero-photo{--c:#ffe680;--c2:#ee8fc0;--c3:#1160b8;aspect-ratio:4/5;width:100%;max-width:440px;margin-inline:auto;border:3px solid #fff;box-shadow:0 0 0 8px #ffe680;transform:rotate(2deg)}
+.hero-photo-wrap{position:relative}
+.sticker{
+  position:absolute;left:-6px;bottom:38px;z-index:3;background:var(--lime);color:#1f2a44;
+  font-family:'Montserrat',sans-serif;font-weight:900;font-size:.85rem;padding:10px 16px;border-radius:14px;transform:rotate(-6deg);
+}
+
+/* faixa de marcas */
+.strip{
+  border-block:1px solid var(--glass-line);background:#ffe680;overflow:hidden;padding:20px 0;
+}
+.track{display:flex;gap:0;width:max-content;animation:marquee 32s linear infinite}
+.track ul{display:flex;align-items:center;flex-shrink:0}
+.track li{padding:0 12px;display:block}
+.logo{width:104px;height:104px;border-radius:50%;background:#fff;display:grid;place-items:center;border:1px solid var(--glass-line);box-shadow:0 6px 16px rgba(31,42,68,.12);overflow:hidden;padding:12px}
+.logo.cheio{padding:0}
+.logo.cheio img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover}
+.logo img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+
+
+@keyframes marquee{to{transform:translateX(calc(-100% / 6))}}
+
+/* sobre */
+.about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(28px,5vw,72px);align-items:center}
+.about-photo{--c:#f7b8d8;--c2:#f7d117;--c3:#a9c8ee;aspect-ratio:4/5;width:100%;max-width:460px;margin-inline:auto;border:2px solid var(--glass-line)}
+.about p+p{margin-top:14px}
+.promises{margin:26px 0;display:grid;gap:12px}
+.promises li{display:flex;gap:14px;align-items:center;padding:14px 18px;font-weight:500}
+.check{flex:none;width:30px;height:30px;border-radius:50%;background:var(--lime);color:#1f2a44;display:grid;place-items:center;font-weight:900}
+.signature{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.6rem;color:var(--pink-soft);font-style:italic;letter-spacing:.02em}
+.signature small{display:block;font-family:'Poppins',sans-serif;font-style:normal;font-weight:400;font-size:.85rem;color:var(--muted);letter-spacing:0}
+
+/* destaques */
+.sec-head{margin-bottom:clamp(30px,5vw,54px)}
+.hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.hl{display:block;text-decoration:none;padding:14px;transition:transform .25s,border-color .25s}
+.hl:hover{transform:translateY(-8px);border-color:var(--teal)}
+.hl .ph{aspect-ratio:9/16;width:100%}
+.play{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:76px;height:76px;border-radius:50%;
+  background:var(--red);display:grid;place-items:center;box-shadow:0 0 0 10px rgba(232,40,58,.22);transition:transform .25s;
+}
+.hl:hover .play{transform:translate(-50%,-50%) scale(1.12)}
+.play svg{width:30px;height:30px;fill:#fff;margin-left:4px}
+.hl-body{padding:20px 8px 8px}
+.big{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(2.2rem,4vw,3rem);color:var(--pink-soft);line-height:1}
+.big-label{font-size:.82rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pink-soft);font-weight:600;margin-bottom:14px}
+.hl h3{font-size:1.2rem;margin-bottom:6px}
+.hl p{color:var(--muted);font-size:.92rem}
+
+/* trabalhos */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px}
+.chip{
+  font-family:'Poppins',sans-serif;font-weight:500;font-size:.9rem;padding:10px 20px;border-radius:999px;cursor:pointer;
+  background:var(--glass);border:1px solid var(--glass-line);color:var(--cream);text-transform:none;transition:background .2s,color .2s,border-color .2s;
+}
+.chip::first-letter{text-transform:uppercase}
+.chip:hover{border-color:var(--pink)}
+.chip[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#1f2a44;font-weight:600}
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.work{margin:0;animation:pop .45s both}
+.work .ph{aspect-ratio:9/16;width:100%;text-decoration:none}
+.work .meta{padding:12px 4px 0}
+.work .niche{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-d);font-weight:600}
+.work h3{font-size:1rem;margin-top:2px}
+.work .brandname{font-size:.85rem;color:var(--muted)}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:none}}
+.empty{color:var(--muted);padding:20px 0}
+.play.sm{width:56px;height:56px;box-shadow:0 0 0 7px rgba(232,40,58,.22)}
+.play.sm svg{width:22px;height:22px}
+.work-vid:hover .play{transform:translate(-50%,-50%) scale(1.12)}
+.vmodal{z-index:110}
+.vbox{position:relative;width:min(560px,100%,calc((100vh - 130px) * 9 / 16));width:min(560px,100%,calc((100dvh - 130px) * 9 / 16))}
+.vframe{aspect-ratio:9/16;width:100%;border-radius:18px;overflow:hidden;background:#000}
+.vframe iframe{width:100%;height:100%;border:0;display:block}
+.vbox .close{top:-54px;right:0;background:#fff}
+
+/* serviços */
+.services{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.svc{padding:30px 26px;position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
+.svc:hover{transform:translateY(-6px);border-color:var(--pink)}
+.svc .n{display:grid;place-items:center;width:58px;height:58px;border-radius:16px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.3rem;color:#1f2a44;background:var(--lime);margin-bottom:18px}
+.svc:nth-child(6n+2) .n{background:var(--pink)}
+.svc:nth-child(6n+3) .n{background:#f79a72}
+.svc:nth-child(6n+4) .n{background:#a9c8ee}
+.svc:nth-child(6n+5) .n{background:#f5a3aa}
+.svc:nth-child(6n+6) .n{background:#ffe680}
+.svc h3{font-size:1.25rem;margin-bottom:10px}
+.svc p{color:var(--muted);font-size:.95rem}
+
+/* números e depoimentos */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:clamp(36px,5vw,60px)}
+.metric{padding:28px 18px;text-align:center}
+.metric strong{display:block;font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(2.2rem,4.5vw,3.4rem);color:var(--teal-d);line-height:1.1}
+.metric span{color:var(--muted);font-size:.9rem}
+.metric{border-top:8px solid var(--lime)}
+.metric:nth-child(2){border-top-color:var(--pink)}
+.metric:nth-child(3){border-top-color:#f79a72}
+.metric:nth-child(4){border-top-color:#8fb8e8}
+.sub-title{font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:var(--pink-soft);margin-bottom:18px}
+.results{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:clamp(36px,5vw,60px)}
+.result{padding:26px;border-left:8px solid var(--pink)}
+.result:nth-child(1){border-left-color:var(--lime)}
+.result:nth-child(3){border-left-color:#f79a72}
+.result strong{display:block;font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.4rem;color:var(--cream);line-height:1}
+.result .rl{color:var(--teal-d);font-weight:600;margin:6px 0 10px}
+.result p{color:var(--muted);font-size:.9rem}
+.quotes{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.quote{padding:28px;margin:0}
+.quote blockquote{margin:0 0 20px;font-size:1.02rem;position:relative}
+.quote blockquote::before{content:"“";font-family:'Montserrat',sans-serif;font-weight:900;font-size:3.4rem;line-height:.4;color:var(--pink);display:block;height:24px}
+.who{display:flex;align-items:center;gap:14px}
+.avatar{width:46px;height:46px;flex:none;border-radius:50%;background:var(--pink);display:grid;place-items:center;color:#1f2a44;font-family:'Montserrat',sans-serif;font-weight:900}
+.who b{display:block;font-family:'Montserrat',sans-serif}
+.who span{font-size:.85rem;color:var(--muted)}
+
+/* contato */
+.contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
+form.glass{padding:clamp(22px,4vw,38px)}
+.field{margin-bottom:18px}
+label{display:block;font-weight:600;font-size:.88rem;margin-bottom:6px}
+input,textarea{
+  width:100%;font:inherit;color:var(--cream);background:#fff;border:1px solid var(--glass-line);
+  border-radius:14px;padding:14px 16px;transition:border-color .2s,box-shadow .2s;
+}
+input::placeholder,textarea::placeholder{color:#6b7385}
+input:focus,textarea:focus{outline:none;border-color:var(--teal-d);box-shadow:0 0 0 3px rgba(20,184,196,.3)}
+textarea{min-height:140px;resize:vertical}
+.ok{
+  display:none;text-align:center;padding:26px 10px;
+}
+.ok.show{display:block;animation:pop .4s both}
+.ok .tick{width:64px;height:64px;border-radius:50%;background:var(--lime);color:#1f2a44;font-size:2rem;font-weight:900;display:grid;place-items:center;margin:0 auto 16px}
+.ok h3{font-size:1.5rem;margin-bottom:8px}
+.ok p{color:var(--muted)}
+.direct{display:grid;gap:14px}
+.direct a.btn{justify-content:flex-start;width:100%;padding:18px 24px}
+.direct .info{padding:22px;color:var(--muted);font-size:.95rem}
+.direct .info b{color:var(--cream)}
+
+/* rodapé */
+footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
+.foot{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+.foot ul{display:flex;gap:10px;flex-wrap:wrap}
+.foot ul a{text-decoration:none;padding:8px 16px;border-radius:999px;border:1px solid var(--glass-line);font-size:.9rem;transition:background .2s,color .2s}
+.foot ul a:hover{background:var(--pink);color:#1f2a44}
+.copy{font-size:.85rem;color:var(--muted);width:100%}
+
+/* card de captura */
+.overlay{
+  position:fixed;inset:0;z-index:100;background:rgba(31,42,68,.6);display:none;align-items:center;justify-content:center;padding:16px;
+  backdrop-filter:blur(4px);
+}
+.overlay.open{display:flex;animation:fade .3s both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.capture{
+  position:relative;width:min(460px,100%);padding:38px 30px 30px;background:rgba(255,250,240,.97);
+  border-color:var(--pink);box-shadow:0 20px 50px rgba(31,42,68,.25);max-height:100%;overflow:auto;
+}
+.capture h2{font-size:1.8rem;margin-bottom:8px}
+.capture h2 em{font-style:normal;color:var(--teal-d)}
+.capture .lead{margin-bottom:20px;font-size:.95rem}
+.close{
+  position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;border:1px solid var(--glass-line);
+  background:var(--glass);color:var(--cream);font-size:1.3rem;cursor:pointer;line-height:1;
+}
+.close:hover{background:var(--pink);color:#1f2a44}
+
+/* entrada ao rolar */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* responsivo */
+@media (max-width:1020px){
+  .gallery{grid-template-columns:repeat(3,1fr)}
+  .services{grid-template-columns:repeat(2,1fr)}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:860px){
+  .burger{display:block}
+  .menu{
+    position:absolute;top:var(--nav-h);left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:10px 16px 18px;
+    background:rgba(255,247,232,.98);border-bottom:1px solid var(--glass-line);
+    display:none;
+  }
+  .menu.open{display:flex}
+  .menu a{padding:14px 12px;font-size:1rem;border-radius:12px}
+  .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr}
+  .hero-photo-wrap{order:-1;max-width:320px;margin-inline:auto;width:100%}
+  .hl-grid{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
+  .results,.quotes{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .gallery{grid-template-columns:repeat(2,1fr);gap:12px}
+  .services{grid-template-columns:1fr}
+  .stats{gap:8px}
+  .stat{padding:14px 6px}
+  .btn{width:100%}
+  .cta-row{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .reveal{opacity:1;transform:none}
+  .track{flex-wrap:wrap;width:auto;justify-content:center}
+  .track ul[aria-hidden="true"]{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#capa" aria-label="AMANDA DREBES, ir para o topo">AMANDA <span>DREBES</span></a>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+    <nav aria-label="Menu principal">
+      <div class="menu" id="menu">
+        <a href="#sobre">Sobre</a>
+        <a href="#destaques">Destaques</a>
+        <a href="#trabalhos">Trabalhos</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#numeros">Números</a>
+        <a href="#contato">Contato</a>
+        <a href="metricas.html">Métricas</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- 1. CAPA -->
+<section class="hero" id="capa">
+  <div class="glow-pink" style="width:420px;height:420px;top:40px;right:-120px"></div>
+  <div class="glow-lime" style="width:320px;height:320px;bottom:-60px;left:-100px"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="reveal">
+        <span class="hero-tag glass"><span class="dot"></span> UGC Creator em Curitiba</span>
+        <h1>AMANDA <span class="l2">DREBES</span></h1>
+        <!-- FRASE DA CAPA: edite aqui o que você faz pelas marcas -->
+        <p class="sub">Eu crio vídeos que parecem recomendação de amiga e <b>fazem sua marca vender</b>.</p>
+        <div class="cta-row">
+          <a class="btn btn-lime" href="#contato">Falar comigo</a>
+          <a class="btn btn-ghost" href="#trabalhos">Ver os trabalhos</a>
+        </div>
+        <div class="stats" id="heroStats"></div>
+      </div>
+      <div class="hero-photo-wrap reveal">
+        <!-- FOTO DA CAPA: para trocar, substitua o arquivo foto-capa.jpg (formato 4:5, 800x1000) no repositório, ou mude o endereço do src abaixo -->
+        <figure class="ph hero-photo" style="margin:0 auto"><img src="foto-capa.jpg" alt="Amanda Drebes de vestido jeans e tênis vermelho, falando em um telefone vermelho antigo" width="800" height="1000" fetchpriority="high"></figure>
+        <span class="sticker">Curitiba, Brasil</span>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="strip" aria-label="Marcas com quem já trabalhei">
+  <div class="track" id="brandTrack"></div>
+</div>
+
+<div class="bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<!-- 2. SOBRE MIM -->
+<section class="sec about" id="sobre">
+  <div class="glow-pink" style="width:300px;height:300px;top:20%;left:-140px"></div>
+  <div class="wrap about-grid">
+    <div class="reveal">
+      <!-- FOTO SOBRE MIM: para trocar, substitua o arquivo foto-sobre.jpg (formato 4:5, 800x1000) no repositório, ou mude o endereço do src abaixo -->
+      <figure class="ph about-photo" style="margin:0 auto"><img src="foto-sobre.jpg" alt="Amanda Drebes gargalhando, de blusa branca, em frente a uma parede com post-its coloridos" width="800" height="1000" loading="lazy"></figure>
+    </div>
+    <div class="reveal">
+      <span class="eyebrow">Sobre mim</span>
+      <h2 class="title">Oi, eu sou a <em>Amanda</em>!</h2>
+      <p>Sou UGC Creator em Curitiba e transformo produtos em conteúdo com cara de gente de verdade. Já passei por marcas de beleza, skincare, moda, comida, casa, fitness e tech, e em todas aprendi a mesma coisa: quando o vídeo é sincero, as pessoas param para assistir.</p>
+      <p>Trabalho com carinho, conversa clara e prazo cumprido. Você me conta o que a sua marca precisa e eu cuido do resto, do roteiro à entrega final.</p>
+      <ul class="promises">
+        <li class="glass"><span class="check" aria-hidden="true">✓</span> Roteiro aprovado antes de gravar</li>
+        <li class="glass"><span class="check" aria-hidden="true">✓</span> Uma rodada de ajuste inclusa</li>
+        <li class="glass"><span class="check" aria-hidden="true">✓</span> Entrega em até 72 horas úteis</li>
+      </ul>
+      <p class="signature">Amanda Drebes<small>UGC Creator · @amandadrebess</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. CONTEÚDOS DE DESTAQUE -->
+<section class="sec" id="destaques">
+  <div class="glow-lime" style="width:360px;height:360px;top:10%;right:-140px"></div>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Conteúdos de destaque</span>
+      <h2 class="title">Vídeos que <em>já performaram</em></h2>
+      <p class="lead">Três conteúdos para você ver o meu estilo em ação. Toque em qualquer card para assistir.</p>
+    </div>
+    <div class="hl-grid" id="highlights"></div>
+  </div>
+</section>
+
+<!-- 4. TRABALHOS POR NICHO -->
+<section class="sec" id="trabalhos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Trabalhos por nicho</span>
+      <h2 class="title">Escolha o seu <em>universo</em></h2>
+      <p class="lead">Filtre por nicho e veja como cada tipo de produto ganha vida na câmera.</p>
+    </div>
+    <div class="filters reveal" id="filters" role="group" aria-label="Filtrar trabalhos por nicho"></div>
+    <div class="gallery" id="gallery" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- 5. COMO EU TE AJUDO -->
+<section class="sec" id="servicos">
+  <div class="glow-pink" style="width:340px;height:340px;bottom:0;right:-120px"></div>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Como eu te ajudo</span>
+      <h2 class="title">Quatro jeitos de <em>trabalharmos juntas</em></h2>
+    </div>
+    <div class="services" id="services"></div>
+  </div>
+</section>
+
+<!-- 6. NÚMEROS E DEPOIMENTOS -->
+<section class="sec" id="numeros">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Números e depoimentos</span>
+      <h2 class="title">Resultado que <em>se vê e se ouve</em></h2>
+    </div>
+    <div class="metrics" id="metrics"></div>
+    <p class="reveal" style="margin:-24px 0 clamp(36px,5vw,60px)"><a class="btn btn-ghost" href="metricas.html">Ver métricas do Instagram</a></p>
+    <h3 class="sub-title reveal">Resultados de campanha</h3>
+    <div class="results" id="results"></div>
+    <h3 class="sub-title reveal">Quem já trabalhou comigo</h3>
+    <div class="quotes" id="quotes"></div>
+  </div>
+</section>
+
+<!-- 7. BORA CRIAR JUNTOS -->
+<section class="sec" id="contato">
+  <div class="glow-lime" style="width:340px;height:340px;top:10%;left:-140px"></div>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Contato</span>
+      <h2 class="title">Bora criar <em>juntos?</em></h2>
+      <p class="lead">Conte um pouco sobre a sua marca e eu respondo rapidinho.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="glass reveal" style="padding:0">
+        <form id="contactForm" class="glass" style="border:0;background:none" novalidate>
+          <div class="field">
+            <label for="cNome">Nome</label>
+            <input id="cNome" name="nome" type="text" autocomplete="name" placeholder="Seu nome" required>
+          </div>
+          <div class="field">
+            <label for="cEmail">E-mail</label>
+            <input id="cEmail" name="email" type="email" autocomplete="email" placeholder="seuemail@email.com" required>
+          </div>
+          <div class="field">
+            <label for="cMsg">Mensagem</label>
+            <textarea id="cMsg" name="mensagem" placeholder="Conte sobre a marca, o produto e o que você precisa" required></textarea>
+          </div>
+          <p id="cErr" role="alert" style="color:var(--pink-soft);min-height:1.5em;margin-bottom:8px;font-size:.9rem"></p>
+          <button class="btn btn-lime" type="submit">Enviar mensagem</button>
+        </form>
+        <div class="ok" id="contactOk" role="status" tabindex="-1">
+          <div class="tick" aria-hidden="true">✓</div>
+          <h3>Mensagem enviada!</h3>
+          <p>Obrigada pelo contato. Eu respondo em breve.</p>
+        </div>
+      </div>
+      <div class="direct reveal">
+        <a class="btn btn-lime" id="linkWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-pink" id="linkMail" href="#">E-mail</a>
+        <a class="btn btn-ghost" id="linkIg" href="#" target="_blank" rel="noopener">Instagram</a>
+        <div class="info glass"><b>Curitiba</b><br>Atendo marcas de todo o Brasil, com gravação e entrega online.</div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<!-- 8. RODAPÉ -->
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#capa">AMANDA <span>DREBES</span></a>
+    <ul id="footLinks"></ul>
+    <p class="copy">© <span id="year"></span> AMANDA DREBES. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<!-- PLAYER DE VÍDEO: abre ao clicar em qualquer vídeo -->
+<div class="overlay vmodal" id="vOverlay" aria-hidden="true">
+  <div class="vbox" role="dialog" aria-modal="true" aria-label="Player de vídeo">
+    <button class="close" id="vClose" aria-label="Fechar vídeo">×</button>
+    <div class="vframe" id="vFrame"></div>
+  </div>
+</div>
+
+<!-- CARD DE CAPTURA (aparece após 7 segundos, uma vez por visita) -->
+<div class="overlay" id="overlay" aria-hidden="true">
+  <div class="capture glass" role="dialog" aria-modal="true" aria-labelledby="capTitle">
+    <button class="close" id="capClose" aria-label="Fechar">×</button>
+    <div id="capBody">
+      <h2 id="capTitle">Quer meu <em>mídia kit</em> completo?</h2>
+      <p class="lead">Deixe seu nome e e-mail e eu te envio com valores, formatos e cases.</p>
+      <form id="capForm" novalidate>
+        <div class="field">
+          <label for="kNome">Nome</label>
+          <input id="kNome" type="text" autocomplete="name" placeholder="Seu nome" required>
+        </div>
+        <div class="field">
+          <label for="kEmail">E-mail</label>
+          <input id="kEmail" type="email" autocomplete="email" placeholder="seuemail@email.com" required>
+        </div>
+        <p id="kErr" role="alert" style="color:var(--pink-soft);min-height:1.4em;margin-bottom:8px;font-size:.88rem"></p>
+        <button class="btn btn-lime" type="submit" style="width:100%">Quero receber</button>
+      </form>
+    </div>
+    <div class="ok" id="capOk" role="status">
+      <div class="tick" aria-hidden="true">✓</div>
+      <h3>Pedido recebido!</h3>
+      <p>Em breve o mídia kit chega no seu e-mail.</p>
+    </div>
+  </div>
+</div>
+
+<script src="js/banco.js"></script>
+<script>
+/* =====================================================
+   DADOS PARA EDITAR (não precisa mexer no HTML)
+   ===================================================== */
+
+/* Dados pessoais */
+const PERFIL = {
+  nome: "AMANDA DREBES",
+  instagram: "@amandadrebess",
+  email: "amandadrebes9@gmail.com",
+  whatsapp: "5551980216628", // só números, com 55 na frente
+  cidade: "Curitiba"
+};
+
+/* Números da capa: valor, prefixo, sufixo e rótulo */
+const NUMEROS_CAPA = [
+  { valor: 300, prefixo: "+", sufixo: "", rotulo: "vídeos entregues" },
+  { valor: 100, prefixo: "+", sufixo: "", rotulo: "marcas atendidas" },
+  { valor: 1,   prefixo: "+", sufixo: "M", rotulo: "views somadas" }
+];
+
+/* Marcas da faixa da capa: cada uma aparece numa bolinha branca com o logo.
+   Para adicionar uma marca: salve o logo na pasta "logos" (ex.: logos/gocase.png) e acrescente uma linha abaixo.
+   cheio: true preenche a bolinha inteira com a cor do logo (use quando o logo tem fundo colorido).
+   Ainda sem logo: Fita Up, Gocase e Ricca. */
+const MARCAS = [
+  { nome: "Vichy",       logo: "logos/vichy.png" },
+  { nome: "L'Oréal Paris", logo: "logos/loreal.png" },
+  { nome: "Keune",       logo: "logos/keune.png" },
+  { nome: "Oster",       logo: "logos/oster.png" },
+  { nome: "Monange",     logo: "logos/monange.png" },
+  { nome: "Pantene",     logo: "logos/pantene.png" },
+  { nome: "O Boticário", logo: "logos/o-boticario.png", cheio: true },
+  { nome: "Eudora",      logo: "logos/eudora.png" },
+  { nome: "Garnier",     logo: "logos/garnier.png" },
+  { nome: "Amazon",      logo: "logos/amazon.png" },
+  { nome: "Barbour's Beauty", logo: "logos/barbours.png" },
+  { nome: "Desinchá",    logo: "logos/desincha.png" },
+  { nome: "Plant Power", logo: "logos/plant-power.png", cheio: true },
+  { nome: "Rituária",    logo: "logos/rituaria.png" }
+];
+
+/* Os 3 conteúdos de destaque.
+   link = endereço do vídeo (o card inteiro abre este link)
+   capa = endereço da imagem vertical 9:16 (deixe "" para usar a capa automática do YouTube) */
+let DESTAQUES = [
+  { link: "https://youtube.com/shorts/ZZoSb8IljPw?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de skincare", contexto: "Skincare · descreva aqui o contexto da campanha" },
+  { link: "https://youtube.com/shorts/TX4IBQr0ZE4?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de casa e decoração", contexto: "Casa e decoração · descreva aqui o contexto da campanha" },
+  { link: "https://youtube.com/shorts/JOZyCMSgrLg?feature=share", capa: "", numero: "+1.000", rotulo: "views no Shorts", titulo: "Vídeo de moda", contexto: "Moda · descreva aqui o contexto da campanha" }
+];
+
+/* Vídeos da galeria (Shorts do YouTube). Para adicionar um vídeo: copie uma linha, cole o link em "video" e escolha o "nicho".
+   Os botões de filtro são criados sozinhos a partir dos nichos usados aqui.
+   titulo e marca são opcionais. capa: deixe "" para usar a capa automática do YouTube, ou coloque o endereço de uma imagem 9:16. */
+let TRABALHOS = [
+  { nicho: "skincare",         titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/ZZoSb8IljPw", capa: "" },
+  { nicho: "casa e decoração", titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/TX4IBQr0ZE4", capa: "" },
+  { nicho: "moda",             titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/JOZyCMSgrLg", capa: "" },
+  { nicho: "moda",             titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/-_1NY4habg0", capa: "" },
+  { nicho: "casa e decoração", titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/5ooUE9kIQ88", capa: "" },
+  { nicho: "app",              titulo: "Vídeo de aplicativo",              marca: "",      video: "https://youtube.com/shorts/N_6Ys6f2R34", capa: "" },
+  { nicho: "cabelos",          titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/t49i1IJJZ68", capa: "" },
+  { nicho: "acessórios",       titulo: "",                                 marca: "",      video: "https://youtube.com/shorts/f-olPvZghdQ", capa: "" },
+  { nicho: "skincare",         titulo: "Novo lançamento babado de Vichy",  marca: "Vichy", video: "https://youtube.com/shorts/gZfgKa4RVZQ", capa: "" },
+  { nicho: "cabelos",          titulo: "Seca em minutos",                  marca: "",      video: "https://youtube.com/shorts/O8kRgkeMjYU", capa: "" }
+];
+let NICHOS = [...new Set(TRABALHOS.map(t => t.nicho))];
+/* Pega o código do vídeo no link do YouTube e monta a capa automática */
+const ytId = url => (String(url).match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
+/* Capa em alta resolução do YouTube (1280x720). Se não existir, cai sozinha para a versão menor. */
+const ytThumb = id => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+function capaReserva(img) {
+  const id = img.dataset.yt;
+  if (id && !img.dataset.reserva) { img.dataset.reserva = "1"; img.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`; }
+}
+document.addEventListener("error", e => { if (e.target.tagName === "IMG") capaReserva(e.target); }, true);
+document.addEventListener("load", e => { if (e.target.tagName === "IMG" && e.target.naturalWidth > 0 && e.target.naturalWidth <= 120) capaReserva(e.target); }, true);
+
+/* Serviços (pode ter quantos quiser; a grade se ajusta sozinha) */
+const SERVICOS = [
+  { titulo: "Vídeos UGC", texto: "Vídeo com roteiro, gravação e edição, no estilo de quem usa o produto de verdade. Inclui unboxing e primeiras impressões." },
+  { titulo: "Clips", texto: "Cortes rápidos e edições dinâmicas, com trilha e legenda, para Reels, TikTok e anúncios." },
+  { titulo: "Influencer", texto: "Divulgo o seu produto para a minha audiência no @amandadrebess, com cupom de desconto e link de compra." },
+  { titulo: "Fotos", texto: "Fotos do produto com luz natural e cenário do dia a dia, para o feed, a loja e os anúncios." }
+];/* Quatro métricas com contador */
+const METRICAS = [
+  { valor: 300, prefixo: "+", sufixo: "",  rotulo: "vídeos entregues" },
+  { valor: 100, prefixo: "+", sufixo: "",  rotulo: "marcas atendidas" },
+  { valor: 1,   prefixo: "+", sufixo: "M", rotulo: "views somadas" },
+  { valor: 7,   prefixo: "",  sufixo: "",  rotulo: "nichos atendidos" }
+];
+
+/* Três resultados de campanha (troque os "00" pelos seus números reais) */
+const RESULTADOS = [
+  { numero: "+00%", rotulo: "aumento em vendas",  texto: "Marca 01 · descreva a campanha e o resultado aqui." },
+  { numero: "00x",  rotulo: "retorno sobre anúncio", texto: "Marca 02 · descreva a campanha e o resultado aqui." },
+  { numero: "-00%", rotulo: "custo por clique",   texto: "Marca 03 · descreva a campanha e o resultado aqui." }
+];
+
+/* Quatro depoimentos */
+const DEPOIMENTOS = [
+  { texto: "Escreva aqui o depoimento do Cliente 01 sobre como foi trabalhar com a Amanda.", nome: "Cliente 01", empresa: "Marca 01" },
+  { texto: "Escreva aqui o depoimento do Cliente 02 sobre a qualidade e o prazo da entrega.", nome: "Cliente 02", empresa: "Marca 02" },
+  { texto: "Escreva aqui o depoimento do Cliente 03 sobre o resultado dos vídeos.",           nome: "Cliente 03", empresa: "Marca 03" },
+  { texto: "Escreva aqui o depoimento do Cliente 04 sobre a comunicação durante o projeto.",  nome: "Cliente 04", empresa: "Marca 04" }
+];
+
+/* =====================================================
+   CÓDIGO (só mexa aqui se souber o que está fazendo)
+   ===================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc = t => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = n => n.toLocaleString("pt-BR");
+const CORES = [["#ffe680","#ee8fc0","#1160b8"],["#f7b8d8","#f7d117","#a9c8ee"],["#a9c8ee","#f7d117","#ee8fc0"],["#f9b79a","#ee8fc0","#ffe680"],["#f2d27a","#1160b8","#ffffff"],["#f5a3aa","#ffe680","#1160b8"]];
+const grad = i => { const c = CORES[i % CORES.length]; return `--c:${c[0]};--c2:${c[1]};--c3:${c[2]}`; };
+const setYear = () => { $("#year").textContent = new Date().getFullYear(); };
+
+/* Links de contato */
+const waLink = `https://wa.me/${PERFIL.whatsapp}?text=${encodeURIComponent("Oi, Amanda! Vi seu portfólio e quero conversar sobre um projeto.")}`;
+const igLink = `https://instagram.com/${PERFIL.instagram.replace("@", "")}`;
+$("#linkWa").href = waLink;
+$("#linkMail").href = `mailto:${PERFIL.email}`;
+$("#linkIg").href = igLink;
+$("#footLinks").innerHTML = `<li><a href="metricas.html">Métricas</a></li>` +
+  `<li><a href="${igLink}" target="_blank" rel="noopener">Instagram ${esc(PERFIL.instagram)}</a></li>` +
+  `<li><a href="${waLink}" target="_blank" rel="noopener">WhatsApp</a></li>` +
+  `<li><a href="mailto:${PERFIL.email}">E-mail</a></li>`;
+
+/* Capa: números */
+$("#heroStats").innerHTML = NUMEROS_CAPA.map(n =>
+  `<div class="stat glass"><strong data-count="${n.valor}" data-pre="${n.prefixo}" data-suf="${n.sufixo}">${n.prefixo}${fmt(n.valor)}${n.sufixo}</strong><span>${esc(n.rotulo)}</span></div>`).join("");
+
+/* Faixa de marcas (lista duplicada para o loop ficar contínuo) */
+const listaMarcas = `<ul>${MARCAS.map(m => {
+  const nome = typeof m === "string" ? m : m.nome, logo = typeof m === "string" ? "" : m.logo, cheio = typeof m === "object" && m.cheio;
+  return `<li>${logo ? `<div class="logo${cheio ? " cheio" : ""}"><img src="${esc(logo)}" alt="${esc(nome)}"></div>` : `<div class="logo" role="img" aria-label="${esc(nome)}"></div>`}</li>`;
+}).join("")}</ul>`;
+/* A fila se repete 6 vezes para nunca aparecer espaço vazio; só a primeira é lida por leitores de tela */
+$("#brandTrack").innerHTML = listaMarcas + listaMarcas.replace("<ul>", '<ul aria-hidden="true">').repeat(5);
+$("#brandTrack").style.animationDuration = (MARCAS.length * 3.2) + "s"; /* velocidade constante, mesmo com mais marcas */
+
+/* Destaques (o painel pode trocar estes cards; se ele ainda não tiver vídeos, ficam os de cima) */
+function montarDestaques() {
+  $("#highlights").innerHTML = DESTAQUES.map((d, i) => {
+    const id = ytId(d.link), capa = d.capa || (id ? ytThumb(id) : "");
+    return `
+  <a class="hl glass reveal js-video" href="${esc(d.link)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(d.titulo)}, ${esc(d.numero)} ${esc(d.rotulo)}">
+    <div class="ph" style="${grad(i)}">
+      ${capa ? `<img src="${esc(capa)}" ${d.capa ? "" : `data-yt="${id}"`} alt="Capa do vídeo ${esc(d.titulo)}" loading="lazy">` : ""}
+      <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
+    </div>
+    <div class="hl-body">
+      <div class="big">${esc(d.numero)}</div>
+      <div class="big-label">${esc(d.rotulo)}</div>
+      <h3>${esc(d.titulo)}</h3>
+      <p>${esc(d.contexto)}</p>
+    </div>
+  </a>`;
+  }).join("");
+}
+montarDestaques();
+
+/* Galeria com filtro */
+const filtros = $("#filters"), galeria = $("#gallery");
+let nichoAtual = "todos";
+function montarFiltros() {
+  if (!["todos", ...NICHOS].includes(nichoAtual)) nichoAtual = "todos";
+  filtros.innerHTML = ["todos", ...NICHOS].map(n =>
+    `<button type="button" class="chip" data-n="${esc(n)}" aria-pressed="${n === nichoAtual}">${esc(n)}</button>`).join("");
+}
+function mostrar(nicho) {
+  nichoAtual = nicho;
+  const lista = TRABALHOS.filter(t => nicho === "todos" || t.nicho === nicho);
+  galeria.innerHTML = lista.length ? lista.map((t, i) => {
+    const id = ytId(t.video), capa = t.capa || (id ? ytThumb(id) : ""), nome = t.titulo || `Vídeo de ${t.nicho}`;
+    return `<figure class="work">
+      <a class="ph work-vid js-video" style="${grad(i)}" href="${esc(t.video)}" target="_blank" rel="noopener" aria-label="Assistir: ${esc(nome)}">
+        ${capa ? `<img src="${esc(capa)}" ${t.capa ? "" : `data-yt="${id}"`} alt="Capa do vídeo ${esc(nome)}, nicho ${esc(t.nicho)}" loading="lazy">` : ""}
+        <span class="play sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
+      </a>
+      <figcaption class="meta">
+        <div class="niche">${esc(t.nicho)}</div>
+        <h3>${esc(nome)}</h3>
+        ${t.marca ? `<div class="brandname">${esc(t.marca)}</div>` : ""}
+      </figcaption>
+    </figure>`;
+  }).join("") : `<p class="empty">Ainda não há vídeos neste nicho.</p>`;
+}
+filtros.addEventListener("click", e => {
+  const b = e.target.closest(".chip");
+  if (!b) return;
+  filtros.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === b));
+  mostrar(b.dataset.n);
+});
+montarFiltros();
+mostrar("todos");
+
+/* Serviços */
+$("#services").innerHTML = SERVICOS.map((s, i) => `
+  <article class="svc glass reveal">
+    <div class="n" aria-hidden="true">${String(i + 1).padStart(2, "0")}</div>
+    <h3>${esc(s.titulo)}</h3>
+    <p>${esc(s.texto)}</p>
+  </article>`).join("");
+
+/* Métricas, resultados e depoimentos */
+$("#metrics").innerHTML = METRICAS.map(m => `
+  <div class="metric glass reveal">
+    <strong data-count="${m.valor}" data-pre="${m.prefixo}" data-suf="${m.sufixo}">${m.prefixo}${fmt(m.valor)}${m.sufixo}</strong>
+    <span>${esc(m.rotulo)}</span>
+  </div>`).join("");
+$("#results").innerHTML = RESULTADOS.map(r => `
+  <article class="result glass reveal">
+    <strong>${esc(r.numero)}</strong>
+    <div class="rl">${esc(r.rotulo)}</div>
+    <p>${esc(r.texto)}</p>
+  </article>`).join("");
+$("#quotes").innerHTML = DEPOIMENTOS.map(d => `
+  <figure class="quote glass reveal">
+    <blockquote>${esc(d.texto)}</blockquote>
+    <figcaption class="who">
+      <span class="avatar" aria-hidden="true">${esc(d.nome.trim().slice(-2))}</span>
+      <span><b>${esc(d.nome)}</b><span>${esc(d.empresa)}</span></span>
+    </figcaption>
+  </figure>`).join("");
+
+setYear();
+
+/* Menu sanduíche */
+const burger = $("#burger"), menu = $("#menu");
+function fecharMenu() { menu.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); burger.setAttribute("aria-label", "Abrir menu"); }
+burger.addEventListener("click", () => {
+  const abrir = !menu.classList.contains("open");
+  menu.classList.toggle("open", abrir);
+  burger.setAttribute("aria-expanded", abrir);
+  burger.setAttribute("aria-label", abrir ? "Fechar menu" : "Abrir menu");
+});
+menu.addEventListener("click", e => { if (e.target.closest("a")) fecharMenu(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") fecharMenu(); });
+
+/* Contadores animados */
+function animar(el) {
+  const alvo = +el.dataset.count, pre = el.dataset.pre || "", suf = el.dataset.suf || "";
+  if (reduzir) { el.textContent = pre + fmt(alvo) + suf; return; }
+  const dur = 1600, ini = performance.now();
+  (function passo(t) {
+    const p = Math.min((t - ini) / dur, 1), v = Math.round(alvo * (1 - Math.pow(1 - p, 3)));
+    el.textContent = pre + fmt(v) + suf;
+    if (p < 1) requestAnimationFrame(passo);
+  })(ini);
+}
+
+/* Animação de entrada ao rolar */
+const revelar = els => {
+  if (reduzir || !("IntersectionObserver" in window)) {
+    els.forEach(e => e.classList.add("in"));
+    document.querySelectorAll("[data-count]").forEach(animar);
+    return;
+  }
+  const io = new IntersectionObserver((itens, obs) => {
+    itens.forEach(it => {
+      if (!it.isIntersecting) return;
+      it.target.classList.add("in");
+      it.target.querySelectorAll("[data-count]").forEach(animar);
+      obs.unobserve(it.target);
+    });
+  }, { threshold: .15 });
+  els.forEach(e => io.observe(e));
+};
+revelar(document.querySelectorAll(".reveal"));
+
+/* ---- Vídeos vindos do painel (tabela "videos" do Supabase) ----
+   Se o painel ainda não tiver vídeos visíveis, ou se a internet falhar, o site
+   continua mostrando a lista que está mais acima neste arquivo. */
+function aplicarVideosDoPainel(linhas) {
+  linhas = Array.isArray(linhas) ? linhas.filter(v => v && v.link) : [];
+  if (!linhas.length) return false;
+  TRABALHOS = linhas.map(v => ({ nicho: v.nicho || "outros", titulo: v.titulo || "", marca: v.marca || "", video: v.link, capa: "" }));
+  NICHOS = [...new Set(TRABALHOS.map(t => t.nicho))];
+  const comDestaque = linhas.filter(v => v.destaque && String(v.destaque).trim()).slice(0, 3);
+  if (comDestaque.length) {
+    DESTAQUES = comDestaque.map(v => {
+      const partes = String(v.destaque).trim().split(/\s+/);
+      return {
+        link: v.link, capa: "", numero: /^\+/.test(partes[0]) ? partes[0] : "+" + partes[0],
+        rotulo: partes.slice(1).join(" ") || "views", titulo: v.titulo || ("Vídeo de " + (v.nicho || "destaque")),
+        contexto: [v.nicho, v.marca].filter(Boolean).join(" · ")
+      };
+    });
+    montarDestaques();
+    revelar(document.querySelectorAll("#highlights .reveal"));
+  }
+  montarFiltros();
+  mostrar(nichoAtual);
+  return true;
+}
+try { aplicarVideosDoPainel(JSON.parse(localStorage.getItem("videosDoPainel") || "null")); } catch (e) {} // mostra rápido a última lista conhecida
+if (window.BANCO) {
+  BANCO.videosDoSite().then(linhas => {
+    try {
+      if (aplicarVideosDoPainel(linhas)) localStorage.setItem("videosDoPainel", JSON.stringify(linhas));
+      else localStorage.removeItem("videosDoPainel");
+    } catch (e) {}
+  }).catch(() => {}); // sem painel ou sem internet: fica a lista de cima
+  BANCO.registrarVisita(); // uma linha na tabela "visitas", sem serviço de fora e sem pedir nada ao visitante
+}
+
+/* Formulário de contato: grava na tabela "marcas" do painel como Lead e confirma na própria tela */
+const form = $("#contactForm");
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const ok = form.nome.value.trim() && /^\S+@\S+\.\S+$/.test(form.email.value) && form.mensagem.value.trim();
+  if (!ok) { $("#cErr").textContent = "Preencha nome, um e-mail válido e a mensagem."; return; }
+  const botao = form.querySelector('button[type="submit"]');
+  botao.disabled = true;
+  $("#cErr").textContent = "";
+  const agora = new Date(), hoje = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2, "0") + "-" + String(agora.getDate()).padStart(2, "0");
+  try {
+    await BANCO.enviarContato({
+      nome: form.nome.value.trim().slice(0, 120), email: form.email.value.trim().slice(0, 200),
+      obs: ("Mensagem pelo site: " + form.mensagem.value.trim()).slice(0, 2000), situacao: "lead", ultimo_contato: hoje
+    });
+    form.style.display = "none";
+    const c = $("#contactOk");
+    c.classList.add("show");
+    c.focus();
+  } catch (erro) {
+    $("#cErr").textContent = "Não consegui enviar agora. Me chame pelo WhatsApp ou pelo e-mail ao lado.";
+    botao.disabled = false;
+  }
+});
+/* Player de vídeo dentro do site */
+const vOv = $("#vOverlay"), vFrame = $("#vFrame");
+let vFoco = null;
+function abrirVideo(url) {
+  const id = ytId(url);
+  if (!id) return false;
+  vFoco = document.activeElement;
+  vFrame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1&hl=pt-BR&modestbranding=1&iv_load_policy=3" title="Vídeo da Amanda Drebes" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  vOv.classList.add("open");
+  vOv.setAttribute("aria-hidden", "false");
+  $("#vClose").focus();
+  return true;
+}
+function fecharVideo() {
+  vOv.classList.remove("open");
+  vOv.setAttribute("aria-hidden", "true");
+  vFrame.innerHTML = "";
+  if (vFoco && vFoco.focus) vFoco.focus();
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.js-video");
+  if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  if (abrirVideo(a.href)) e.preventDefault();
+});
+$("#vClose").addEventListener("click", fecharVideo);
+vOv.addEventListener("click", e => { if (e.target === vOv) fecharVideo(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && vOv.classList.contains("open")) fecharVideo(); });
+
+/* Card de captura: 7 segundos, uma vez por visita */
+const overlay = $("#overlay");
+let ultimoFoco = null;
+function abrirCard() {
+  ultimoFoco = document.activeElement;
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden", "false");
+  $("#kNome").focus();
+}
+function fecharCard() {
+  overlay.classList.remove("open");
+  overlay.setAttribute("aria-hidden", "true");
+  if (ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
+}
+let jaViu = false;
+try { jaViu = sessionStorage.getItem("capturaVista") === "1"; } catch (e) {}
+if (!jaViu) {
+  const mostrarCard = () => {
+    if (vOv.classList.contains("open")) { setTimeout(mostrarCard, 5000); return; }
+    abrirCard();
+    try { sessionStorage.setItem("capturaVista", "1"); } catch (e) {}
+  };
+  setTimeout(mostrarCard, 7000);
+}
+$("#capClose").addEventListener("click", fecharCard);
+overlay.addEventListener("click", e => { if (e.target === overlay) fecharCard(); });
+document.addEventListener("keydown", e => {
+  if (!overlay.classList.contains("open")) return;
+  if (e.key === "Escape") fecharCard();
+  if (e.key === "Tab") { /* mantém o foco dentro do card */
+    const f = [...overlay.querySelectorAll("button,input")].filter(x => x.offsetParent !== null);
+    if (!f.length) return;
+    const p = f[0], u = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === p) { e.preventDefault(); u.focus(); }
+    else if (!e.shiftKey && document.activeElement === u) { e.preventDefault(); p.focus(); }
+  }
+});
+$("#capForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!$("#kNome").value.trim() || !/^\S+@\S+\.\S+$/.test($("#kEmail").value)) {
+    $("#kErr").textContent = "Informe seu nome e um e-mail válido.";
+    return;
+  }
+  const agora = new Date(), hoje = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2, "0") + "-" + String(agora.getDate()).padStart(2, "0");
+  try {
+    await BANCO.enviarContato({ nome: $("#kNome").value.trim().slice(0, 120), email: $("#kEmail").value.trim().slice(0, 200), obs: "Pediu o mídia kit pelo site", situacao: "lead", ultimo_contato: hoje });
+  } catch (erro) {
+    $("#kErr").textContent = "Não consegui enviar agora. Tente de novo em instantes.";
+    return;
+  }
+  $("#capBody").style.display = "none";
+  $("#capOk").classList.add("show");
+  setTimeout(fecharCard, 2600);
+});</script>
+</body>
+</html>
