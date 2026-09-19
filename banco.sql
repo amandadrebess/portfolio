@@ -272,3 +272,36 @@ insert into public.campanhas (campanha, cliente, tipo, status, qtd, valor, prazo
 select 'Campanha de exemplo', 'Marca Exemplo', 'Conteúdo', 'Briefing', 1, 0,
        current_date + 7, 'pendente', true, false, true
 where not exists (select 1 from public.campanhas);
+
+-- =====================================================================
+-- BLOCO 6: CUPONS DAS MARCAS
+-- Os cupons que você divulga: marca, nome do cupom, link, desconto,
+-- validade e se está ativo. Trancado como as outras: só você lê e escreve.
+-- =====================================================================
+create table if not exists public.cupons (
+  id         uuid primary key default gen_random_uuid(),
+  marca      text not null,
+  cupom      text not null,
+  link       text,
+  desconto   text,
+  validade   date,
+  ativo      boolean not null default true,
+  obs        text,
+  exemplo    boolean not null default false,
+  criado_em  timestamptz not null default now()
+);
+
+alter table public.cupons enable row level security;
+
+drop policy if exists "so_amanda" on public.cupons;
+create policy "so_amanda" on public.cupons
+  for all to authenticated
+  using (public.eh_amanda()) with check (public.eh_amanda());
+
+revoke all on public.cupons from anon;
+grant select, insert, update, delete on public.cupons to authenticated;
+
+insert into public.cupons (marca, cupom, link, desconto, validade, ativo, obs, exemplo)
+select 'Marca Exemplo', 'EXEMPLO10', 'https://marcaexemplo.com/?cupom=EXEMPLO10', '10%',
+       current_date + 30, true, 'Linha de exemplo. Pode apagar.', true
+where not exists (select 1 from public.cupons);
