@@ -151,10 +151,21 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
   position:relative;z-index:2;margin:14px;padding:6px 12px;border-radius:999px;font-size:.74rem;font-weight:500;
   background:rgba(31,42,68,.8);color:#fff;border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px);
 }
-.hero-photo{--c:#ffe680;--c2:#ee8fc0;--c3:#1160b8;aspect-ratio:4/5;width:100%;max-width:330px;margin-inline:auto;border:3px solid #fff;box-shadow:0 0 0 8px #ffe680;transform:rotate(2deg)}
-.hero-photo-wrap{position:relative}
-.hero-photo img{transform-origin:50% 100%;animation:baila 3.2s ease-in-out infinite}
-@keyframes baila{0%,100%{transform:scale(1.03) rotate(0)}25%{transform:scale(1.03) rotate(-1.2deg) translateY(-3px)}50%{transform:scale(1.03) rotate(0) translateY(0)}75%{transform:scale(1.03) rotate(1.2deg) translateY(-3px)}}
+.hero-photo{--c:#ffe680;--c2:#ee8fc0;--c3:#1160b8;aspect-ratio:2/3;width:100%;max-width:300px;margin-inline:auto;border:3px solid #fff;box-shadow:0 0 0 8px #ffe680;transform:rotate(2deg)}
+.hero-photo-wrap{position:relative;container-type:inline-size}
+.hero-photo img{transform-origin:50% 100%;animation:arremessa 1.2s ease-in-out infinite}
+@keyframes arremessa{0%{transform:scale(1.05) rotate(-1.6deg) translateY(-1%)}25%{transform:scale(1.02) rotate(0) translateY(0)}50%{transform:scale(1.05) rotate(1.6deg) translateY(-1%)}75%{transform:scale(1.02) rotate(0) translateY(0)}100%{transform:scale(1.05) rotate(-1.6deg) translateY(-1%)}}
+/* caixas de "recebidos" sendo jogadas das mãos em direção a quem olha */
+.caixa{position:absolute;z-index:4;left:calc(var(--sx)*1%);top:calc(var(--sy)*1%);width:calc(var(--t)*1cqw);aspect-ratio:1;pointer-events:none;opacity:0;animation:caixaVoa 3.6s linear infinite;animation-delay:calc(var(--d)*1s);filter:drop-shadow(0 3px 3px rgba(31,42,68,.25))}
+.caixa svg{display:block;width:100%;height:100%}
+@keyframes caixaVoa{
+ 0%{transform:translate(-50%,-50%) translate(0,0) scale(.25) rotate(0);opacity:0}
+ 6%{opacity:1}
+ 30%{transform:translate(-50%,-50%) translate(calc(var(--dx)*.5cqw),-14cqw) scale(.75) rotate(calc(var(--r)*.35deg))}
+ 62%{transform:translate(-50%,-50%) translate(calc(var(--dx)*.9cqw),14cqw) scale(1.05) rotate(calc(var(--r)*.7deg));opacity:1}
+ 88%{opacity:1}
+ 100%{transform:translate(-50%,-50%) translate(calc(var(--dx)*1cqw),58cqw) scale(1.25) rotate(calc(var(--r)*1deg));opacity:0}
+}
 .balao{position:absolute;z-index:3;top:4%;left:-6%;background:#fff;color:#1f2a44;border:3px solid #1f2a44;border-radius:18px;padding:8px 14px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(.85rem,2vw,1.05rem);letter-spacing:.02em;box-shadow:4px 4px 0 #ee8fc0;transform-origin:85% 100%;animation:balaoPop 6s ease-in-out infinite;pointer-events:none}
 .balao::after{content:"";position:absolute;right:22px;bottom:-14px;width:18px;height:18px;background:#fff;border-right:3px solid #1f2a44;border-bottom:3px solid #1f2a44;transform:rotate(45deg) skew(8deg,8deg)}
 @keyframes balaoPop{0%,8%{transform:scale(0) rotate(-8deg);opacity:0}16%{transform:scale(1.18) rotate(3deg);opacity:1}22%,80%{transform:scale(1) rotate(-2deg);opacity:1}90%,100%{transform:scale(0) rotate(-8deg);opacity:0}}
@@ -369,7 +380,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
   .bf-num{animation:none}
 }
 .menu a.bf-link{background:#d21f31;color:#fff;border-radius:999px}
-@media (prefers-reduced-motion:reduce){.hero-photo img{animation:none}.balao{animation:none;transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.hero-photo img{animation:none}.caixa{display:none}.balao{animation:none;transform:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -417,7 +428,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
       </div>
       <div class="hero-photo-wrap reveal">
         <!-- FOTO DA CAPA: para trocar, substitua o arquivo foto-capa.jpg (formato 4:5, 800x1000) no repositório, ou mude o endereço do src abaixo -->
-        <figure class="ph hero-photo" style="margin:0 auto"><img src="foto-capa.jpg" alt="Amanda Drebes de vestido jeans e tênis vermelho, falando em um telefone vermelho antigo" width="800" height="1000" fetchpriority="high"></figure>
+        <figure class="ph hero-photo" style="margin:0 auto"><img src="foto-capa-lancando.jpg" alt="Amanda Drebes rindo, de blazer preto e saia prata, com as mãos para frente como se jogasse caixas" width="900" height="1348" fetchpriority="high"></figure>
         <span class="balao" aria-hidden="true">TÔ PRONTA!</span>
         <span class="sticker">Curitiba, Brasil</span>
       </div>
@@ -1040,6 +1051,21 @@ $("#capForm").addEventListener("submit", async e => {
   /* a altura da faixa empurra o menu para baixo */
   const ajustar = () => document.documentElement.style.setProperty("--faixa-h", faixa.offsetHeight + "px");
   ajustar(); window.addEventListener("resize", ajustar);
+})();
+/* Caixas de recebidos voando das mãos da Amanda (só enfeite; some com "reduzir movimento") */
+(function () {
+  const wrap = document.querySelector(".hero-photo-wrap"); if (!wrap) return;
+  const cores = [["#f7d117", "#d29a00"], ["#ee8fc0", "#d86aa5"], ["#4c93dc", "#1160b8"], ["#f78a5e", "#f05a28"]];
+  /* sx e sy: de onde sai (mão esquerda ou direita, em % da foto). dx: para que lado vai. r: giro. t: tamanho. d: atraso. */
+  const lista = [
+    { sx: 41, sy: 47, dx: -38, r: -200, t: 12, d: 0 }, { sx: 69, sy: 48, dx: 34, r: 180, t: 13, d: .6 },
+    { sx: 41, sy: 47, dx: -14, r: 140, t: 11, d: 1.2 }, { sx: 69, sy: 48, dx: 12, r: -160, t: 12, d: 1.8 },
+    { sx: 42, sy: 47, dx: -52, r: -120, t: 10, d: 2.4 }, { sx: 68, sy: 48, dx: 50, r: 220, t: 11, d: 3 }
+  ];
+  const caixaSvg = c => '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="15" width="38" height="29" rx="3" fill="' + c[0] + '" stroke="#1f2a44" stroke-width="2.5"/>' +
+    '<path d="M5 15l6-9h26l6 9z" fill="' + c[1] + '" stroke="#1f2a44" stroke-width="2.5" stroke-linejoin="round"/><rect x="20" y="6" width="8" height="38" fill="rgba(255,255,255,.7)"/>' +
+    '<path d="M31 30h7M31 35h5" stroke="#1f2a44" stroke-width="2" stroke-linecap="round"/></svg>';
+  wrap.insertAdjacentHTML("beforeend", lista.map((b, i) => '<span class="caixa" aria-hidden="true" style="--sx:' + b.sx + ";--sy:" + b.sy + ";--dx:" + b.dx + ";--r:" + b.r + ";--t:" + b.t + ";--d:" + b.d + '">' + caixaSvg(cores[i % cores.length]) + "</span>").join(""));
 })();</script>
 </body>
 </html>
