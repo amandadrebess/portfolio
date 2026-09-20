@@ -731,17 +731,35 @@ function dataDoTexto(v) {
   if (m) { let a = +m[3]; if (a < 100) a += 2000; const d = new Date(a, +m[2] - 1, +m[1]); return d.getMonth() === +m[2] - 1 && a > 1990 && a < 2100 ? iso(d) : null; }
   m = s.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? m[0] : null;
 }
-ACOES.importarMarcas = () => {
+/* Lê .xlsx/.xls: carrega a biblioteca de leitura só quando precisa (primeira aba). */
+function carregarLeitorExcel() {
+  if (window.XLSX) return Promise.resolve();
+  return new Promise((ok, falha) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";
+    s.onload = ok; s.onerror = () => falha(new Error("sem leitor")); document.head.appendChild(s);
+  });
+}
+async function lerExcel(buf) {
+  await carregarLeitorExcel();
+  const livro = XLSX.read(buf, { type: "array", cellDates: true });
+  const aba = livro.Sheets[livro.SheetNames[0]];
+  const l = XLSX.utils.sheet_to_json(aba, { header: 1, raw: false, defval: "", dateNF: "dd/mm/yyyy" });
+  return l.map(x => x.map(c => String(c === null || c === undefined ? "" : c))).filter(x => x.some(c => c.trim() !== ""));
+}ACOES.importarMarcas = () => {
   let linhas = [], cab = [];
   abrirModal("Importar planilha de marcas",
-    '<p class="nota">Salve a sua planilha como <b>CSV</b> (no Excel: Arquivo, Salvar como, CSV) e escolha o arquivo abaixo. Eu descubro sozinha quais colunas são nome, Instagram, e-mail e telefone. Marcas que já existem (mesmo e-mail ou mesmo nome) não são repetidas.</p>' +
-    '<div class="campo inteira"><label for="arqImp">Arquivo CSV</label><input id="arqImp" type="file" accept=".csv,.txt,text/csv"></div>' +
+    '<p class="nota">Escolha a sua planilha do <b>Excel (.xlsx)</b> ou um arquivo <b>CSV</b>. Se for do Excel, uso a primeira aba, e a primeira linha precisa ter os títulos das colunas. Eu descubro sozinha quais colunas são nome, Instagram, e-mail e telefone. Marcas que já existem (mesmo e-mail ou mesmo nome) não são repetidas.</p>' +
+    '<div class="campo inteira"><label for="arqImp">Arquivo da planilha (Excel ou CSV)</label><input id="arqImp" type="file" accept=".xlsx,.xls,.csv,.txt,text/csv"></div>' +
     '<div id="impCorpo"></div>', { largo: true });
   $("#arqImp").addEventListener("change", async ev => {
     const f = ev.target.files[0]; if (!f) return;
     const corpo = $("#impCorpo");
-    if (/\.xlsx?$/i.test(f.name)) { corpo.innerHTML = '<p class="erro-form">Esse arquivo é do Excel. Abra ele e use Arquivo, Salvar como, CSV. Depois escolha o novo arquivo aqui.</p>'; return; }
-    linhas = lerCSV(lerTextoArquivo(await f.arrayBuffer()));
+    if (/\.xls[xmb]?$/i.test(f.name)) {
+      corpo.innerHTML = '<p class="dica">Lendo a planilha do Excel...</p>';
+      try { linhas = await lerExcel(await f.arrayBuffer()); }
+      catch (e) { corpo.innerHTML = '<p class="erro-form">Não consegui abrir esse arquivo do Excel. Se ele tiver senha, tire a senha, ou salve como CSV e tente de novo.</p>'; return; }
+    } else linhas = lerCSV(lerTextoArquivo(await f.arrayBuffer()));
     if (linhas.length < 2) { corpo.innerHTML = '<p class="erro-form">Não encontrei linhas nessa planilha. A primeira linha precisa ter os títulos das colunas.</p>'; return; }
     cab = linhas.shift().map(x => String(x).trim());
     const chute = CAMPOS_IMPORTAR.map(c => adivinharColuna(cab, c));
