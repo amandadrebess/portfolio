@@ -62,7 +62,8 @@ const ICONES = {
   edit: '<path d="M4 20h4l10-10-4-4L4 16v4z"/><path d="M13 7l4 4"/>',
   trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/>',
   download: '<path d="M12 4v11M7 11l5 5 5-5M4 20h16"/>',
-  tag: '<path d="M3 12V4h8l9 9-8 8-9-9zM7.5 8.5h.01"/>', d="M12 16V5M7 9l5-4 5 4M4 20h16"/>',
+  tag: '<path d="M3 12V4h8l9 9-8 8-9-9zM7.5 8.5h.01"/>',
+  upload: '<path d="M12 16V5M7 9l5-4 5 4M4 20h16"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
   star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
   grip: '<circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/>',
@@ -214,7 +215,7 @@ const estado = {
   problemas: {} /* tabela -> aviso. Se faltar tabela ou campo, o painel avisa e segue funcionando. */
 };
 const ui = {
-  vBusca: "", cupBusca: "", cupFiltro: "ativos", mBusca: "", mFiltro: "todas", mNicho: "todos", cBusca: "", cFiltro: "todas", cOrdem: { col: "prazo", dir: 1 },
+  vBusca: "", cupBusca: "", cupFiltro: "ativos", mBusca: "", mFiltro: "todas", mNicho: "todos", mFav: false, cBusca: "", cFiltro: "todas", cOrdem: { col: "prazo", dir: 1 },
   calFiltro: "todos", cal: { ano: new Date().getFullYear(), mes: new Date().getMonth() },
   cl: { sub: "checklist", abertos: {}, estilo: "todos", aud: "todas" }, revisao: {}
 };
@@ -636,11 +637,12 @@ CAMPOS.mNicho = el => { ui.mNicho = el.value; desenharListaMarcas(); };
 function marcasFiltradas() {
   const q = ui.mBusca.trim().toLowerCase();
   return estado.marcas.filter(m => {
+    if (ui.mFav && !m.favorita) return false;
     if (ui.mFiltro !== "todas" && m.situacao !== ui.mFiltro) return false;
     if (ui.mNicho !== "todos" && (ui.mNicho === "sem" ? !!m.nicho : norm(m.nicho) !== norm(ui.mNicho))) return false;
     if (!q) return true;
     return [m.nome, m.instagram, m.email].some(x => String(x || "").toLowerCase().indexOf(q) > -1);
-  });
+  }).map((m, i) => ({ m, i })).sort((a, b) => (b.m.favorita ? 1 : 0) - (a.m.favorita ? 1 : 0) || a.i - b.i).map(x => x.m);
 }
 
 function desenharListaMarcas() {
@@ -648,11 +650,12 @@ function desenharListaMarcas() {
   $("#contaMarcas").textContent = plural(lista.length, "marca", "marcas");
   if (!estado.marcas.length) { $("#listaMarcas").innerHTML = '<p class="vazio">Nenhuma marca ainda. Clique em "Adicionar marca" ou espere chegar um contato pelo formulário do site.</p>'; return; }
   if (!lista.length) { $("#listaMarcas").innerHTML = '<p class="vazio">Nenhuma marca encontrada com esse filtro.</p>'; return; }
-  $("#listaMarcas").innerHTML = '<div class="rolagem"><table class="tabela"><thead><tr><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th><th>Observação</th><th>Último contato</th></tr></thead><tbody>' +
+  $("#listaMarcas").innerHTML = '<div class="rolagem"><table class="tabela"><thead><tr><th style="width:28px"></th><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th><th>Observação</th><th>Último contato</th></tr></thead><tbody>' +
     lista.map(m => {
       const insta = usuarioInsta(m.instagram), zap = linkWhats(m.telefone);
       const sit = (SITUACOES.find(s => s[0] === m.situacao) || [m.situacao, m.situacao || ""])[1];
-      return '<tr class="clicavel" data-acao="editarMarca" data-id="' + esc(m.id) + '">' +
+      return '<tr class="clicavel' + (m.favorita ? " fav" : "") + '" data-acao="editarMarca" data-id="' + esc(m.id) + '">' +
+        '<td><button type="button" class="icone-btn estrela' + (m.favorita ? " on" : "") + '" data-acao="favoritarMarca" data-id="' + esc(m.id) + '" title="' + (m.favorita ? "Tirar dos favoritos" : "Favoritar") + '" aria-label="' + (m.favorita ? "Tirar dos favoritos" : "Favoritar") + '">' + ic("star", !!m.favorita) + "</button></td>" +
         "<td><b>" + esc(m.nome) + "</b>" + etiquetaExemplo(m) + "</td>" +
         "<td>" + (m.nicho ? pill("nicho", m.nicho) : "") + "</td>" +
         "<td>" + (insta ? '<a class="discreto" href="https://instagram.com/' + esc(insta) + '" target="_blank" rel="noopener">@' + esc(insta) + "</a>" : "") + "</td>" +
@@ -672,6 +675,7 @@ function telaMarcas() {
     SITUACOES.map(s => '<option value="' + s[0] + '"' + (ui.mFiltro === s[0] ? " selected" : "") + ">" + s[1] + "</option>").join("") + "</select>" +
     '<select class="sel" data-campo="mNicho" data-evento="change" aria-label="Filtrar por nicho"><option value="todos">Todos os nichos</option><option value="sem"' + (ui.mNicho === "sem" ? " selected" : "") + '>Sem nicho</option>' + nichosUsados().map(n => '<option value="' + esc(n) + '"' + (norm(ui.mNicho) === norm(n) ? " selected" : "") + ">" + esc(n) + "</option>").join("") + "</select>" +
     '<span class="dica" id="contaMarcas" style="margin:0"></span><span class="espaco"></span>' +
+    '<button class="btn' + (ui.mFav ? " amarelo" : "") + '" data-acao="soFavoritas" aria-pressed="' + ui.mFav + '">' + ic("star", ui.mFav) + "Favoritas</button>" +
     '<button class="btn" data-acao="separarNichos">' + ic("tag") + "Separar por nichos</button>" +
     '<button class="btn" data-acao="importarMarcas">' + ic("upload") + "Importar planilha</button>" +
     '<button class="btn" data-acao="baixarMarcas">' + ic("download") + "Baixar CSV</button>" +
@@ -711,8 +715,8 @@ ACOES.baixarMarcas = () => {
   const lista = marcasFiltradas();
   if (!lista.length) { avisar("Não há marcas para baixar", "erro"); return; }
   baixarCSV("marcas-" + hojeISO() + ".csv",
-    ["Marca", "Nicho", "Instagram", "E-mail", "Telefone", "Situação", "Observação", "Último contato"],
-    lista.map(m => [m.nome, m.nicho, m.instagram, m.email, m.telefone, (SITUACOES.find(s => s[0] === m.situacao) || ["", m.situacao])[1], m.obs, fmtData(m.ultimo_contato)]));
+    ["Marca", "Nicho", "Instagram", "E-mail", "Telefone", "Situação", "Observação", "Último contato", "Favorita"],
+    lista.map(m => [m.nome, m.nicho, m.instagram, m.email, m.telefone, (SITUACOES.find(s => s[0] === m.situacao) || ["", m.situacao])[1], m.obs, fmtData(m.ultimo_contato), m.favorita ? "Sim" : ""]));
 };
 /* ---- IMPORTAR PLANILHA (CSV) PARA A ABA MARCAS ---- */
 const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9@ ]/g, " ").replace(/\s+/g, " ").trim();
@@ -782,7 +786,14 @@ async function lerExcel(buf) {
   const aba = livro.Sheets[livro.SheetNames[0]];
   const l = XLSX.utils.sheet_to_json(aba, { header: 1, raw: false, defval: "", dateNF: "dd/mm/yyyy" });
   return l.map(x => x.map(c => String(c === null || c === undefined ? "" : c))).filter(x => x.some(c => c.trim() !== ""));
-}ACOES.separarNichos = () => {
+}ACOES.favoritarMarca = (el, e) => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  const m = estado.marcas.find(x => String(x.id) === el.dataset.id); if (!m) return;
+  if (!("favorita" in m)) { avisar("Falta rodar o bloco 8 do banco.sql no Supabase para usar favoritas", "erro"); return; }
+  const novo = !m.favorita;
+  atualizarCampo("marcas", m.id, { favorita: novo }).then(ok => { if (!ok) return; m.favorita = novo; desenharListaMarcas(); avisar(novo ? "Marca favoritada" : "Marca tirada dos favoritos"); });
+};
+ACOES.soFavoritas = () => { ui.mFav = !ui.mFav; telaMarcas(); };ACOES.separarNichos = () => {
   if (!estado.marcas.length) { avisar("Ainda não há marcas", "erro"); return; }
   if (!("nicho" in estado.marcas[0])) { abrirModal("Falta um passo no banco", '<p class="nota">Para separar por nichos, rode uma vez o bloco 7 do arquivo banco.sql no Supabase (SQL Editor). Depois atualize esta página.</p><div class="rodape-modal"><span class="espaco"></span><button type="button" class="btn amarelo" id="fechaAviso">Entendi</button></div>'); $("#fechaAviso").addEventListener("click", fecharModal); return; }
   const sem = estado.marcas.filter(m => !m.nicho);
@@ -853,7 +864,7 @@ async function lerExcel(buf) {
       });
       $("#impPrevia").innerHTML = '<p class="nota" style="margin-top:10px"><b>' + plural(novas.length, "marca será importada", "marcas serão importadas") + "</b>" +
         (repetidas ? ", " + plural(repetidas, "já existe e será pulada", "já existem e serão puladas") : "") + (vazias ? ", " + plural(vazias, "linha sem nome será ignorada", "linhas sem nome serão ignoradas") : "") + ".</p>" +
-        (novas.length ? '<div class="rolagem"><table class="tabela"><thead><tr><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th></tr></thead><tbody>' +
+        (novas.length ? '<div class="rolagem"><table class="tabela"><thead><tr><th style="width:28px"></th><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th></tr></thead><tbody>' +
           novas.slice(0, 5).map(n => "<tr><td>" + esc(n.nome) + "</td><td>" + esc(n.nicho || "") + "</td><td>" + esc(n.instagram ? "@" + n.instagram : "") + "</td><td>" + esc(n.email || "") + "</td><td>" + esc(n.telefone || "") + "</td><td>" + esc((SITUACOES.find(s => s[0] === n.situacao) || ["", ""])[1]) + "</td></tr>").join("") + "</tbody></table></div>" +
           (novas.length > 5 ? '<p class="dica">Mostrando as 5 primeiras.</p>' : "") : "");
       return novas;
