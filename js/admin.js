@@ -62,7 +62,7 @@ const ICONES = {
   edit: '<path d="M4 20h4l10-10-4-4L4 16v4z"/><path d="M13 7l4 4"/>',
   trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/>',
   download: '<path d="M12 4v11M7 11l5 5 5-5M4 20h16"/>',
-  upload: '<path d="M12 16V5M7 9l5-4 5 4M4 20h16"/>',
+  tag: '<path d="M3 12V4h8l9 9-8 8-9-9zM7.5 8.5h.01"/>', d="M12 16V5M7 9l5-4 5 4M4 20h16"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
   star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
   grip: '<circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/>',
@@ -617,9 +617,9 @@ const PALAVRAS_NICHO = [
   ["Alimentos e bebidas", /aliment|food|cafe|chocolate|snack|doce|bebida|suco|vinho|cerveja|restaurante|padaria|gourmet|sabor/],
   ["Fitness e saúde", /fitness|gym|academia|treino|esporte|sport|yoga|saude|bem estar|clinic/],
   ["Suplementos", /suplement|whey|creatina|vitamina|colageno|nutri|protein/],
-  ["Pet", /pet|dog|gato|racao|vet/],
+  ["Pet", /\b(pet|pets|petshop|dog|gato|racao|vet)\b/],
   ["Infantil", /baby|bebe|infantil|kids|crianca|materni|fralda/],
-  ["Tecnologia e apps", /app|tech|tecno|digital|software|plataforma|eletro|celular|gadget|smart|oster|philips/],
+  ["Tecnologia e apps", /\bapp\b|\bapps\b|tech|tecno|digital|software|plataforma|eletro|celular|gadget|smart|oster|philips/],
   ["Serviços e finanças", /banco|credit|financ|seguro|cartao|pagament|consult|servic|curso|escola|agencia/]
 ];
 function nichoDoTexto(txt) {
@@ -672,7 +672,7 @@ function telaMarcas() {
     SITUACOES.map(s => '<option value="' + s[0] + '"' + (ui.mFiltro === s[0] ? " selected" : "") + ">" + s[1] + "</option>").join("") + "</select>" +
     '<select class="sel" data-campo="mNicho" data-evento="change" aria-label="Filtrar por nicho"><option value="todos">Todos os nichos</option><option value="sem"' + (ui.mNicho === "sem" ? " selected" : "") + '>Sem nicho</option>' + nichosUsados().map(n => '<option value="' + esc(n) + '"' + (norm(ui.mNicho) === norm(n) ? " selected" : "") + ">" + esc(n) + "</option>").join("") + "</select>" +
     '<span class="dica" id="contaMarcas" style="margin:0"></span><span class="espaco"></span>' +
-    '<button class="btn" data-acao="importarMarcas">' + ic("upload") + "Importar planilha</button>" +
+    '<button class="btn" data-acao="separarNichos">' + ic("tag") + "Separar por nichos</button>" +' + ic("upload") + "Importar planilha</button>" +
     '<button class="btn" data-acao="baixarMarcas">' + ic("download") + "Baixar CSV</button>" +
     '<button class="btn amarelo" data-acao="novaMarca">' + ic("plus") + "Adicionar marca</button></div>" +
     '<div id="listaMarcas"></div></div>';
@@ -781,7 +781,34 @@ async function lerExcel(buf) {
   const aba = livro.Sheets[livro.SheetNames[0]];
   const l = XLSX.utils.sheet_to_json(aba, { header: 1, raw: false, defval: "", dateNF: "dd/mm/yyyy" });
   return l.map(x => x.map(c => String(c === null || c === undefined ? "" : c))).filter(x => x.some(c => c.trim() !== ""));
-}ACOES.importarMarcas = () => {
+}ACOES.separarNichos = () => {
+  if (!estado.marcas.length) { avisar("Ainda não há marcas", "erro"); return; }
+  if (!("nicho" in estado.marcas[0])) { abrirModal("Falta um passo no banco", '<p class="nota">Para separar por nichos, rode uma vez o bloco 7 do arquivo banco.sql no Supabase (SQL Editor). Depois atualize esta página.</p><div class="rodape-modal"><span class="espaco"></span><button type="button" class="btn amarelo" id="fechaAviso">Entendi</button></div>'); $("#fechaAviso").addEventListener("click", fecharModal); return; }
+  const sem = estado.marcas.filter(m => !m.nicho);
+  const palpites = sem.map(m => ({ m, n: nichoDoTexto(m.nome + " " + (m.instagram || "")) }));
+  const achou = palpites.filter(x => x.n), contagem = {};
+  achou.forEach(x => { contagem[x.n] = (contagem[x.n] || 0) + 1; });
+  abrirModal("Separar marcas por nichos",
+    '<p class="nota">Eu olho o nome e o @ de cada marca sem nicho e sugiro um nicho. É um palpite: depois você corrige o que estiver errado clicando na marca. Marcas em que eu não tiver certeza ficam em "Sem nicho".</p>' +
+    (sem.length ? '<p><b>' + plural(achou.length, "marca ganha um nicho", "marcas ganham um nicho") + "</b> de " + sem.length + " sem nicho.</p>" +
+      (achou.length ? '<div class="rolagem"><table class="tabela"><thead><tr><th>Nicho</th><th>Marcas</th></tr></thead><tbody>' + Object.keys(contagem).sort((a, b) => contagem[b] - contagem[a]).map(k => "<tr><td>" + esc(k) + "</td><td>" + contagem[k] + "</td></tr>").join("") + "</tbody></table></div>" : "") : '<p class="vazio">Todas as marcas já têm nicho.</p>') +
+    '<p class="erro-form" id="nichoErro" role="alert"></p><div class="rodape-modal"><span class="espaco"></span><button type="button" class="btn" id="nichoCancela">Fechar</button>' + (achou.length ? '<button type="button" class="btn amarelo" id="nichoAplica">Aplicar nichos</button>' : "") + "</div>");
+  $("#nichoCancela").addEventListener("click", fecharModal);
+  if (!achou.length) return;
+  $("#nichoAplica").addEventListener("click", async () => {
+    const b = $("#nichoAplica"); b.disabled = true; b.textContent = "Aplicando...";
+    try {
+      for (const k of Object.keys(contagem)) {
+        const ids = achou.filter(x => x.n === k).map(x => x.m.id);
+        for (let i = 0; i < ids.length; i += 100) {
+          const r = await db.from("marcas").update({ nicho: k }).in("id", ids.slice(i, i + 100));
+          if (r.error) throw new Error(traduzirErro(r.error, "marcas"));
+        }
+      }
+      fecharModal(); await carregar(["marcas"]); desenhar(); avisar(plural(achou.length, "marca separada por nicho", "marcas separadas por nicho"));
+    } catch (e) { $("#nichoErro").textContent = e.message || "Não consegui aplicar."; b.disabled = false; b.textContent = "Aplicar nichos"; }
+  });
+};ACOES.importarMarcas = () => {
   let linhas = [], cab = [];
   abrirModal("Importar planilha de marcas",
     '<p class="nota">Escolha a sua planilha do <b>Excel (.xlsx)</b> ou um arquivo <b>CSV</b>. Se for do Excel, uso a primeira aba, e a primeira linha precisa ter os títulos das colunas. Eu descubro sozinha quais colunas são nome, Instagram, e-mail e telefone. Marcas que já existem (mesmo e-mail ou mesmo nome) não são repetidas.</p>' +
@@ -821,7 +848,7 @@ async function lerExcel(buf) {
         if ((chave && existentes.has(chave)) || (!chave && nomes.has(norm(nome)))) { repetidas++; return; }
         if (chave) existentes.add(chave); else nomes.add(norm(nome));
         novas.push({ nome: nome.slice(0, 200), instagram: insta ? insta.slice(0, 100) : null, email: email ? email.slice(0, 200) : null, telefone: pega(l, "telefone").slice(0, 60) || null,
-          nicho: (pega(l, "nicho") || (adivinha ? nichoDoTexto(nome + " " + insta + " " + obs) : "") || "").slice(0, 60) || null, situacao: situacaoDoTexto(pega(l, "situacao"), padrao), obs: obs ? obs.slice(0, 2000) : null, ultimo_contato: dataDoTexto(pega(l, "ultimo_contato")), exemplo: false });
+          nicho: (pega(l, "nicho") || (adivinha ? nichoDoTexto(nome + " " + insta) : "") || "").slice(0, 60) || null, situacao: situacaoDoTexto(pega(l, "situacao"), padrao), obs: obs ? obs.slice(0, 2000) : null, ultimo_contato: dataDoTexto(pega(l, "ultimo_contato")), exemplo: false });
       });
       $("#impPrevia").innerHTML = '<p class="nota" style="margin-top:10px"><b>' + plural(novas.length, "marca será importada", "marcas serão importadas") + "</b>" +
         (repetidas ? ", " + plural(repetidas, "já existe e será pulada", "já existem e serão puladas") : "") + (vazias ? ", " + plural(vazias, "linha sem nome será ignorada", "linhas sem nome serão ignoradas") : "") + ".</p>" +
