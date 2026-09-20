@@ -302,13 +302,49 @@ function irPara(aba) {
   desenhar();
 }
 
+/* ---- AVISO DE CONTATO NOVO PELO SITE (formulário de contato e pedido do mídia kit) ----
+   "Visto até" fica guardado neste navegador. Na primeira vez, o que já existe conta como visto. */
+const CHAVE_VISTOS = "contatosVistosAte";
+function vistosAte() {
+  try {
+    let v = localStorage.getItem(CHAVE_VISTOS);
+    if (!v) { v = new Date().toISOString(); localStorage.setItem(CHAVE_VISTOS, v); }
+    return v;
+  } catch (e) { return new Date().toISOString(); }
+}
+function novosDoSite() {
+  const ate = vistosAte();
+  return estado.marcas.filter(m => !m.exemplo && m.situacao === "lead" && /pelo site/i.test(m.obs || "") && String(m.criado_em || "") > ate)
+    .sort((a, b) => String(b.criado_em).localeCompare(String(a.criado_em)));
+}
+function motivoDoContato(m) { return /mídia kit/i.test(m.obs || "") ? "Pediu o mídia kit" : "Mandou uma mensagem"; }
+
 function desenharAvisos() {
   const chaves = Object.keys(estado.problemas);
-  $("#avisos").innerHTML = chaves.length
-    ? '<div class="aviso-banco" role="alert"><b>Atenção: faltou alguma coisa no banco.</b> O resto do painel continua funcionando.<ul>' +
-      chaves.map(k => "<li>" + esc(estado.problemas[k]) + "</li>").join("") + "</ul></div>"
-    : "";
+  const novos = novosDoSite();
+  let html = "";
+  if (novos.length) {
+    html += '<div class="aviso-novo" role="status"><b>' + (novos.length === 1 ? "Novo contato pelo site" : novos.length + " novos contatos pelo site") + "</b><ul>" +
+      novos.slice(0, 3).map(m => "<li><b>" + esc(m.nome) + "</b>" + (m.email ? " (" + esc(m.email) + ")" : "") + " · " + motivoDoContato(m) + "</li>").join("") +
+      (novos.length > 3 ? "<li>e mais " + (novos.length - 3) + "</li>" : "") + '</ul><div class="acoes-aviso">' +
+      '<button type="button" class="btn pequeno amarelo" data-acao="verNovosContatos">Ver em Marcas</button>' +
+      '<button type="button" class="btn pequeno" data-acao="marcarVistos">Marcar como visto</button></div></div>';
+  }
+  if (chaves.length) {
+    html += '<div class="aviso-banco" role="alert"><b>Atenção: faltou alguma coisa no banco.</b> O resto do painel continua funcionando.<ul>' +
+      chaves.map(k => "<li>" + esc(estado.problemas[k]) + "</li>").join("") + "</ul></div>";
+  }
+  $("#avisos").innerHTML = html;
+  /* bolinha no menu Marcas e número no título da aba do navegador */
+  const item = $('.item[data-aba="marcas"]');
+  if (item) { let s = item.querySelector(".selo"); if (!s) { s = document.createElement("span"); s.className = "selo"; item.appendChild(s); } s.textContent = novos.length || ""; s.hidden = !novos.length; }
+  document.title = (novos.length ? "(" + novos.length + ") " : "") + document.title.replace(/^\(\d+\) /, "");
 }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-acao='verNovosContatos'],[data-acao='marcarVistos']"); if (!b) return;
+  if (b.dataset.acao === "verNovosContatos") location.hash = "marcas";
+  else { try { localStorage.setItem(CHAVE_VISTOS, new Date().toISOString()); } catch (x) {} desenharAvisos(); if (estado.aba === "marcas") desenharListaMarcas(); }
+});
 
 /* Se uma tela der erro, ela avisa e as outras continuam abrindo. Nunca fica em branco. */
 function desenhar() {
@@ -327,6 +363,7 @@ async function atualizarTudo(silencioso) {
   atualizando = true;
   try {
     await carregar();
+    desenharAvisos(); /* o aviso de contato novo aparece mesmo se você estiver digitando */
     const digitando = /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "");
     const janelaAberta = $("#fundoModal").classList.contains("aberto");
     if (!silencioso || (!digitando && !janelaAberta)) desenhar();
@@ -671,6 +708,7 @@ function desenharListaMarcas() {
   $("#contaMarcas").textContent = plural(lista.length, "marca", "marcas");
   if (!estado.marcas.length) { $("#listaMarcas").innerHTML = '<p class="vazio">Nenhuma marca ainda. Clique em "Adicionar marca" ou espere chegar um contato pelo formulário do site.</p>'; return; }
   if (!lista.length) { $("#listaMarcas").innerHTML = '<p class="vazio">Nenhuma marca encontrada com esse filtro.</p>'; return; }
+  const novosSite = new Set(novosDoSite().map(m => m.id));
   $("#listaMarcas").innerHTML = '<div class="rolagem"><table class="tabela"><thead><tr><th style="width:26px" title="Selecionar para o disparo"></th><th style="width:28px"></th><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th><th>Observação</th><th>Último contato</th></tr></thead><tbody>' +
     lista.map(m => {
       const insta = usuarioInsta(m.instagram), zap = linkWhats(m.telefone);
@@ -679,7 +717,7 @@ function desenharListaMarcas() {
       return '<tr class="clicavel' + (m.favorita ? " fav" : "") + '" data-acao="editarMarca" data-id="' + esc(m.id) + '">' +
         '<td><input type="checkbox" class="caixa-sel" data-acao="selecionarMarca" data-id="' + esc(m.id) + '"' + (m.selecionada && temEmail ? " checked" : "") + (temEmail ? "" : ' disabled title="Esta marca não tem e-mail"') + ' aria-label="Selecionar ' + esc(m.nome) + ' para o disparo"></td>' +
         '<td><button type="button" class="icone-btn estrela' + (m.favorita ? " on" : "") + '" data-acao="favoritarMarca" data-id="' + esc(m.id) + '" title="' + (m.favorita ? "Tirar dos favoritos" : "Favoritar") + '" aria-label="' + (m.favorita ? "Tirar dos favoritos" : "Favoritar") + '">' + ic("star", !!m.favorita) + "</button></td>" +
-        "<td><b>" + esc(m.nome) + "</b>" + etiquetaExemplo(m) + "</td>" +
+        "<td><b>" + esc(m.nome) + "</b>" + etiquetaExemplo(m) + (novosSite.has(m.id) ? '<span class="pill p-novo">novo do site</span>' : "") + "</td>" +
         "<td>" + (m.nicho ? pill("nicho", m.nicho) : "") + "</td>" +
         "<td>" + (insta ? '<a class="discreto" href="https://instagram.com/' + esc(insta) + '" target="_blank" rel="noopener">@' + esc(insta) + "</a>" : "") + "</td>" +
         "<td>" + (m.email ? '<a class="discreto" href="mailto:' + esc(m.email) + '">' + esc(m.email) + "</a>" : "") + "</td>" +
