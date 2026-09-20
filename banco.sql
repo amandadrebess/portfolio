@@ -305,3 +305,6 @@ insert into public.cupons (marca, cupom, link, desconto, validade, ativo, obs, e
 select 'Marca Exemplo', 'EXEMPLO10', 'https://marcaexemplo.com/?cupom=EXEMPLO10', '10%',
        current_date + 30, true, 'Linha de exemplo. Pode apagar.', true
 where not exists (select 1 from public.cupons);
+
+-- BLOCO 7: nicho das marcas (pode rodar quantas vezes quiser)
+alter table public.marcas add column if not exists nicho text;
