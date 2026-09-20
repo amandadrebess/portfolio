@@ -280,7 +280,7 @@ async function atualizarCampo(tabela, id, valores) {
 /* ---------------------------------------------------------------
    INÍCIO DO PAINEL: menu, rotas e eventos
    --------------------------------------------------------------- */
-const TITULOS = { portfolio: "Portfólio", marcas: "Marcas", cupons: "Cupons", calendario: "Calendário", campanhas: "Campanhas", checklist: "Checklist portfólio" };
+const TITULOS = { portfolio: "Portfólio", marcas: "Marcas", prospeccao: "Prospecção", cupons: "Cupons", calendario: "Calendário", campanhas: "Campanhas", checklist: "Checklist portfólio" };
 const TELAS = {}; // preenchido mais abaixo: TELAS.portfolio = telaPortfolio ...
 
 async function iniciar(usuario) {
@@ -645,16 +645,39 @@ function marcasFiltradas() {
   }).map((m, i) => ({ m, i })).sort((a, b) => (b.m.favorita ? 1 : 0) - (a.m.favorita ? 1 : 0) || a.i - b.i).map(x => x.m);
 }
 
+/* Pega o primeiro e-mail que existir no campo (aceita "a@b.com; c@d.com" ou texto em volta). */
+function emailDe(v) {
+  const m = String(v || "").match(/[^\s@;,<>()"']+@[^\s@;,<>()"']+\.[^\s@;,<>()"']+/);
+  return m ? m[0].toLowerCase().replace(/[.]+$/, "") : "";
+}
+const temColunaSel = () => !estado.marcas.length || ("selecionada" in estado.marcas[0]);
+
+/* Resumo da seleção, no alto da tabela de marcas. */
+function desenharResumoSel() {
+  const alvo = $("#resumoSel"); if (!alvo) return;
+  const sel = estado.marcas.filter(m => m.selecionada && emailDe(m.email));
+  const vis = marcasFiltradas().filter(m => emailDe(m.email));
+  const faltam = vis.filter(m => !m.selecionada).length;
+  alvo.innerHTML = '<div class="resumo-sel"><b>' + plural(sel.length, "marca selecionada", "marcas selecionadas") + "</b>" +
+    '<span class="dica" style="margin:0">para o disparo de e-mails</span><span class="espaco"></span>' +
+    '<button type="button" class="btn pequeno" data-acao="selTodasFiltro"' + (faltam ? "" : " disabled") + ">Selecionar todas que aparecem (" + faltam + ")</button>" +
+    '<button type="button" class="btn pequeno" data-acao="limparSelecao"' + (sel.length ? "" : " disabled") + ">Limpar seleção</button>" +
+    '<button type="button" class="btn pequeno amarelo" data-acao="irProspeccao">' + ic("envelope") + "Ir para Prospecção</button></div>";
+}
+
 function desenharListaMarcas() {
+  desenharResumoSel();
   const lista = marcasFiltradas();
   $("#contaMarcas").textContent = plural(lista.length, "marca", "marcas");
   if (!estado.marcas.length) { $("#listaMarcas").innerHTML = '<p class="vazio">Nenhuma marca ainda. Clique em "Adicionar marca" ou espere chegar um contato pelo formulário do site.</p>'; return; }
   if (!lista.length) { $("#listaMarcas").innerHTML = '<p class="vazio">Nenhuma marca encontrada com esse filtro.</p>'; return; }
-  $("#listaMarcas").innerHTML = '<div class="rolagem"><table class="tabela"><thead><tr><th style="width:28px"></th><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th><th>Observação</th><th>Último contato</th></tr></thead><tbody>' +
+  $("#listaMarcas").innerHTML = '<div class="rolagem"><table class="tabela"><thead><tr><th style="width:26px" title="Selecionar para o disparo"></th><th style="width:28px"></th><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th><th>Observação</th><th>Último contato</th></tr></thead><tbody>' +
     lista.map(m => {
       const insta = usuarioInsta(m.instagram), zap = linkWhats(m.telefone);
       const sit = (SITUACOES.find(s => s[0] === m.situacao) || [m.situacao, m.situacao || ""])[1];
+      const temEmail = !!emailDe(m.email);
       return '<tr class="clicavel' + (m.favorita ? " fav" : "") + '" data-acao="editarMarca" data-id="' + esc(m.id) + '">' +
+        '<td><input type="checkbox" class="caixa-sel" data-acao="selecionarMarca" data-id="' + esc(m.id) + '"' + (m.selecionada && temEmail ? " checked" : "") + (temEmail ? "" : ' disabled title="Esta marca não tem e-mail"') + ' aria-label="Selecionar ' + esc(m.nome) + ' para o disparo"></td>' +
         '<td><button type="button" class="icone-btn estrela' + (m.favorita ? " on" : "") + '" data-acao="favoritarMarca" data-id="' + esc(m.id) + '" title="' + (m.favorita ? "Tirar dos favoritos" : "Favoritar") + '" aria-label="' + (m.favorita ? "Tirar dos favoritos" : "Favoritar") + '">' + ic("star", !!m.favorita) + "</button></td>" +
         "<td><b>" + esc(m.nome) + "</b>" + etiquetaExemplo(m) + "</td>" +
         "<td>" + (m.nicho ? pill("nicho", m.nicho) : "") + "</td>" +
@@ -680,7 +703,7 @@ function telaMarcas() {
     '<button class="btn" data-acao="importarMarcas">' + ic("upload") + "Importar planilha</button>" +
     '<button class="btn" data-acao="baixarMarcas">' + ic("download") + "Baixar CSV</button>" +
     '<button class="btn amarelo" data-acao="novaMarca">' + ic("plus") + "Adicionar marca</button></div>" +
-    '<div id="listaMarcas"></div></div>';
+    '<div id="resumoSel"></div><div id="listaMarcas"></div></div>';
   desenharListaMarcas();
 }
 CAMPOS.mBusca = el => { ui.mBusca = el.value; desenharListaMarcas(); };
@@ -793,7 +816,41 @@ async function lerExcel(buf) {
   const novo = !m.favorita;
   atualizarCampo("marcas", m.id, { favorita: novo }).then(ok => { if (!ok) return; m.favorita = novo; desenharListaMarcas(); avisar(novo ? "Marca favoritada" : "Marca tirada dos favoritos"); });
 };
-ACOES.soFavoritas = () => { ui.mFav = !ui.mFav; telaMarcas(); };ACOES.separarNichos = () => {
+ACOES.soFavoritas = () => { ui.mFav = !ui.mFav; telaMarcas(); };
+
+/* ---- SELEÇÃO PARA O DISPARO (fica salva no banco, coluna "selecionada") ---- */
+const AVISO_SEL = "Falta rodar o disparo.sql no Supabase para a seleção ficar salva";
+ACOES.selecionarMarca = async el => {
+  const m = estado.marcas.find(x => String(x.id) === el.dataset.id); if (!m) return;
+  if (!("selecionada" in m)) { el.checked = false; avisar(AVISO_SEL, "erro"); return; }
+  const novo = el.checked;
+  const ok = await atualizarCampo("marcas", m.id, { selecionada: novo });
+  if (!ok) { el.checked = !novo; return; }
+  m.selecionada = novo; desenharResumoSel();
+};
+ACOES.selTodasFiltro = async () => {
+  if (!temColunaSel()) { avisar(AVISO_SEL, "erro"); return; }
+  const alvo = marcasFiltradas().filter(m => emailDe(m.email) && !m.selecionada);
+  for (let i = 0; i < alvo.length; i += 100) {
+    const lote = alvo.slice(i, i + 100);
+    const r = await db.from("marcas").update({ selecionada: true }).in("id", lote.map(m => m.id));
+    if (r.error) { avisar(traduzirErro(r.error, "marcas"), "erro"); break; }
+    lote.forEach(m => { m.selecionada = true; });
+  }
+  desenharListaMarcas();
+};
+ACOES.limparSelecao = async () => {
+  if (!temColunaSel()) { avisar(AVISO_SEL, "erro"); return; }
+  const alvo = estado.marcas.filter(m => m.selecionada);
+  for (let i = 0; i < alvo.length; i += 100) {
+    const lote = alvo.slice(i, i + 100);
+    const r = await db.from("marcas").update({ selecionada: false }).in("id", lote.map(m => m.id));
+    if (r.error) { avisar(traduzirErro(r.error, "marcas"), "erro"); break; }
+    lote.forEach(m => { m.selecionada = false; });
+  }
+  desenharListaMarcas();
+};
+ACOES.irProspeccao = () => { location.hash = "prospeccao"; };ACOES.separarNichos = () => {
   if (!estado.marcas.length) { avisar("Ainda não há marcas", "erro"); return; }
   if (!("nicho" in estado.marcas[0])) { abrirModal("Falta um passo no banco", '<p class="nota">Para separar por nichos, rode uma vez o bloco 7 do arquivo banco.sql no Supabase (SQL Editor). Depois atualize esta página.</p><div class="rodape-modal"><span class="espaco"></span><button type="button" class="btn amarelo" id="fechaAviso">Entendi</button></div>'); $("#fechaAviso").addEventListener("click", fecharModal); return; }
   const sem = estado.marcas.filter(m => !m.nicho);
@@ -864,7 +921,7 @@ ACOES.soFavoritas = () => { ui.mFav = !ui.mFav; telaMarcas(); };ACOES.separarNic
       });
       $("#impPrevia").innerHTML = '<p class="nota" style="margin-top:10px"><b>' + plural(novas.length, "marca será importada", "marcas serão importadas") + "</b>" +
         (repetidas ? ", " + plural(repetidas, "já existe e será pulada", "já existem e serão puladas") : "") + (vazias ? ", " + plural(vazias, "linha sem nome será ignorada", "linhas sem nome serão ignoradas") : "") + ".</p>" +
-        (novas.length ? '<div class="rolagem"><table class="tabela"><thead><tr><th style="width:28px"></th><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th></tr></thead><tbody>' +
+        (novas.length ? '<div class="rolagem"><table class="tabela"><thead><tr><th>Marca</th><th>Nicho</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th></tr></thead><tbody>' +
           novas.slice(0, 5).map(n => "<tr><td>" + esc(n.nome) + "</td><td>" + esc(n.nicho || "") + "</td><td>" + esc(n.instagram ? "@" + n.instagram : "") + "</td><td>" + esc(n.email || "") + "</td><td>" + esc(n.telefone || "") + "</td><td>" + esc((SITUACOES.find(s => s[0] === n.situacao) || ["", ""])[1]) + "</td></tr>").join("") + "</tbody></table></div>" +
           (novas.length > 5 ? '<p class="dica">Mostrando as 5 primeiras.</p>' : "") : "");
       return novas;
