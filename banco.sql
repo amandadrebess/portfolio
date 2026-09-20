@@ -308,3 +308,6 @@ where not exists (select 1 from public.cupons);
 
 -- BLOCO 7: nicho das marcas (pode rodar quantas vezes quiser)
 alter table public.marcas add column if not exists nicho text;
+
+-- BLOCO 8: marcas favoritas (destaque)
+alter table public.marcas add column if not exists favorita boolean not null default false;
