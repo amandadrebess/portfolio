@@ -153,6 +153,11 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 }
 .hero-photo{--c:#ffe680;--c2:#ee8fc0;--c3:#1160b8;aspect-ratio:4/5;width:100%;max-width:330px;margin-inline:auto;border:3px solid #fff;box-shadow:0 0 0 8px #ffe680;transform:rotate(2deg)}
 .hero-photo-wrap{position:relative}
+.hero-photo img{transform-origin:50% 100%;animation:baila 3.2s ease-in-out infinite}
+@keyframes baila{0%,100%{transform:scale(1.03) rotate(0)}25%{transform:scale(1.03) rotate(-1.2deg) translateY(-3px)}50%{transform:scale(1.03) rotate(0) translateY(0)}75%{transform:scale(1.03) rotate(1.2deg) translateY(-3px)}}
+.balao{position:absolute;z-index:3;top:4%;left:-6%;background:#fff;color:#1f2a44;border:3px solid #1f2a44;border-radius:18px;padding:8px 14px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(.85rem,2vw,1.05rem);letter-spacing:.02em;box-shadow:4px 4px 0 #ee8fc0;transform-origin:85% 100%;animation:balaoPop 6s ease-in-out infinite;pointer-events:none}
+.balao::after{content:"";position:absolute;right:22px;bottom:-14px;width:18px;height:18px;background:#fff;border-right:3px solid #1f2a44;border-bottom:3px solid #1f2a44;transform:rotate(45deg) skew(8deg,8deg)}
+@keyframes balaoPop{0%,8%{transform:scale(0) rotate(-8deg);opacity:0}16%{transform:scale(1.18) rotate(3deg);opacity:1}22%,80%{transform:scale(1) rotate(-2deg);opacity:1}90%,100%{transform:scale(0) rotate(-8deg);opacity:0}}
 .sticker{
   position:absolute;left:-6px;bottom:38px;z-index:3;background:var(--lime);color:#1f2a44;
   font-family:'Montserrat',sans-serif;font-weight:900;font-size:.72rem;padding:7px 12px;border-radius:12px;transform:rotate(-6deg);
@@ -363,12 +368,14 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
   .bf-meia + .bf-meia,.bf-meia .bf-un:nth-child(n+2){display:none}
   .bf-num{animation:none}
 }
+.menu a.bf-link{background:#d21f31;color:#fff;border-radius:999px}
+@media (prefers-reduced-motion:reduce){.hero-photo img{animation:none}.balao{animation:none;transform:none;opacity:1}}
 </style>
 </head>
 <body>
 
 <!-- FAIXA NO TOPO: o número de dias é calculado sozinho (Black Friday = 4ª sexta-feira de novembro). Para mudar o texto, edite abaixo. -->
-<a class="faixa-bf" id="faixaBF" href="#destaques" aria-label="Faltam alguns dias para a Black Friday. Vem espiar alguns conteúdos">
+<a class="faixa-bf" id="faixaBF" href="blackfriday.html" aria-label="Faltam alguns dias para a Black Friday. Vem espiar alguns conteúdos">
   <div class="bf-trilha" id="bfTrilha" aria-hidden="true"></div>
 </a>
 <header class="nav">
@@ -384,6 +391,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
         <a href="#numeros">Números</a>
         <a href="#contato">Contato</a>
         <a href="metricas.html">Métricas</a>
+        <a href="blackfriday.html" class="bf-link">Black Friday</a>
       </div>
     </nav>
   </div>
@@ -410,6 +418,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
       <div class="hero-photo-wrap reveal">
         <!-- FOTO DA CAPA: para trocar, substitua o arquivo foto-capa.jpg (formato 4:5, 800x1000) no repositório, ou mude o endereço do src abaixo -->
         <figure class="ph hero-photo" style="margin:0 auto"><img src="foto-capa.jpg" alt="Amanda Drebes de vestido jeans e tênis vermelho, falando em um telefone vermelho antigo" width="800" height="1000" fetchpriority="high"></figure>
+        <span class="balao" aria-hidden="true">TÔ PRONTA!</span>
         <span class="sticker">Curitiba, Brasil</span>
       </div>
     </div>
@@ -722,7 +731,8 @@ const igLink = `https://instagram.com/${PERFIL.instagram.replace("@", "")}`;
 $("#linkWa").href = waLink;
 $("#linkMail").href = `mailto:${PERFIL.email}`;
 $("#linkIg").href = igLink;
-$("#footLinks").innerHTML = `<li><a href="metricas.html">Métricas</a></li>` +
+$("#footLinks").innerHTML = `<li><a href="metricas.html">Métricas</a>
+        <a href="blackfriday.html" class="bf-link">Black Friday</a></li>` +
   `<li><a href="${igLink}" target="_blank" rel="noopener">Instagram ${esc(PERFIL.instagram)}</a></li>` +
   `<li><a href="${waLink}" target="_blank" rel="noopener">WhatsApp</a></li>` +
   `<li><a href="mailto:${PERFIL.email}">E-mail</a></li>`;
