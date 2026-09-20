@@ -672,7 +672,8 @@ function telaMarcas() {
     SITUACOES.map(s => '<option value="' + s[0] + '"' + (ui.mFiltro === s[0] ? " selected" : "") + ">" + s[1] + "</option>").join("") + "</select>" +
     '<select class="sel" data-campo="mNicho" data-evento="change" aria-label="Filtrar por nicho"><option value="todos">Todos os nichos</option><option value="sem"' + (ui.mNicho === "sem" ? " selected" : "") + '>Sem nicho</option>' + nichosUsados().map(n => '<option value="' + esc(n) + '"' + (norm(ui.mNicho) === norm(n) ? " selected" : "") + ">" + esc(n) + "</option>").join("") + "</select>" +
     '<span class="dica" id="contaMarcas" style="margin:0"></span><span class="espaco"></span>' +
-    '<button class="btn" data-acao="separarNichos">' + ic("tag") + "Separar por nichos</button>" +' + ic("upload") + "Importar planilha</button>" +
+    '<button class="btn" data-acao="separarNichos">' + ic("tag") + "Separar por nichos</button>" +
+    '<button class="btn" data-acao="importarMarcas">' + ic("upload") + "Importar planilha</button>" +
     '<button class="btn" data-acao="baixarMarcas">' + ic("download") + "Baixar CSV</button>" +
     '<button class="btn amarelo" data-acao="novaMarca">' + ic("plus") + "Adicionar marca</button></div>" +
     '<div id="listaMarcas"></div></div>';
