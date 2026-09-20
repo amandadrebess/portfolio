@@ -127,8 +127,18 @@
   };
   async function carregarProsp() {
     try {
-      const a = await db.from("email_envios").select("id,email,assunto,status,erro,criado_em").order("criado_em", { ascending: false }).limit(5000);
-      if (a.error) { P.envios = null; estado.problemas.email_envios = msgTabela(a.error, "email_envios"); } else { P.envios = a.data || []; delete estado.problemas.email_envios; }
+      const a = await db.from("email_envios").select("id,email,assunto,status,erro,resend_id,criado_em").order("criado_em", { ascending: false }).limit(5000);
+      if (a.error) { P.envios = null; estado.problemas.email_envios = msgTabela(a.error, "email_envios"); }
+      else {
+        /* Se o mesmo envio do Resend foi gravado duas vezes, conto uma só. */
+        const vistosResend = new Set();
+        P.envios = (a.data || []).filter(e => {
+          if (!e.resend_id || e.resend_id === "rascunho") return true;
+          if (vistosResend.has(e.resend_id)) return false;
+          vistosResend.add(e.resend_id); return true;
+        });
+        delete estado.problemas.email_envios;
+      }
       const b = await db.from("email_optout").select("email,motivo,criado_em").order("criado_em", { ascending: false }).limit(5000);
       if (b.error) { P.optouts = null; estado.problemas.email_optout = msgTabela(b.error, "email_optout"); } else { P.optouts = b.data || []; delete estado.problemas.email_optout; }
     } catch (e) { P.envios = P.envios || null; }
