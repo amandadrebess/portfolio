@@ -83,11 +83,16 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .btn-ghost:hover{background:rgba(238,143,192,.3)}
 
 /* faixa de aviso no topo (Black Friday) */
-.faixa-bf{position:fixed;inset:0 0 auto 0;z-index:60;background:#1f2a44;color:#fff;text-align:center;font-size:.76rem;line-height:1.35;padding:8px 14px;display:flex;flex-wrap:wrap;gap:2px 10px;justify-content:center;align-items:center}
-.faixa-bf b{font-weight:700}
-.faixa-bf a{color:#f7d117;font-weight:600;text-decoration:underline;text-underline-offset:3px}
-.faixa-bf a:hover{color:#ffe04a}
-
+.faixa-bf{position:fixed;inset:0 0 auto 0;z-index:60;display:block;overflow:hidden;background:#d21f31;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;line-height:1.35;padding:8px 0}
+.bf-trilha{display:flex;width:max-content;animation:bfRola 38s linear infinite}
+.bf-meia{display:flex;flex-shrink:0}
+.bf-un{display:inline-flex;align-items:center;gap:14px;padding-right:14px;white-space:nowrap}
+.bf-un i{font-style:normal;color:#f7d117}
+.bf-cta{color:#f7d117}
+.bf-num{display:inline-block;background:#f7d117;color:#1f2a44;padding:0 9px;border-radius:999px;margin:0 2px;animation:bfPulso 1.5s ease-in-out infinite}
+.faixa-bf:hover .bf-trilha{animation-play-state:paused}
+@keyframes bfRola{to{transform:translateX(-50%)}}
+@keyframes bfPulso{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
 /* menu */
 .nav{
   position:fixed;inset:var(--faixa-h) 0 auto 0;height:var(--nav-h);z-index:50;
@@ -354,17 +359,18 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
   .reveal{opacity:1;transform:none}
   .track{flex-wrap:wrap;width:auto;justify-content:center}
   .track ul[aria-hidden="true"]{display:none}
+  .bf-trilha{animation:none;width:100%;justify-content:center}
+  .bf-meia + .bf-meia,.bf-meia .bf-un:nth-child(n+2){display:none}
+  .bf-num{animation:none}
 }
 </style>
 </head>
 <body>
 
 <!-- FAIXA NO TOPO: o número de dias é calculado sozinho (Black Friday = 4ª sexta-feira de novembro). Para mudar o texto, edite abaixo. -->
-<div class="faixa-bf" id="faixaBF" role="region" aria-label="Aviso">
-  <span><b id="bfTexto">Faltam alguns dias para a Black Friday</b></span>
-  <a href="#destaques">Vem espiar alguns conteúdos</a>
-</div>
-
+<a class="faixa-bf" id="faixaBF" href="#destaques" aria-label="Faltam alguns dias para a Black Friday. Vem espiar alguns conteúdos">
+  <div class="bf-trilha" id="bfTrilha" aria-hidden="true"></div>
+</a>
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="#capa" aria-label="AMANDA DREBES, ir para o topo">AMANDA <span>DREBES</span></a>
@@ -411,7 +417,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
 </section>
 <div class="strip" aria-label="Marcas com quem já trabalhei">
   <!-- FRASE DA FAIXA: troque o texto abaixo quando quiser -->
-  <p class="strip-titulo">Marcas que apostaram e confiam no meu trabalho</p>
+  <p class="strip-titulo">Marcas que já confiaram no meu trabalho</p>
   <div class="track" id="brandTrack"></div>
 </div>
 
@@ -1007,15 +1013,21 @@ $("#capForm").addEventListener("submit", async e => {
   setTimeout(fecharCard, 2600);
 });/* ---- Faixa do topo: contagem para a Black Friday (4ª sexta-feira de novembro) ---- */
 (function () {
-  const faixa = document.getElementById("faixaBF"), texto = document.getElementById("bfTexto");
-  if (!faixa || !texto) return;
+  const faixa = document.getElementById("faixaBF"), trilha = document.getElementById("bfTrilha");
+  if (!faixa || !trilha) return;
   const sextaBF = ano => { const d = new Date(ano, 10, 1); return new Date(ano, 10, 1 + ((5 - d.getDay() + 7) % 7) + 21); };
   const agora = new Date(), hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
   let alvo = sextaBF(hoje.getFullYear());
   if (alvo < hoje) alvo = sextaBF(hoje.getFullYear() + 1);
   const dias = Math.round((alvo - hoje) / 86400000);
-  texto.textContent = dias === 0 ? "Hoje é Black Friday!" : dias === 1 ? "Falta 1 dia para a Black Friday" : "Faltam " + dias + " dias para a Black Friday";
-  /* a altura da faixa empurra o menu para baixo (muda se o texto quebrar em duas linhas no celular) */
+  const frase = dias === 0 ? '<b class="bf-num">Hoje</b> é Black Friday!' : dias === 1 ? 'Falta <b class="bf-num">1</b> dia para a Black Friday' : 'Faltam <b class="bf-num">' + dias + '</b> dias para a Black Friday';
+  const textoLeitor = dias === 0 ? "Hoje é Black Friday" : dias === 1 ? "Falta 1 dia para a Black Friday" : "Faltam " + dias + " dias para a Black Friday";
+  faixa.setAttribute("aria-label", textoLeitor + ". Vem espiar alguns conteúdos");
+  /* letreiro: o texto se repete em duas metades iguais para a rolagem nunca ter buraco */
+  const un = '<span class="bf-un"><span>' + frase + '</span><i>✦</i><span class="bf-cta">Vem espiar alguns conteúdos</span><i>✦</i></span>';
+  const meia = '<span class="bf-meia">' + un.repeat(4) + '</span>';
+  trilha.innerHTML = meia + meia;
+  /* a altura da faixa empurra o menu para baixo */
   const ajustar = () => document.documentElement.style.setProperty("--faixa-h", faixa.offsetHeight + "px");
   ajustar(); window.addEventListener("resize", ajustar);
 })();</script>
