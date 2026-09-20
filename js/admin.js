@@ -62,6 +62,7 @@ const ICONES = {
   edit: '<path d="M4 20h4l10-10-4-4L4 16v4z"/><path d="M13 7l4 4"/>',
   trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/>',
   download: '<path d="M12 4v11M7 11l5 5 5-5M4 20h16"/>',
+  upload: '<path d="M12 16V5M7 9l5-4 5 4M4 20h16"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
   star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
   grip: '<circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/>',
@@ -638,6 +639,7 @@ function telaMarcas() {
     '<select class="sel" data-campo="mFiltro" data-evento="change" aria-label="Filtrar por situação"><option value="todas">Todas as situações</option>' +
     SITUACOES.map(s => '<option value="' + s[0] + '"' + (ui.mFiltro === s[0] ? " selected" : "") + ">" + s[1] + "</option>").join("") + "</select>" +
     '<span class="dica" id="contaMarcas" style="margin:0"></span><span class="espaco"></span>' +
+    '<button class="btn" data-acao="importarMarcas">' + ic("upload") + "Importar planilha</button>" +
     '<button class="btn" data-acao="baixarMarcas">' + ic("download") + "Baixar CSV</button>" +
     '<button class="btn amarelo" data-acao="novaMarca">' + ic("plus") + "Adicionar marca</button></div>" +
     '<div id="listaMarcas"></div></div>';
@@ -677,7 +679,120 @@ ACOES.baixarMarcas = () => {
     ["Marca", "Instagram", "E-mail", "Telefone", "Situação", "Observação", "Último contato"],
     lista.map(m => [m.nome, m.instagram, m.email, m.telefone, (SITUACOES.find(s => s[0] === m.situacao) || ["", m.situacao])[1], m.obs, fmtData(m.ultimo_contato)]));
 };
-TELAS.marcas = telaMarcas;
+/* ---- IMPORTAR PLANILHA (CSV) PARA A ABA MARCAS ---- */
+const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9@ ]/g, " ").replace(/\s+/g, " ").trim();
+const CAMPOS_IMPORTAR = [
+  { k: "nome", rotulo: "Marca", dicas: ["marca", "nome", "empresa", "cliente", "brand", "razao social", "nome da marca", "nome fantasia"] },
+  { k: "instagram", rotulo: "Instagram", dicas: ["instagram", "insta", "ig", "@", "perfil", "arroba", "usuario"] },
+  { k: "email", rotulo: "E-mail", dicas: ["email", "e mail", "mail", "e-mail", "contato email", "correio"] },
+  { k: "telefone", rotulo: "Telefone / WhatsApp", dicas: ["telefone", "whatsapp", "whats", "zap", "celular", "fone", "tel", "contato telefone", "numero"] },
+  { k: "situacao", rotulo: "Situação", dicas: ["situacao", "status", "etapa", "fase", "estagio"] },
+  { k: "obs", rotulo: "Observação", dicas: ["observacao", "observacoes", "obs", "notas", "nota", "anotacoes", "comentarios", "detalhes", "proposta"] },
+  { k: "ultimo_contato", rotulo: "Último contato", dicas: ["ultimo contato", "data", "data contato", "data do contato", "contato em", "enviado em", "data proposta", "data envio"] }
+];
+function lerTextoArquivo(buf) {
+  try { return new TextDecoder("utf-8", { fatal: true }).decode(buf); }
+  catch (e) { return new TextDecoder("windows-1252").decode(buf); } // planilhas antigas do Excel
+}
+function lerCSV(texto) {
+  texto = texto.replace(/^﻿/, "");
+  const primeira = texto.split(/\r?\n/, 1)[0] || "";
+  const cont = ch => primeira.split(ch).length - 1;
+  const sep = [";", ",", "\t"].sort((a, b) => cont(b) - cont(a))[0];
+  const linhas = []; let linha = [], cel = "", asp = false;
+  for (let i = 0; i < texto.length; i++) {
+    const c = texto[i];
+    if (asp) {
+      if (c === '"') { if (texto[i + 1] === '"') { cel += '"'; i++; } else asp = false; } else cel += c;
+    } else if (c === '"' && cel === "") asp = true;
+    else if (c === sep) { linha.push(cel); cel = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && texto[i + 1] === "\n") i++; linha.push(cel); cel = ""; linhas.push(linha); linha = []; }
+    else cel += c;
+  }
+  if (cel !== "" || linha.length) { linha.push(cel); linhas.push(linha); }
+  return linhas.filter(l => l.some(x => String(x).trim() !== ""));
+}
+function adivinharColuna(cabecalhos, campo) {
+  const ns = cabecalhos.map(norm);
+  for (const d of campo.dicas) { const i = ns.indexOf(norm(d)); if (i > -1) return i; }
+  for (const d of campo.dicas) { const nd = norm(d); if (nd.length < 3) continue; const i = ns.findIndex(h => h.indexOf(nd) > -1); if (i > -1) return i; }
+  return -1;
+}
+function situacaoDoTexto(v, padrao) {
+  const n = norm(v); if (!n) return padrao;
+  if (/cliente|fechad|fechou|aprovad|ativo|parceir/.test(n) && !/inativ/.test(n)) return "cliente";
+  if (/parad|inativ|perdid|sem retorno|recus|nao (tem|houve)|arquivad|frio/.test(n)) return "parada";
+  if (/convers|negoci|proposta|enviad|respond|retorn|andamento|aguard|contato feito|em contato/.test(n)) return "conversando";
+  return padrao;
+}
+function dataDoTexto(v) {
+  const s = String(v || "").trim(); if (!s) return null;
+  let m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/);
+  if (m) { let a = +m[3]; if (a < 100) a += 2000; const d = new Date(a, +m[2] - 1, +m[1]); return d.getMonth() === +m[2] - 1 && a > 1990 && a < 2100 ? iso(d) : null; }
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? m[0] : null;
+}
+ACOES.importarMarcas = () => {
+  let linhas = [], cab = [];
+  abrirModal("Importar planilha de marcas",
+    '<p class="nota">Salve a sua planilha como <b>CSV</b> (no Excel: Arquivo, Salvar como, CSV) e escolha o arquivo abaixo. Eu descubro sozinha quais colunas são nome, Instagram, e-mail e telefone. Marcas que já existem (mesmo e-mail ou mesmo nome) não são repetidas.</p>' +
+    '<div class="campo inteira"><label for="arqImp">Arquivo CSV</label><input id="arqImp" type="file" accept=".csv,.txt,text/csv"></div>' +
+    '<div id="impCorpo"></div>', { largo: true });
+  $("#arqImp").addEventListener("change", async ev => {
+    const f = ev.target.files[0]; if (!f) return;
+    const corpo = $("#impCorpo");
+    if (/\.xlsx?$/i.test(f.name)) { corpo.innerHTML = '<p class="erro-form">Esse arquivo é do Excel. Abra ele e use Arquivo, Salvar como, CSV. Depois escolha o novo arquivo aqui.</p>'; return; }
+    linhas = lerCSV(lerTextoArquivo(await f.arrayBuffer()));
+    if (linhas.length < 2) { corpo.innerHTML = '<p class="erro-form">Não encontrei linhas nessa planilha. A primeira linha precisa ter os títulos das colunas.</p>'; return; }
+    cab = linhas.shift().map(x => String(x).trim());
+    const chute = CAMPOS_IMPORTAR.map(c => adivinharColuna(cab, c));
+    const opcoesCol = sel => '<option value="-1">(não usar)</option>' + cab.map((h, i) => '<option value="' + i + '"' + (i === sel ? " selected" : "") + ">" + esc(h || "Coluna " + (i + 1)) + "</option>").join("");
+    corpo.innerHTML = '<p class="dica" style="margin:8px 0">' + plural(linhas.length, "linha encontrada", "linhas encontradas") + '. Confira se cada informação está ligada à coluna certa:</p>' +
+      '<div class="grade-form">' + CAMPOS_IMPORTAR.map((c, i) => '<div class="campo"><label for="mp_' + c.k + '">' + esc(c.rotulo) + '</label><select id="mp_' + c.k + '" data-i="' + i + '">' + opcoesCol(chute[i]) + "</select></div>").join("") +
+      '<div class="campo"><label for="mpPadrao">Situação para quem não tiver</label><select id="mpPadrao">' + SITUACOES.map(s => '<option value="' + s[0] + '">' + s[1] + "</option>").join("") + "</select></div></div>" +
+      '<div id="impPrevia"></div><p class="erro-form" id="impErro" role="alert"></p>' +
+      '<div class="rodape-modal"><span class="espaco"></span><button type="button" class="btn" id="impCancelar">Cancelar</button><button type="button" class="btn amarelo" id="impGo">Importar</button></div>';
+    const montar = () => {
+      const col = {}; CAMPOS_IMPORTAR.forEach(c => { col[c.k] = +$("#mp_" + c.k).value; });
+      const padrao = $("#mpPadrao").value;
+      const pega = (l, k) => col[k] > -1 ? String(l[col[k]] === undefined ? "" : l[col[k]]).trim() : "";
+      const existentes = new Set(); const nomes = new Set();
+      estado.marcas.forEach(m => { if (m.email) existentes.add(norm(m.email)); nomes.add(norm(m.nome)); });
+      const novas = []; let repetidas = 0, vazias = 0;
+      linhas.forEach(l => {
+        let nome = pega(l, "nome"), insta = usuarioInsta(pega(l, "instagram")), email = pega(l, "email").toLowerCase(), obs = pega(l, "obs");
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { obs = (obs ? obs + " | " : "") + "E-mail informado: " + email; email = ""; }
+        if (!nome) nome = insta ? "@" + insta : (email ? email.split("@")[0] : "");
+        if (!nome) { vazias++; return; }
+        const chave = email ? norm(email) : "";
+        if ((chave && existentes.has(chave)) || (!chave && nomes.has(norm(nome)))) { repetidas++; return; }
+        if (chave) existentes.add(chave); else nomes.add(norm(nome));
+        novas.push({ nome: nome.slice(0, 200), instagram: insta ? insta.slice(0, 100) : null, email: email ? email.slice(0, 200) : null, telefone: pega(l, "telefone").slice(0, 60) || null,
+          situacao: situacaoDoTexto(pega(l, "situacao"), padrao), obs: obs ? obs.slice(0, 2000) : null, ultimo_contato: dataDoTexto(pega(l, "ultimo_contato")), exemplo: false });
+      });
+      $("#impPrevia").innerHTML = '<p class="nota" style="margin-top:10px"><b>' + plural(novas.length, "marca será importada", "marcas serão importadas") + "</b>" +
+        (repetidas ? ", " + plural(repetidas, "já existe e será pulada", "já existem e serão puladas") : "") + (vazias ? ", " + plural(vazias, "linha sem nome será ignorada", "linhas sem nome serão ignoradas") : "") + ".</p>" +
+        (novas.length ? '<div class="rolagem"><table class="tabela"><thead><tr><th>Marca</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th></tr></thead><tbody>' +
+          novas.slice(0, 5).map(n => "<tr><td>" + esc(n.nome) + "</td><td>" + esc(n.instagram ? "@" + n.instagram : "") + "</td><td>" + esc(n.email || "") + "</td><td>" + esc(n.telefone || "") + "</td><td>" + esc((SITUACOES.find(s => s[0] === n.situacao) || ["", ""])[1]) + "</td></tr>").join("") + "</tbody></table></div>" +
+          (novas.length > 5 ? '<p class="dica">Mostrando as 5 primeiras.</p>' : "") : "");
+      return novas;
+    };
+    let prontas = montar();
+    corpo.querySelectorAll("select").forEach(s => s.addEventListener("change", () => { prontas = montar(); }));
+    $("#impCancelar").addEventListener("click", fecharModal);
+    $("#impGo").addEventListener("click", async () => {
+      if (!prontas.length) { $("#impErro").textContent = "Não há nada novo para importar."; return; }
+      const botao = $("#impGo"); botao.disabled = true; botao.textContent = "Importando...";
+      try {
+        for (let i = 0; i < prontas.length; i += 200) {
+          const r = await db.from("marcas").insert(prontas.slice(i, i + 200));
+          if (r.error) throw new Error(traduzirErro(r.error, "marcas"));
+        }
+        const total = prontas.length;
+        fecharModal(); await carregar(["marcas"]); desenhar(); avisar(plural(total, "marca importada", "marcas importadas"));
+      } catch (e) { $("#impErro").textContent = (e.message || "Não consegui importar.") + " Se algumas já entraram, atualize a página para conferir."; botao.disabled = false; botao.textContent = "Importar"; }
+    });
+  });
+};TELAS.marcas = telaMarcas;
 
 /* ===================================================================
    4F. CUPONS (cupons ativos das marcas, com o nome do cupom e o link)
