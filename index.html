@@ -235,7 +235,9 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .trilho::-webkit-scrollbar{display:none}
 .trilho.arrastando{cursor:grabbing;scroll-snap-type:none;user-select:none}
 .trilho:focus-visible{outline:2px solid var(--teal-d);outline-offset:3px;border-radius:14px}
-.cartao-v{flex:0 0 clamp(140px,15vw,168px);scroll-snap-align:start;margin:0}
+.cartao-v{flex:0 0 calc((100% - 48px) / 5);min-width:0;scroll-snap-align:start;margin:0}
+@media (max-width:900px){.cartao-v{flex-basis:calc((100% - 24px) / 3)}}
+@media (max-width:560px){.cartao-v{flex-basis:calc((100% - 12px) / 2.3)}}
 .cartao-v .ph{aspect-ratio:9/16;width:100%;text-decoration:none;border-radius:14px}
 .cartao-v .ph img{-webkit-user-drag:none;user-select:none}
 .cartao-v .rotulo{position:absolute;left:0;right:0;bottom:0;z-index:2;background:rgba(31,42,68,.62);color:#fff;padding:8px 10px}
@@ -832,7 +834,7 @@ function mostrar() {
 function ligarFaixa(f) {
   const tr = f.querySelector(".trilho"), ant = f.querySelector('[data-dir="-1"]'), prox = f.querySelector('[data-dir="1"]');
   const estado = () => { ant.disabled = tr.scrollLeft < 4; prox.disabled = tr.scrollLeft + tr.clientWidth >= tr.scrollWidth - 4; };
-  const passo = () => Math.max(160, tr.clientWidth * 0.8);
+  const passo = () => Math.max(160, tr.clientWidth + 12);
   ant.addEventListener("click", () => tr.scrollBy({ left: -passo(), behavior: "smooth" }));
   prox.addEventListener("click", () => tr.scrollBy({ left: passo(), behavior: "smooth" }));
   tr.addEventListener("scroll", estado, { passive: true });
