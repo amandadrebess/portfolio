@@ -928,7 +928,9 @@ revelar(document.querySelectorAll(".reveal"));
    Se o painel ainda não tiver vídeos visíveis, ou se a internet falhar, o site
    continua mostrando a lista que está mais acima neste arquivo. */
 function aplicarVideosDoPainel(linhas) {
-  linhas = Array.isArray(linhas) ? linhas.filter(v => v && v.link) : [];
+  /* vídeos do nicho "Black Friday" (criativos para ads) aparecem só na página blackfriday.html */
+  const ehBF = n => /^black[\s-]*friday$/.test(String(n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim());
+  linhas = Array.isArray(linhas) ? linhas.filter(v => v && v.link && !ehBF(v.nicho)) : [];
   if (!linhas.length) return false;
   TRABALHOS = linhas.map(v => ({ nicho: v.nicho || "outros", titulo: v.titulo || "", marca: v.marca || "", video: v.link, capa: "" }));
   NICHOS = [...new Set(TRABALHOS.map(t => t.nicho))];
