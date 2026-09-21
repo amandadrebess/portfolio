@@ -43,13 +43,13 @@ a{color:inherit}
 ul{margin:0;padding:0;list-style:none}
 section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 :focus-visible{outline:3px solid var(--teal-d);outline-offset:3px;border-radius:6px}
-.wrap{width:min(1040px,100% - 32px);margin-inline:auto}
-.sec{padding:clamp(40px,6vw,72px) 0;position:relative}
+.wrap{width:min(960px,100% - 32px);margin-inline:auto}
+.sec{padding:clamp(28px,4.5vw,52px) 0;position:relative}
 .eyebrow{
   display:inline-block;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.7rem;
   letter-spacing:.18em;text-transform:uppercase;color:var(--teal-d);margin-bottom:10px;
 }
-.title{font-weight:900;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.02em;margin-bottom:12px}
+.title{font-weight:900;font-size:clamp(1.3rem,2.6vw,1.75rem);letter-spacing:-.02em;margin-bottom:12px}
 .title em{font-style:normal;color:var(--pink-soft)}
 .lead{color:var(--muted);max-width:60ch}
 .glass{
@@ -192,7 +192,7 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .signature small{display:block;font-family:'Poppins',sans-serif;font-style:normal;font-weight:400;font-size:.78rem;color:var(--muted);letter-spacing:0}
 
 /* destaques */
-.sec-head{margin-bottom:clamp(20px,3.5vw,34px)}
+.sec-head{margin-bottom:clamp(14px,2.5vw,24px)}
 .hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin-inline:auto}
 .hl{display:block;text-decoration:none;padding:10px;transition:transform .25s,border-color .25s}
 .hl:hover{transform:translateY(-8px);border-color:var(--teal)}
@@ -220,7 +220,7 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .chip[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#1f2a44;font-weight:600}
 .gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 /* galeria em faixas por nicho, uma ao lado da outra (deslizar para o lado) */
-.faixas{display:grid;gap:26px}
+.faixas{display:grid;gap:16px;max-width:780px}
 .faixa{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h) + 12px)}
 .faixa-cab{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .faixa-tit{font-size:1.15rem;font-weight:800;flex:1;display:flex;align-items:baseline;gap:8px;text-transform:none}
@@ -231,7 +231,7 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .seta{width:34px;height:34px;border-radius:50%;border:1px solid var(--glass-line);background:#fff;color:#1f2a44;font-size:1.1rem;line-height:1;cursor:pointer;display:grid;place-items:center;transition:background .2s,border-color .2s}
 .seta:hover{border-color:var(--pink);background:var(--glass)}
 .seta[disabled]{opacity:.35;cursor:default}
-.trilho{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding:2px 2px 6px;cursor:grab;-webkit-overflow-scrolling:touch}
+.trilho{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding:18px 10px;margin:-18px -10px;cursor:grab;-webkit-overflow-scrolling:touch}
 .trilho::-webkit-scrollbar{display:none}
 .trilho.arrastando{cursor:grabbing;scroll-snap-type:none;user-select:none}
 .trilho:focus-visible{outline:2px solid var(--teal-d);outline-offset:3px;border-radius:14px}
@@ -244,6 +244,11 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .cartao-v .rotulo b{display:block;font-family:'Montserrat',sans-serif;font-size:.8rem;line-height:1.2}
 .cartao-v .rotulo span{display:block;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-top:2px}
 .cartao-v:hover .play{transform:translate(-50%,-50%) scale(1.12)}
+.cartao-v{position:relative}
+.cartao-v .ph{transition:transform .25s ease,box-shadow .25s ease}
+.cartao-v:hover{z-index:5}
+.cartao-v:hover .ph,.cartao-v:focus-within .ph{transform:scale(1.09);box-shadow:0 14px 30px rgba(31,42,68,.28)}
+@media (hover:none){.cartao-v:hover .ph{transform:none;box-shadow:none}}
 .work{margin:0;animation:pop .45s both}
 .work .ph{aspect-ratio:9/16;width:100%;text-decoration:none}
 .work .meta{padding:8px 2px 0}
@@ -263,7 +268,7 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 
 /* serviços */
 .services{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.svc{padding:18px 16px;position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
+.svc{padding:14px 14px;position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
 .svc:hover{transform:translateY(-6px);border-color:var(--pink)}
 .svc .n{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:.95rem;color:#1f2a44;background:var(--lime);margin-bottom:12px}
 .svc:nth-child(6n+2) .n{background:var(--pink)}
@@ -271,6 +276,20 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .svc:nth-child(6n+4) .n{background:#a9c8ee}
 .svc:nth-child(6n+5) .n{background:#f5a3aa}
 .svc:nth-child(6n+6) .n{background:#ffe680}
+.services{align-items:start}
+.svc-ver{margin-top:12px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--glass-line);background:#fff;border-radius:999px;padding:6px 14px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.76rem;color:#1f2a44;cursor:pointer;transition:background .2s,border-color .2s}
+.svc-ver:hover{border-color:var(--pink);background:var(--glass)}
+.svc-ver b{font-size:1rem;line-height:1;transition:transform .25s}
+.svc-ver.aberto b{transform:rotate(45deg)}
+.svc-exemplo{margin-top:12px}
+.svc-exemplo[hidden]{display:none}
+.svc-video{position:relative;display:block;width:min(150px,100%);aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#ffe680}
+.svc-video img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.svc-video .play{z-index:2}
+.svc-res{margin:8px 0 0;font-size:.78rem;font-weight:600;color:#1160b8}
+.svc-breve{width:min(150px,100%);aspect-ratio:9/16;border-radius:14px;border:2px dashed #d8c9a0;background:#fffaf0;display:grid;place-content:center;text-align:center;padding:10px;gap:4px}
+.svc-breve span{font-family:'Montserrat',sans-serif;font-weight:800;font-size:.85rem;color:#1f2a44}
+.svc-breve p{margin:0;font-size:.7rem;color:var(--muted)}
 .svc-link{display:block;text-decoration:none;color:inherit;background:#fdeaf4}
 .svc-link h3::after{content:" \2192"}
 .cta-criar{margin-top:22px;padding:18px 20px;border-radius:20px;background:#fff;border:1px solid var(--glass-line);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
@@ -390,7 +409,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
   .btn{width:100%}
   .cta-row{flex-direction:column}
 }
-@media (prefers-reduced-motion:reduce){
+@media (prefers-reduced-motion:reduce){.cartao-v:hover .ph,.cartao-v:focus-within .ph{transform:none}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none !important;transition:none !important}
   .reveal{opacity:1;transform:none}
@@ -401,7 +420,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
   .bf-num{animation:none}
 }
 .menu a.bf-link{background:#d21f31;color:#fff;border-radius:999px}
-@media (prefers-reduced-motion:reduce){.hero-anim{animation:none}.cabecao{animation:none;transform:translateY(7%) scale(1.4)}.balao{animation:none;transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.cartao-v:hover .ph,.cartao-v:focus-within .ph{transform:none}.hero-anim{animation:none}.cabecao{animation:none;transform:translateY(7%) scale(1.4)}.balao{animation:none;transform:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -712,13 +731,16 @@ document.addEventListener("error", e => { if (e.target.tagName === "IMG") capaRe
 document.addEventListener("load", e => { if (e.target.tagName === "IMG" && e.target.naturalWidth > 0 && e.target.naturalWidth <= 120) capaReserva(e.target); }, true);
 
 /* Serviços (pode ter quantos quiser; a grade se ajusta sozinha) */
+/* Cada seção pode abrir um vídeo de exemplo que performou.
+   video: cole o link do YouTube (ex: "https://youtube.com/shorts/XXXXXXXXXXX"). Deixe "" para mostrar "Em breve".
+   resultado: frase curta e REAL sobre o resultado (ex: "+120 mil views"). Deixe "" para não mostrar nada. */
 const SERVICOS = [
-  { titulo: "Criativos para tráfego", texto: "Vídeos feitos para anúncios pagos, com gancho forte nos primeiros segundos e variações diferentes para você testar o que mais converte." },
-  { titulo: "UGC tradicional", texto: "Vídeo com roteiro, gravação e edição, no estilo de quem usa o produto de verdade, para as redes sociais e os anúncios da marca." },
-  { titulo: "UGC para e-commerce", texto: "Vídeos do seu produto com cara de cliente de verdade, para o site da marca e as campanhas de e-commerce: demonstração, uso no dia a dia e prova social." },
-  { titulo: "Clips", texto: "Vídeos de produto curtos e diretos, feitos para marketplaces e lojas online. Mostram o produto em uso e ajudam o cliente a decidir a compra na própria página." },
-  { titulo: "Publi post", texto: "Uma postagem para a minha audiência, que já confia em mim, apresentando o seu produto de forma natural, com a minha cara e o meu jeito de contar, no @amandadrebess." },
-  { titulo: "TikTok Shop", texto: "Vídeos no formato que funciona no TikTok Shop, para mostrar o produto, gerar desejo e levar direto para a compra." }
+  { titulo: "Criativos para tráfego", texto: "Vídeos feitos para anúncios pagos, com gancho forte nos primeiros segundos e variações diferentes para você testar o que mais converte.", video: "", resultado: "" },
+  { titulo: "UGC tradicional", texto: "Vídeo com roteiro, gravação e edição, no estilo de quem usa o produto de verdade, para as redes sociais e os anúncios da marca.", video: "", resultado: "" },
+  { titulo: "UGC para e-commerce", texto: "Vídeos do seu produto com cara de cliente de verdade, para o site da marca e as campanhas de e-commerce: demonstração, uso no dia a dia e prova social.", video: "", resultado: "" },
+  { titulo: "Clips", texto: "Vídeos de produto curtos e diretos, feitos para marketplaces e lojas online. Mostram o produto em uso e ajudam o cliente a decidir a compra na própria página.", video: "", resultado: "" },
+  { titulo: "Publi post", texto: "Uma postagem para a minha audiência, que já confia em mim, apresentando o seu produto de forma natural, com a minha cara e o meu jeito de contar, no @amandadrebess.", video: "", resultado: "" },
+  { titulo: "TikTok Shop", texto: "Vídeos no formato que funciona no TikTok Shop, para mostrar o produto, gerar desejo e levar direto para a compra.", video: "", resultado: "" }
 ];/* Quatro métricas com contador */
 const METRICAS = [
   { valor: 300, prefixo: "+", sufixo: "",  rotulo: "vídeos entregues" },
@@ -867,11 +889,25 @@ mostrar();
 
 /* Serviços */
 $("#services").innerHTML = SERVICOS.map((s, i) => {
-  const miolo = `<div class="n" aria-hidden="true">${String(i + 1).padStart(2, "0")}</div><h3>${esc(s.titulo)}</h3><p>${esc(s.texto)}</p>`;
-  return s.link
-    ? `<a class="svc glass reveal svc-link" href="${esc(s.link)}">${miolo}</a>`
-    : `<article class="svc glass reveal">${miolo}</article>`;
+  const id = ytId(s.video || ""), capa = id ? ytThumb(id) : "";
+  const exemplo = id
+    ? `<a class="svc-video js-video" href="${esc(s.video)}" target="_blank" rel="noopener" aria-label="Assistir o exemplo de ${esc(s.titulo)}">
+         <img src="${esc(capa)}" data-yt="${id}" alt="Capa do vídeo de exemplo de ${esc(s.titulo)}" loading="lazy">
+         <span class="play sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span></a>
+       ${s.resultado ? `<p class="svc-res">${esc(s.resultado)}</p>` : ""}`
+    : `<div class="svc-breve"><span>Em breve</span><p>Aqui vai um vídeo que performou.</p></div>`;
+  return `<article class="svc glass reveal">
+    <div class="n" aria-hidden="true">${String(i + 1).padStart(2, "0")}</div>
+    <h3>${esc(s.titulo)}</h3><p>${esc(s.texto)}</p>
+    <button type="button" class="svc-ver" aria-expanded="false" aria-controls="svc-ex-${i}">Ver exemplo <b aria-hidden="true">+</b></button>
+    <div class="svc-exemplo" id="svc-ex-${i}" hidden>${exemplo}</div>
+  </article>`;
 }).join("");
+$("#services").addEventListener("click", e => {
+  const b = e.target.closest(".svc-ver"); if (!b) return;
+  const painel = document.getElementById(b.getAttribute("aria-controls")), abrir = painel.hidden;
+  painel.hidden = !abrir; b.setAttribute("aria-expanded", abrir); b.classList.toggle("aberto", abrir);
+});
 /* botão "Quero criar com você" leva para o WhatsApp, se o número estiver no perfil */
 try { const wa = document.getElementById("criarWa"); if (wa && typeof PERFIL !== "undefined" && PERFIL.whatsapp) wa.href = "https://wa.me/" + PERFIL.whatsapp + "?text=" + encodeURIComponent("Oi, Amanda! Vi o seu portfólio e quero criar um conteúdo para a minha marca."); } catch (e) {}
 

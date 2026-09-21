@@ -224,6 +224,11 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .play.sm{width:40px;height:40px;box-shadow:0 0 0 5px rgba(232,40,58,.22)}
 .play.sm svg{width:16px;height:16px}
 .work-vid:hover .play{transform:translate(-50%,-50%) scale(1.12)}
+.work{position:relative}
+.work .ph{transition:transform .25s ease,box-shadow .25s ease}
+.work:hover{z-index:5}
+.work:hover .ph{transform:scale(1.07);box-shadow:0 14px 30px rgba(31,42,68,.28)}
+@media (hover:none){.work:hover .ph{transform:none;box-shadow:none}}
 .vmodal{z-index:110}
 .vbox{position:relative;width:min(540px,100%,calc((100vh - 130px) * 9 / 16));width:min(540px,100%,calc((100dvh - 130px) * 9 / 16))}
 .vframe{aspect-ratio:9/16;width:100%;border-radius:18px;overflow:hidden;background:#000}
