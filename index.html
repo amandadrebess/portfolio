@@ -262,7 +262,7 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .vbox .close{top:-54px;right:0;background:#fff}
 
 /* serviços */
-.services{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .svc{padding:18px 16px;position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
 .svc:hover{transform:translateY(-6px);border-color:var(--pink)}
 .svc .n{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:.95rem;color:#1f2a44;background:var(--lime);margin-bottom:12px}
@@ -271,6 +271,11 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 .svc:nth-child(6n+4) .n{background:#a9c8ee}
 .svc:nth-child(6n+5) .n{background:#f5a3aa}
 .svc:nth-child(6n+6) .n{background:#ffe680}
+.svc-link{display:block;text-decoration:none;color:inherit;background:#fdeaf4}
+.svc-link h3::after{content:" \2192"}
+.cta-criar{margin-top:22px;padding:18px 20px;border-radius:20px;background:#fff;border:1px solid var(--glass-line);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+.cta-criar p{margin:0;font-size:.92rem}
+.cta-criar .cta-row{margin:0}
 .svc h3{font-size:1rem;margin-bottom:6px}
 .svc p{color:var(--muted);font-size:.82rem}
 
@@ -413,7 +418,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
       <div class="menu" id="menu">
         <a href="#sobre">Sobre</a>
         <a href="#trabalhos">Trabalhos</a>
-        <a href="#servicos">Serviços</a>
+        <a href="#servicos">Criar juntos</a>
         <a href="#numeros">Números</a>
         <a href="#contato">Contato</a>
         <a href="metricas.html">Métricas</a>
@@ -494,15 +499,23 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
   </div>
 </section>
 
-<!-- 5. COMO EU TE AJUDO -->
+<!-- 5. O QUE PODEMOS CRIAR JUNTOS -->
 <section class="sec" id="servicos">
   <div class="glow-pink" style="width:340px;height:340px;bottom:0;right:-120px"></div>
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="eyebrow">Como eu te ajudo</span>
-      <h2 class="title">Quatro jeitos de <em>trabalharmos juntas</em></h2>
+      <span class="eyebrow">O que podemos criar juntos</span>
+      <h2 class="title">Conteúdo que <em>vende</em> de verdade</h2>
+      <p class="lead">Escolha o formato ideal para a sua marca. Se ainda não sabe qual, me conta o seu objetivo e eu indico o melhor caminho.</p>
     </div>
     <div class="services" id="services"></div>
+    <div class="cta-criar reveal">
+      <p><b>Bora criar algo juntas?</b> Me conta sobre o seu produto e eu preparo uma proposta.</p>
+      <div class="cta-row">
+        <a class="btn btn-lime" id="criarWa" href="#contato">Quero criar com você</a>
+        <a class="btn btn-ghost" href="#trabalhos">Ver os trabalhos</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -701,9 +714,11 @@ document.addEventListener("load", e => { if (e.target.tagName === "IMG" && e.tar
 /* Serviços (pode ter quantos quiser; a grade se ajusta sozinha) */
 const SERVICOS = [
   { titulo: "Vídeos UGC", texto: "Vídeo com roteiro, gravação e edição, no estilo de quem usa o produto de verdade. Inclui unboxing e primeiras impressões." },
-  { titulo: "Clips", texto: "Cortes rápidos e edições dinâmicas, com trilha e legenda, para Reels, TikTok e anúncios." },
+  { titulo: "Criativos para ads", texto: "Vídeos pensados para rodar como anúncio pago, com gancho forte nos primeiros segundos e versões diferentes para você testar." },
+  { titulo: "Clips", texto: "Cortes rápidos e edições dinâmicas, com trilha e legenda, para Reels, TikTok e Shorts." },
   { titulo: "Influencer", texto: "Divulgo o seu produto para a minha audiência no @amandadrebess, com cupom de desconto e link de compra." },
-  { titulo: "Fotos", texto: "Fotos do produto com luz natural e cenário do dia a dia, para o feed, a loja e os anúncios." }
+  { titulo: "Fotos", texto: "Fotos do produto com luz natural e cenário do dia a dia, para o feed, a loja e os anúncios." },
+  { titulo: "Black Friday", texto: "Conteúdos inspirados na data para a sua marca vender mais. Toque aqui para ver exemplos.", link: "blackfriday.html" }
 ];/* Quatro métricas com contador */
 const METRICAS = [
   { valor: 300, prefixo: "+", sufixo: "",  rotulo: "vídeos entregues" },
@@ -851,12 +866,14 @@ montarFiltros();
 mostrar();
 
 /* Serviços */
-$("#services").innerHTML = SERVICOS.map((s, i) => `
-  <article class="svc glass reveal">
-    <div class="n" aria-hidden="true">${String(i + 1).padStart(2, "0")}</div>
-    <h3>${esc(s.titulo)}</h3>
-    <p>${esc(s.texto)}</p>
-  </article>`).join("");
+$("#services").innerHTML = SERVICOS.map((s, i) => {
+  const miolo = `<div class="n" aria-hidden="true">${String(i + 1).padStart(2, "0")}</div><h3>${esc(s.titulo)}</h3><p>${esc(s.texto)}</p>`;
+  return s.link
+    ? `<a class="svc glass reveal svc-link" href="${esc(s.link)}">${miolo}</a>`
+    : `<article class="svc glass reveal">${miolo}</article>`;
+}).join("");
+/* botão "Quero criar com você" leva para o WhatsApp, se o número estiver no perfil */
+try { const wa = document.getElementById("criarWa"); if (wa && typeof PERFIL !== "undefined" && PERFIL.whatsapp) wa.href = "https://wa.me/" + PERFIL.whatsapp + "?text=" + encodeURIComponent("Oi, Amanda! Vi o seu portfólio e quero criar um conteúdo para a minha marca."); } catch (e) {}
 
 /* Métricas, resultados e depoimentos */
 $("#metrics").innerHTML = METRICAS.map(m => `
