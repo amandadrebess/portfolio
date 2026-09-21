@@ -559,8 +559,6 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
     </div>
     <div class="metrics" id="metrics"></div>
     <p class="reveal" style="margin:-24px 0 clamp(36px,5vw,60px)"><a class="btn btn-ghost" href="metricas.html">Ver métricas do Instagram</a></p>
-    <h3 class="sub-title reveal">Resultados de campanha</h3>
-    <div class="results" id="results"></div>
     <h3 class="sub-title reveal">Quem já trabalhou comigo</h3>
     <div class="quotes" id="quotes"></div>
   </div>
@@ -937,12 +935,6 @@ $("#metrics").innerHTML = METRICAS.map(m => `
     <strong data-count="${m.valor}" data-pre="${m.prefixo}" data-suf="${m.sufixo}">${m.prefixo}${fmt(m.valor)}${m.sufixo}</strong>
     <span>${esc(m.rotulo)}</span>
   </div>`).join("");
-$("#results").innerHTML = RESULTADOS.map(r => `
-  <article class="result glass reveal">
-    <strong>${esc(r.numero)}</strong>
-    <div class="rl">${esc(r.rotulo)}</div>
-    <p>${esc(r.texto)}</p>
-  </article>`).join("");
 $("#quotes").innerHTML = DEPOIMENTOS.map(d => `
   <figure class="quote glass reveal">
     <blockquote>${esc(d.texto)}</blockquote>
