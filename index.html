@@ -156,8 +156,6 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 /* foto do telefone: balanço leve + efeito "cabeção" (a cabeça cresce e diminui, como um bonequinho) */
 .hero-anim{position:absolute;inset:0;z-index:1;transform-origin:50% 100%;animation:baila 3.2s ease-in-out infinite}
 @keyframes baila{0%,100%{transform:scale(1.03) rotate(0)}25%{transform:scale(1.03) rotate(-1.2deg) translateY(-3px)}50%{transform:scale(1.03) rotate(0) translateY(0)}75%{transform:scale(1.03) rotate(1.2deg) translateY(-3px)}}
-.cabecao{position:absolute;inset:0;z-index:3;background:url(foto-capa.jpg) center/100% 100% no-repeat;transform-origin:45.6% 36%;-webkit-mask-image:radial-gradient(ellipse 19% 16% at 47% 19.5%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 19% 16% at 47% 19.5%,#000 60%,transparent 100%);animation:cabecaoPulsa 2.6s ease-in-out infinite;pointer-events:none}
-@keyframes cabecaoPulsa{0%,100%{transform:translateY(7%) scale(1.4) rotate(-3deg)}50%{transform:translateY(7%) scale(1.68) rotate(3deg)}}.balao{position:absolute;z-index:3;top:4%;left:-6%;background:#fff;color:#1f2a44;border:3px solid #1f2a44;border-radius:18px;padding:8px 14px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(.85rem,2vw,1.05rem);letter-spacing:.02em;box-shadow:4px 4px 0 #ee8fc0;transform-origin:85% 100%;animation:balaoPop 6s ease-in-out infinite;pointer-events:none}
 .balao::after{content:"";position:absolute;right:22px;bottom:-14px;width:18px;height:18px;background:#fff;border-right:3px solid #1f2a44;border-bottom:3px solid #1f2a44;transform:rotate(45deg) skew(8deg,8deg)}
 @keyframes balaoPop{0%,8%{transform:scale(0) rotate(-8deg);opacity:0}16%{transform:scale(1.18) rotate(3deg);opacity:1}22%,80%{transform:scale(1) rotate(-2deg);opacity:1}90%,100%{transform:scale(0) rotate(-8deg);opacity:0}}
 .sticker{
@@ -420,7 +418,19 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
   .bf-num{animation:none}
 }
 .menu a.bf-link{background:#d21f31;color:#fff;border-radius:999px}
-@media (prefers-reduced-motion:reduce){.cartao-v:hover .ph,.cartao-v:focus-within .ph{transform:none}.hero-anim{animation:none}.cabecao{animation:none;transform:translateY(7%) scale(1.4)}.balao{animation:none;transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.cartao-v:hover .ph,.cartao-v:focus-within .ph{transform:none}.hero-anim{animation:none}/* ===== TEMA MAIS LIMPO: fundo claro, menos blocos coloridos, uma cor de destaque (azul) e amarelo só nos botões ===== */
+:root{--bg:#fdfbf7}
+.glow-pink,.glow-lime{display:none}
+#servicos{background:transparent}
+.strip{background:#fff}
+.hero-photo{border:4px solid #fff;box-shadow:0 12px 32px rgba(31,42,68,.16)}
+.about-photo{--c:#eef1f6;border:4px solid #fff;box-shadow:0 12px 32px rgba(31,42,68,.12)}
+.ph{background:var(--c,#e9ecf3)}
+.cartao-v .ph,.work .ph{background:#e9ecf3 !important}
+.svc .n,.svc:nth-child(n) .n{background:#e6effa !important;color:#0d4f9a}
+.svc-link{background:#f4f7fc}
+.svc-video,.svc-breve{background:#f4f6fa}
+.bar{opacity:.55}
 </style>
 </head>
 <body>
@@ -467,7 +477,7 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
       </div>
       <div class="hero-photo-wrap reveal">
         <!-- FOTO DA CAPA: para trocar, substitua o arquivo foto-capa.jpg (formato 4:5, 800x1000) no repositório, ou mude o endereço do src abaixo -->
-        <figure class="ph hero-photo" style="margin:0 auto"><div class="hero-anim"><img src="foto-capa.jpg" alt="Amanda Drebes de vestido jeans e tênis vermelho, falando em um telefone vermelho antigo" width="800" height="1000" fetchpriority="high"><div class="cabecao" aria-hidden="true"></div></div></figure>
+        <figure class="ph hero-photo" style="margin:0 auto"><div class="hero-anim"><img src="foto-capa.jpg" alt="Amanda Drebes de vestido jeans e tênis vermelho, falando em um telefone vermelho antigo" width="800" height="1000" fetchpriority="high"></div></figure>
         <span class="balao" aria-hidden="true">TÔ PRONTA!</span>
         <span class="sticker">Curitiba, Brasil</span>
       </div>
