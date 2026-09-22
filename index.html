@@ -609,7 +609,6 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
         <a href="#sobre">Sobre</a>
         <a href="#trabalhos">Trabalhos</a>
         <a href="#servicos">Criar juntos</a>
-        <a href="#numeros">Números</a>
         <a href="#contato">Contato</a>
         <a href="metricas.html">Métricas</a>
         <a href="blackfriday.html" class="bf-link">Black Friday</a>
@@ -743,14 +742,6 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
         <a class="btn btn-ghost" href="#trabalhos">Ver os trabalhos</a>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- 6. NÚMEROS E DEPOIMENTOS -->
-<section class="sec" id="numeros">
-  <div class="wrap">
-    <h3 class="sub-title reveal">Quem já trabalhou comigo</h3>
-    <div class="quotes" id="quotes"></div>
   </div>
 </section>
 
@@ -1123,7 +1114,7 @@ if ($("#metrics")) $("#metrics").innerHTML = METRICAS.map(m => `
     <strong data-count="${m.valor}" data-pre="${m.prefixo}" data-suf="${m.sufixo}">${m.prefixo}${fmt(m.valor)}${m.sufixo}</strong>
     <span>${esc(m.rotulo)}</span>
   </div>`).join("");
-$("#quotes").innerHTML = DEPOIMENTOS.map(d => `
+if ($("#quotes")) $("#quotes").innerHTML = DEPOIMENTOS.map(d => `
   <figure class="quote glass reveal">
     <blockquote>${esc(d.texto)}</blockquote>
     <figcaption class="who">
