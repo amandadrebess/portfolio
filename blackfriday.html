@@ -383,6 +383,39 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
 .cta-box{padding:clamp(20px,4vw,34px);text-align:center}
 .cta-box .cta-row{justify-content:center;margin:16px 0 0}
 
+/* ===== POP MARIANA: amarelo, vermelho, azul e rosa-choque, com contorno preto grosso (mesmo estilo do portfólio) ===== */
+:root{
+  --bg:#fff6da; --pink:#ff4fa3; --pink-soft:#ff3b3b; --teal:#2f6fed; --teal-d:#2f6fed; --lime:#ffd400; --orange:#ff3b3b;
+  --navy:#151515; --cream2:#ffffff;
+}
+body{background:var(--bg)}
+.eyebrow{color:#2f6fed}
+.brand span{color:var(--pink-soft)}
+.nav{background:#fff !important;border-bottom:2px solid var(--navy)}
+.menu a:hover{background:var(--lime);color:var(--navy)}
+.bf-topo h1 span,.hero h1 .l2{color:var(--pink-soft)}
+
+.glass{background:var(--cream2) !important;border:2.5px solid var(--navy) !important;border-radius:18px !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;box-shadow:6px 6px 0 var(--navy) !important}
+
+.btn{border-radius:14px !important;border:2.5px solid var(--navy) !important;box-shadow:4px 4px 0 var(--navy);transition:transform .15s,box-shadow .15s !important;font-weight:900}
+.btn:hover{transform:translate(2px,2px) !important;box-shadow:2px 2px 0 var(--navy)}
+.btn-lime{background:#c4e400 !important;color:var(--navy) !important}
+.btn-pink{background:#2f6fed !important;color:#fff !important}
+.btn-ghost{background:#fff !important;color:var(--navy) !important;border-color:var(--navy) !important;backdrop-filter:none !important}
+
+.work .ph{border:2.5px solid var(--navy);box-shadow:5px 5px 0 var(--navy)}
+.work:hover .ph,.work .ph:focus-within{box-shadow:8px 8px 0 var(--navy) !important}
+
+.svc:nth-child(6n+1) .n{background:var(--orange) !important;color:#fff !important}
+.svc:nth-child(6n+2) .n{background:#2f6fed !important;color:#fff !important}
+.svc:nth-child(6n+3) .n{background:var(--pink) !important;color:#fff !important}
+.svc:nth-child(6n+4) .n{background:var(--lime) !important;color:var(--navy) !important}
+.svc:nth-child(6n+5) .n{background:#2f6fed !important;color:#fff !important}
+.svc:nth-child(6n+6) .n{background:var(--orange) !important;color:#fff !important}
+
+.faixa-bf{background:var(--navy) !important}
+.bf-dias b{background:var(--orange) !important;color:#fff !important}
+
 /* MOUSE VERDE ÁRVORE */
 html,body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cpath d='M4 2v18l5-4.5 3.6 7.6 3.2-1.5-3.6-7.5H19z' fill='%232E7D32' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2,auto}
 a,button,[role="button"],label,select,summary,.cartao-v,.btn{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cpath d='M4 2v18l5-4.5 3.6 7.6 3.2-1.5-3.6-7.5H19z' fill='%232E7D32' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2,pointer}
