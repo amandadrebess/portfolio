@@ -595,6 +595,8 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
 .faixa-bf{background:var(--navy) !important}
 .menu a.bf-link{background:var(--orange) !important}
 .menu{background:#fff}
+.hero h1{color:var(--pink) !important}
+.hero h1 .l2{color:var(--lime) !important;-webkit-text-stroke:2px var(--navy) !important}
 </style>
 </head>
 <body>
@@ -712,7 +714,7 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
               </video>
             </div>
             <p class="rc-marca">Rituária</p>
-            <div class="rc-views"><span data-en="Sold in 1 day">Vendidos em 1 dia</span><b>+40 mil</b></div>
+            <div class="rc-views"><span data-en="Sold in 1 day">Vendidos em 1 dia</span><b data-en="+R$40k">+40 mil</b></div>
           </div>
         </div>
         <button class="rc-seta rc-next" type="button" aria-label="Próximo" data-en-aria="Next">›</button>
@@ -797,7 +799,7 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
       </div>
       <div class="direct reveal">
         <a class="btn btn-lime" id="linkWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="btn btn-pink" id="linkMail" href="#">E-mail</a>
+        <a class="btn btn-pink" id="linkMail" href="#" data-en="Email">E-mail</a>
         <a class="btn btn-ghost" id="linkIg" href="#" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
@@ -840,8 +842,8 @@ const PERFIL = {
 
 /* Números da capa: valor, prefixo, sufixo e rótulo */
 const NUMEROS_CAPA = [
-  { valor: 300, prefixo: "+", sufixo: "", rotulo: "vídeos entregues" },
-  { valor: 100, prefixo: "+", sufixo: "", rotulo: "marcas atendidas" }
+  { valor: 300, prefixo: "+", sufixo: "", rotulo: "vídeos entregues", rotuloEn: "videos delivered" },
+  { valor: 100, prefixo: "+", sufixo: "", rotulo: "marcas atendidas", rotuloEn: "brands served" }
 ];
 
 /* Marcas da faixa da capa: cada uma aparece numa bolinha branca com o logo.
@@ -981,8 +983,14 @@ function renderRodape() {
 renderRodape();
 
 /* Capa: números */
-$("#heroStats").innerHTML = NUMEROS_CAPA.map(n =>
-  `<div class="stat glass"><strong data-count="${n.valor}" data-pre="${n.prefixo}" data-suf="${n.sufixo}">${n.prefixo}${fmt(n.valor)}${n.sufixo}</strong><span>${esc(n.rotulo)}</span></div>`).join("");
+function renderHeroStats() {
+  $("#heroStats").innerHTML = NUMEROS_CAPA.map(n => {
+    const rotulo = LANG === "en" && n.rotuloEn ? n.rotuloEn : n.rotulo;
+    return `<div class="stat glass"><strong data-count="${n.valor}" data-pre="${n.prefixo}" data-suf="${n.sufixo}">${n.prefixo}${fmt(n.valor)}${n.sufixo}</strong><span>${esc(rotulo)}</span></div>`;
+  }).join("");
+  document.querySelectorAll("#heroStats [data-count]").forEach(animar);
+}
+renderHeroStats();
 
 /* Faixa de marcas (lista duplicada para o loop ficar contínuo) */
 const listaMarcas = `<ul>${MARCAS.map(m => {
@@ -1324,7 +1332,7 @@ vOv.addEventListener("click", e => { if (e.target === vOv) fecharVideo(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && vOv.classList.contains("open")) fecharVideo(); });
 
 /* ---- Faixa do topo: contagem para a Black Friday (4ª sexta-feira de novembro) ---- */
-(function () {
+function montarFaixaBF() {
   const faixa = document.getElementById("faixaBF"), trilha = document.getElementById("bfTrilha");
   if (!faixa || !trilha) return;
   const sextaBF = ano => { const d = new Date(ano, 10, 1); return new Date(ano, 10, 1 + ((5 - d.getDay() + 7) % 7) + 21); };
@@ -1332,17 +1340,23 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && vOv.classL
   let alvo = sextaBF(hoje.getFullYear());
   if (alvo < hoje) alvo = sextaBF(hoje.getFullYear() + 1);
   const dias = Math.round((alvo - hoje) / 86400000);
-  const frase = dias === 0 ? '<b class="bf-num">Hoje</b> é Black Friday!' : dias === 1 ? 'Falta <b class="bf-num">1</b> dia para a Black Friday' : 'Faltam <b class="bf-num">' + dias + '</b> dias para a Black Friday';
-  const textoLeitor = dias === 0 ? "Hoje é Black Friday" : dias === 1 ? "Falta 1 dia para a Black Friday" : "Faltam " + dias + " dias para a Black Friday";
-  faixa.setAttribute("aria-label", textoLeitor + ". Vem espiar alguns conteúdos");
+  const en = LANG === "en";
+  const frase = dias === 0 ? (en ? '<b class="bf-num">Today</b> is Black Friday!' : '<b class="bf-num">Hoje</b> é Black Friday!')
+    : dias === 1 ? (en ? '<b class="bf-num">1</b> day left for Black Friday' : 'Falta <b class="bf-num">1</b> dia para a Black Friday')
+    : (en ? '<b class="bf-num">' + dias + '</b> days left for Black Friday' : 'Faltam <b class="bf-num">' + dias + '</b> dias para a Black Friday');
+  const textoLeitor = dias === 0 ? (en ? "Today is Black Friday" : "Hoje é Black Friday") : dias === 1 ? (en ? "1 day left for Black Friday" : "Falta 1 dia para a Black Friday") : (en ? dias + " days left for Black Friday" : "Faltam " + dias + " dias para a Black Friday");
+  const cta = en ? "Come take a peek" : "Vem espiar alguns conteúdos";
+  faixa.setAttribute("aria-label", textoLeitor + ". " + cta);
   /* letreiro: o texto se repete em duas metades iguais para a rolagem nunca ter buraco */
-  const un = '<span class="bf-un"><span>' + frase + '</span><i>✦</i><span class="bf-cta">Vem espiar alguns conteúdos</span><i>✦</i></span>';
+  const un = '<span class="bf-un"><span>' + frase + '</span><i>✦</i><span class="bf-cta">' + cta + '</span><i>✦</i></span>';
   const meia = '<span class="bf-meia">' + un.repeat(4) + '</span>';
   trilha.innerHTML = meia + meia;
   /* a altura da faixa empurra o menu para baixo */
   const ajustar = () => document.documentElement.style.setProperty("--faixa-h", faixa.offsetHeight + "px");
-  ajustar(); window.addEventListener("resize", ajustar);
-})();
+  ajustar();
+  if (!montarFaixaBF.ligado) { window.addEventListener("resize", ajustar); montarFaixaBF.ligado = true; }
+}
+montarFaixaBF();
 
 /* Carrossel da aba "Os melhores resultados" (rascunho) */
 (() => {
@@ -1385,6 +1399,8 @@ function aplicarIdioma(lang) {
   montarFiltros();
   mostrar();
   renderRodape();
+  renderHeroStats();
+  montarFaixaBF();
   revelar(document.querySelectorAll("#services .reveal, #gallery .reveal, #filters .reveal"));
 }
 $("#langSwitch")?.addEventListener("click", e => {

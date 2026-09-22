@@ -431,20 +431,33 @@ body{background:var(--bg)}
 .pill.glass{box-shadow:4px 4px 0 var(--navy) !important}
 .glow-pink,.glow-lime{display:none}
 .strip{background:#fff3b0 !important}
+
+/* seletor de idioma PT/EN, ao lado do nome */
+.brand-group{display:flex;align-items:center;gap:14px}
+.lang-switch{display:inline-flex;align-items:center;background:#eee;border-radius:999px;padding:3px;gap:2px}
+.lang-btn{border:0;background:transparent;padding:6px 14px;border-radius:999px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.76rem;letter-spacing:.03em;color:var(--muted);cursor:pointer;transition:background .2s,color .2s}
+.lang-btn[aria-pressed="true"]{background:var(--navy);color:#fff}
+@media (max-width:640px){.lang-btn{padding:5px 10px;font-size:.7rem}.brand-group{gap:8px}}
 </style>
 </head>
 <body>
 
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="AMANDA DREBES, voltar ao portfólio">AMANDA <span>DREBES</span></a>
+    <div class="brand-group">
+      <a class="brand" href="index.html" aria-label="AMANDA DREBES, voltar ao portfólio">AMANDA <span>DREBES</span></a>
+      <div class="lang-switch" id="langSwitch" role="group" aria-label="Idioma do site / Site language">
+        <button type="button" class="lang-btn" data-lang="pt" aria-pressed="true">PT</button>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu"><span></span><span></span><span></span></button>
     <nav aria-label="Menu principal">
       <div class="menu" id="menu">
-        <a href="#geral">Visão geral</a>
-        <a href="#audiencia">Público</a>
-        <a href="#prints">Prints</a>
-        <a href="index.html">← Portfólio</a>
+        <a href="#geral" data-en="Overview">Visão geral</a>
+        <a href="#audiencia" data-en="Audience">Público</a>
+        <a href="#prints" data-en="Screenshots">Prints</a>
+        <a href="index.html" data-en="← Portfolio">← Portfólio</a>
       </div>
     </nav>
   </div>
@@ -454,16 +467,16 @@ body{background:var(--bg)}
 <section class="page-hero" id="topo">
   <div class="glow-pink" style="width:380px;height:380px;top:20px;right:-120px"></div>
   <div class="wrap reveal" style="position:relative;z-index:1">
-    <span class="eyebrow">Métricas do Instagram</span>
-    <h1>Meus números <span>no Instagram</span></h1>
-    <p class="lead">Aqui você vê o tamanho do meu perfil, as visualizações e quem me acompanha, para decidir com segurança o que criar juntos.</p>
+    <span class="eyebrow" data-en="Instagram metrics">Métricas do Instagram</span>
+    <h1 data-en-html='Numbers on <span>Instagram</span>'>Meus números <span>no Instagram</span></h1>
+    <p class="lead" data-en="Here you can see the size of my profile, the views and who follows me, so you can decide with confidence what to create together.">Aqui você vê o tamanho do meu perfil, as visualizações e quem me acompanha, para decidir com segurança o que criar juntos.</p>
     <div class="pills">
       <span class="pill glass" id="pillPerfil"></span>
       <span class="pill glass" id="pillData"></span>
     </div>
     <div class="cta-row">
-      <a class="btn btn-lime" id="btnPerfil" href="#" target="_blank" rel="noopener">Ver meu perfil</a>
-      <a class="btn btn-ghost" href="index.html#contato">Falar comigo</a>
+      <a class="btn btn-lime" id="btnPerfil" href="#" target="_blank" rel="noopener" data-en="See my profile">Ver meu perfil</a>
+      <a class="btn btn-ghost" href="index.html#contato" data-en="Talk to me">Falar comigo</a>
     </div>
   </div>
 </section>
@@ -472,8 +485,8 @@ body{background:var(--bg)}
 <section class="sec" id="geral">
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="eyebrow">Visão geral</span>
-      <h2 class="title">Os números do <em>perfil</em></h2>
+      <span class="eyebrow" data-en="Overview">Visão geral</span>
+      <h2 class="title" data-en-html="The <em>profile</em> numbers">Os números do <em>perfil</em></h2>
     </div>
     <div class="kpis" id="kpis"></div>
   </div>
@@ -483,13 +496,13 @@ body{background:var(--bg)}
 <section class="sec" id="audiencia" style="background:#fff3c4">
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="eyebrow">Quem me acompanha</span>
-      <h2 class="title">O <em>público</em> do perfil</h2>
+      <span class="eyebrow" data-en="Who follows me">Quem me acompanha</span>
+      <h2 class="title" data-en-html="The profile's <em>audience</em>">O <em>público</em> do perfil</h2>
     </div>
     <div class="aud">
-      <div class="glass reveal"><h3>Gênero</h3><ul class="bars" id="barGenero"></ul></div>
-      <div class="glass reveal"><h3>Idades que mais me acompanham</h3><ul class="bars" id="barIdade"></ul></div>
-      <div class="glass reveal"><h3>Principais cidades</h3><ul class="bars" id="barCidades"></ul></div>
+      <div class="glass reveal"><h3 data-en="Gender">Gênero</h3><ul class="bars" id="barGenero"></ul></div>
+      <div class="glass reveal"><h3 data-en="Ages that follow me the most">Idades que mais me acompanham</h3><ul class="bars" id="barIdade"></ul></div>
+      <div class="glass reveal"><h3 data-en="Top cities">Principais cidades</h3><ul class="bars" id="barCidades"></ul></div>
     </div>
   </div>
 </section>
@@ -498,9 +511,9 @@ body{background:var(--bg)}
 <section class="sec" id="prints" style="background:#e8f0fb">
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="eyebrow">Prova real</span>
-      <h2 class="title">Prints das <em>métricas</em></h2>
-      <p class="lead">Capturas de tela direto do painel profissional do Instagram.</p>
+      <span class="eyebrow" data-en="Real proof">Prova real</span>
+      <h2 class="title" data-en-html="<em>Metrics</em> screenshots">Prints das <em>métricas</em></h2>
+      <p class="lead" data-en="Screenshots straight from the Instagram professional dashboard.">Capturas de tela direto do painel profissional do Instagram.</p>
     </div>
     <div class="prints" id="printsGrid"></div>
   </div>
@@ -510,12 +523,12 @@ body{background:var(--bg)}
 <section class="sec" id="contato">
   <div class="wrap">
     <div class="glass cta-box reveal">
-      <span class="eyebrow">Bora criar juntos</span>
-      <h2 class="title">Quer esses números <em>na sua marca?</em></h2>
-      <p class="lead" style="margin-inline:auto">Me chame e eu preparo uma proposta com o formato ideal para o seu produto.</p>
+      <span class="eyebrow" data-en="Let's create together">Bora criar juntos</span>
+      <h2 class="title" data-en-html="Want these numbers <em>for your brand?</em>">Quer esses números <em>na sua marca?</em></h2>
+      <p class="lead" style="margin-inline:auto" data-en="Get in touch and I'll put together a proposal with the ideal format for your product.">Me chame e eu preparo uma proposta com o formato ideal para o seu produto.</p>
       <div class="cta-row">
         <a class="btn btn-lime" id="linkWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="btn btn-pink" id="linkMail" href="#">E-mail</a>
+        <a class="btn btn-pink" id="linkMail" href="#" data-en="Email">E-mail</a>
         <a class="btn btn-ghost" id="linkIg" href="#" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
@@ -528,7 +541,7 @@ body{background:var(--bg)}
   <div class="wrap foot">
     <a class="brand" href="index.html">AMANDA <span>DREBES</span></a>
     <ul id="footLinks"></ul>
-    <p class="copy">© <span id="year"></span> AMANDA DREBES. Todos os direitos reservados.</p>
+    <p class="copy">© <span id="year"></span> AMANDA DREBES. <span data-en="All rights reserved.">Todos os direitos reservados.</span></p>
   </div>
 </footer>
 
@@ -543,24 +556,26 @@ const PERIODO = "20 de ago a 18 de set"; // período dos números (últimos 30 d
 
 /* Visão geral: valor (número), prefixo, sufixo e uma nota curta */
 const KPIS = [
-  { rotulo: "Seguidores",    valor: 16840,   prefixo: "", sufixo: "", nota: "no perfil, +1,0% nos últimos 30 dias" },
-  { rotulo: "Visualizações", valor: 2943340, prefixo: "", sufixo: "", nota: "nos últimos 30 dias, sendo 88,4% de pessoas que ainda não me seguem" }
+  { rotulo: "Seguidores",    rotuloEn: "Followers", valor: 16840,   prefixo: "", sufixo: "", nota: "no perfil, +1,0% nos últimos 30 dias", notaEn: "on the profile, +1.0% in the last 30 days" },
+  { rotulo: "Visualizações", rotuloEn: "Views",      valor: 2943340, prefixo: "", sufixo: "", nota: "nos últimos 30 dias, sendo 88,4% de pessoas que ainda não me seguem", notaEn: "in the last 30 days, 88.4% of them people who don't follow me yet" }
 ];
 
 /* Público: valor é a porcentagem (0 a 100) */
-const GENERO  = [ { rotulo: "Mulheres", valor: 84.7 }, { rotulo: "Homens", valor: 15.3 } ];
-const IDADE   = [ { rotulo: "25 a 34 anos", valor: 39.1 }, { rotulo: "35 a 44 anos", valor: 31.1 }, { rotulo: "45 a 54 anos", valor: 13.4 } ];
+const GENERO  = [ { rotulo: "Mulheres", rotuloEn: "Women", valor: 84.7 }, { rotulo: "Homens", rotuloEn: "Men", valor: 15.3 } ];
+const IDADE   = [ { rotulo: "25 a 34 anos", rotuloEn: "25–34 years old", valor: 39.1 }, { rotulo: "35 a 44 anos", rotuloEn: "35–44 years old", valor: 31.1 }, { rotulo: "45 a 54 anos", rotuloEn: "45–54 years old", valor: 13.4 } ];
 const CIDADES = [ { rotulo: "Teutônia (RS)", valor: 14.8 }, { rotulo: "São Paulo (SP)", valor: 3.4 }, { rotulo: "Lajeado (RS)", valor: 3.3 }, { rotulo: "Curitiba (PR)", valor: 3.1 }, { rotulo: "Porto Alegre (RS)", valor: 2.0 } ];
 
 /* Prints do painel do Instagram. imagem = nome do arquivo do print (na mesma pasta do site). */
 const PRINTS = [
-  { legenda: "Stories mais vistos, últimos 30 dias", imagem: "print-stories.jpg", alt: "Print do painel do Instagram com os Stories mais vistos nos últimos 30 dias, o primeiro com 16 mil visualizações" },
-  { legenda: "Reels mais vistos, últimos 30 dias",   imagem: "print-reels.jpg",   alt: "Print do painel do Instagram com os Reels mais vistos nos últimos 30 dias, o primeiro com 15 mil visualizações" }
+  { legenda: "Stories mais vistos, últimos 30 dias", legendaEn: "Most viewed Stories, last 30 days", imagem: "print-stories.jpg", alt: "Print do painel do Instagram com os Stories mais vistos nos últimos 30 dias, o primeiro com 16 mil visualizações" },
+  { legenda: "Reels mais vistos, últimos 30 dias",   legendaEn: "Most viewed Reels, last 30 days",   imagem: "print-reels.jpg",   alt: "Print do painel do Instagram com os Reels mais vistos nos últimos 30 dias, o primeiro com 15 mil visualizações" }
 ];
 /* =====================================================
    CÓDIGO
    ===================================================== */
 const $ = (s, r = document) => r.querySelector(s);
+let LANG = "pt";
+try { LANG = localStorage.getItem("idioma") === "en" ? "en" : "pt"; } catch (e) {}
 const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const esc = t => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const fmt = n => n.toLocaleString("pt-BR");
@@ -569,43 +584,65 @@ const grad = i => { const c = CORES[i % CORES.length]; return `--c:${c[0]};--c2:
 const PALETA = ["#f7d117", "#ee8fc0", "#1160b8", "#f79a72", "#8fb8e8", "#d29a00"];
 
 const igLink = `https://instagram.com/${PERFIL.instagram.replace("@", "")}`;
-const waLink = `https://wa.me/${PERFIL.whatsapp}?text=${encodeURIComponent("Oi, Amanda! Vi suas métricas do Instagram e quero conversar sobre um projeto.")}`;
-$("#pillPerfil").textContent = PERFIL.instagram;
-$("#pillData").textContent = `Últimos 30 dias: ${PERIODO}`;
-$("#btnPerfil").href = igLink; $("#linkIg").href = igLink; $("#linkWa").href = waLink;
-$("#linkMail").href = `mailto:${PERFIL.email}`;
-$("#footLinks").innerHTML =
-  `<li><a href="index.html">Portfólio</a></li>` +
-  `<li><a href="${igLink}" target="_blank" rel="noopener">Instagram ${esc(PERFIL.instagram)}</a></li>` +
-  `<li><a href="${waLink}" target="_blank" rel="noopener">WhatsApp</a></li>` +
-  `<li><a href="mailto:${PERFIL.email}">E-mail</a></li>`;
+function montarLinks() {
+  const msgWa = LANG === "en" ? "Hi, Amanda! I saw your Instagram metrics and I'd like to talk about a project." : "Oi, Amanda! Vi suas métricas do Instagram e quero conversar sobre um projeto.";
+  const waLink = `https://wa.me/${PERFIL.whatsapp}?text=${encodeURIComponent(msgWa)}`;
+  $("#pillPerfil").textContent = PERFIL.instagram;
+  $("#pillData").textContent = (LANG === "en" ? "Last 30 days: " : "Últimos 30 dias: ") + PERIODO;
+  $("#btnPerfil").href = igLink; $("#linkIg").href = igLink; $("#linkWa").href = waLink;
+  $("#linkMail").href = `mailto:${PERFIL.email}`;
+  const tPortfolio = LANG === "en" ? "Portfolio" : "Portfólio";
+  const tMail = LANG === "en" ? "Email" : "E-mail";
+  $("#footLinks").innerHTML =
+    `<li><a href="index.html">${tPortfolio}</a></li>` +
+    `<li><a href="${igLink}" target="_blank" rel="noopener">Instagram ${esc(PERFIL.instagram)}</a></li>` +
+    `<li><a href="${waLink}" target="_blank" rel="noopener">WhatsApp</a></li>` +
+    `<li><a href="mailto:${PERFIL.email}">${tMail}</a></li>`;
+}
+montarLinks();
 $("#year").textContent = new Date().getFullYear();
 
 /* Visão geral */
-$("#kpis").innerHTML = KPIS.map(k => {
-  const tem = typeof k.valor === "number";
-  return `<article class="kpi glass reveal">
+function renderKpis() {
+  $("#kpis").innerHTML = KPIS.map(k => {
+    const tem = typeof k.valor === "number";
+    const rotulo = LANG === "en" && k.rotuloEn ? k.rotuloEn : k.rotulo;
+    const nota = LANG === "en" && k.notaEn ? k.notaEn : k.nota;
+    return `<article class="kpi glass reveal">
     <strong ${tem ? `data-count="${k.valor}" data-pre="${esc(k.prefixo)}" data-suf="${esc(k.sufixo)}"` : ""}>${tem ? esc(k.prefixo) + fmt(k.valor) + esc(k.sufixo) : "00" + esc(k.sufixo)}</strong>
-    <h3>${esc(k.rotulo)}</h3><p>${esc(k.nota)}</p></article>`;
-}).join("");
+    <h3>${esc(rotulo)}</h3><p>${esc(nota)}</p></article>`;
+  }).join("");
+  document.querySelectorAll("#kpis [data-count]").forEach(animar);
+}
+renderKpis();
 
 /* Barras do público */
 function barras(id, lista) {
   const maior = Math.max(1, ...lista.map(b => typeof b.valor === "number" ? b.valor : 0)); // a maior barra ocupa a largura toda
   $(id).innerHTML = lista.map(b => {
     const tem = typeof b.valor === "number";
-    return `<li class="bar-row"><span class="bl">${esc(b.rotulo)}</span><span class="bv">${tem ? String(b.valor).replace(".", ",") + "%" : "00%"}</span>
+    const rotulo = LANG === "en" && b.rotuloEn ? b.rotuloEn : b.rotulo;
+    const valorTxt = tem ? (LANG === "en" ? String(b.valor) : String(b.valor).replace(".", ",")) + "%" : "00%";
+    return `<li class="bar-row"><span class="bl">${esc(rotulo)}</span><span class="bv">${valorTxt}</span>
       <span class="meter" aria-hidden="true"><i class="${tem ? "" : "vazio"}" style="--w:${tem ? Math.min(100, Math.max(0, b.valor / maior * 100)) : 45}%"></i></span></li>`;
   }).join("");
 }
-barras("#barGenero", GENERO); barras("#barIdade", IDADE); barras("#barCidades", CIDADES);
+function renderBarras() {
+  barras("#barGenero", GENERO); barras("#barIdade", IDADE); barras("#barCidades", CIDADES);
+}
+renderBarras();
 
 /* Prints */
-$("#printsGrid").innerHTML = PRINTS.map(p => `
-  <figure class="reveal">
-    <img class="print-img" src="${esc(p.imagem)}" alt="${esc(p.alt || p.legenda)}" width="738" height="1270" loading="lazy">
-    <figcaption class="leg">${esc(p.legenda)}</figcaption>
-  </figure>`).join("");
+function renderPrints() {
+  $("#printsGrid").innerHTML = PRINTS.map(p => {
+    const legenda = LANG === "en" && p.legendaEn ? p.legendaEn : p.legenda;
+    return `<figure class="reveal">
+    <img class="print-img" src="${esc(p.imagem)}" alt="${esc(p.alt || legenda)}" width="738" height="1270" loading="lazy">
+    <figcaption class="leg">${esc(legenda)}</figcaption>
+  </figure>`;
+  }).join("");
+}
+renderPrints();
 /* Menu sanduíche */
 const burger = $("#burger"), menu = $("#menu");
 function fecharMenu() { menu.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); burger.setAttribute("aria-label", "Abrir menu"); }
@@ -629,11 +666,12 @@ function animar(el) {
     if (p < 1) requestAnimationFrame(passo);
   })(ini);
 }
-const alvos = document.querySelectorAll(".reveal");
-if (reduzir || !("IntersectionObserver" in window)) {
-  alvos.forEach(e => e.classList.add("in"));
-  document.querySelectorAll("[data-count]").forEach(animar);
-} else {
+function revelar(alvos) {
+  if (reduzir || !("IntersectionObserver" in window)) {
+    alvos.forEach(e => e.classList.add("in"));
+    alvos.forEach(e => e.querySelectorAll("[data-count]").forEach(animar));
+    return;
+  }
   const io = new IntersectionObserver((itens, obs) => {
     itens.forEach(it => {
       if (!it.isIntersecting) return;
@@ -645,7 +683,39 @@ if (reduzir || !("IntersectionObserver" in window)) {
   }, { threshold: .15 });
   alvos.forEach(e => io.observe(e));
 }
+revelar(document.querySelectorAll(".reveal"));
 if (window.BANCO) BANCO.registrarVisita(); /* conta a visita na tabela visitas do painel */
+
+/* Botão PT / EN no topo: troca os textos fixos e refaz as partes que a página monta sozinha
+   (números, público, prints, rodapé), sem precisar recarregar. A escolha fica salva no
+   navegador da pessoa (a mesma usada no portfólio principal). */
+function aplicarEstatico(lang) {
+  document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
+  document.querySelectorAll("[data-en]").forEach(el => {
+    if (el.dataset.pt === undefined) el.dataset.pt = el.textContent;
+    el.textContent = lang === "en" ? el.dataset.en : el.dataset.pt;
+  });
+  document.querySelectorAll("[data-en-html]").forEach(el => {
+    if (el.dataset.ptHtml === undefined) el.dataset.ptHtml = el.innerHTML;
+    el.innerHTML = lang === "en" ? el.dataset.enHtml : el.dataset.ptHtml;
+  });
+}
+function aplicarIdioma(lang) {
+  LANG = lang === "en" ? "en" : "pt";
+  try { localStorage.setItem("idioma", LANG); } catch (e) {}
+  aplicarEstatico(LANG);
+  document.querySelectorAll(".lang-btn").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === LANG ? "true" : "false"));
+  montarLinks();
+  renderKpis();
+  renderBarras();
+  renderPrints();
+  revelar(document.querySelectorAll("#kpis .reveal, #audiencia .reveal, #prints .reveal"));
+}
+$("#langSwitch")?.addEventListener("click", e => {
+  const b = e.target.closest(".lang-btn"); if (!b) return;
+  aplicarIdioma(b.dataset.lang);
+});
+aplicarIdioma(LANG);
 </script>
 </body>
 </html>
