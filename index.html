@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#fffaf0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Poppins:wght@400;500;600&family=Caveat:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#fffaf0;
@@ -436,6 +436,64 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
 
 .diferencial{margin-top:18px;padding:16px 20px;border-radius:16px;border-left:4px solid #d93a1f;font-size:.95rem;line-height:1.55}
 .diferencial strong{display:block;margin-bottom:4px;font-size:1.02rem}
+
+/* ===== RETRO POP (rascunho, inspirado no print que a Amanda mandou) ===== */
+:root{
+  --bg:#fbf1e2; --cream2:#fffaf0; --navy:#231a3d;
+  --orange:#ff5a35; --pink:#ff8fab; --coral:#ffb199; --purple:#6a2c91;
+}
+body{background:var(--bg)}
+.wrap{position:relative}
+.eyebrow{position:relative;padding-left:16px;color:var(--purple)}
+.eyebrow::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%) rotate(45deg);width:8px;height:8px;background:var(--orange)}
+.title em{font-family:'Caveat',cursive;font-weight:700;font-style:normal;color:var(--orange);font-size:1.35em;display:inline-block;transform:rotate(-3deg)}
+h1{font-weight:900;font-size:clamp(2.4rem,7vw,4.2rem);letter-spacing:-.03em;position:relative;z-index:1}
+h1 .l2{display:block;color:var(--orange);-webkit-text-stroke:2px var(--navy)}
+.hero{position:relative}
+.hero::before{
+  content:"";position:absolute;top:-40px;right:6%;width:260px;height:260px;z-index:0;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,var(--orange) 0deg 4deg,transparent 4deg 18deg);
+  border-radius:50%;opacity:.35;
+}
+.glow-pink,.glow-lime{display:none}
+
+/* cartões com jeito de adesivo: fundo sólido, contorno grosso, sombra "dura" (sem desfoque) */
+.glass{
+  background:var(--cream2) !important;border:2.5px solid var(--navy) !important;border-radius:18px !important;
+  backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+  box-shadow:6px 6px 0 var(--navy) !important;
+}
+.hero-tag.glass{box-shadow:4px 4px 0 var(--navy) !important;background:#fff !important}
+.svc:hover{transform:translate(-2px,-2px);box-shadow:9px 9px 0 var(--navy) !important;border-color:var(--navy) !important}
+.metric{border-top:0 !important}
+.metric strong{color:var(--purple)}
+.metric:nth-child(1) strong{color:var(--orange)}
+.metric:nth-child(2) strong{color:var(--purple)}
+.metric:nth-child(3) strong{color:var(--pink)}
+.metric:nth-child(4) strong{color:#2f5bc7}
+
+.btn{border-radius:14px !important;border:2.5px solid var(--navy) !important;box-shadow:4px 4px 0 var(--navy);transition:transform .15s,box-shadow .15s !important;font-weight:900}
+.btn:hover{transform:translate(2px,2px) !important;box-shadow:2px 2px 0 var(--navy)}
+.btn-lime{background:var(--orange) !important;color:#fff !important}
+.btn-lime:hover{background:#ff713f !important}
+.btn-pink{background:var(--pink) !important;color:var(--navy) !important}
+.btn-ghost{background:#fff !important;color:var(--navy) !important;border-color:var(--navy) !important}
+
+.hero-photo{border:4px solid var(--navy) !important;box-shadow:8px 8px 0 var(--orange) !important;border-radius:20px}
+.balao{background:#fff;border:2px solid var(--navy);color:var(--navy);font-weight:800}
+.sticker{background:var(--orange) !important;border:2px solid var(--navy) !important;color:#fff !important;font-weight:800}
+
+.cartao-v .ph{border:2.5px solid var(--navy);box-shadow:5px 5px 0 var(--navy)}
+.cartao-v:hover .ph,.cartao-v:focus-within .ph{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--navy) !important}
+.cartao-v .rotulo{background:var(--navy) !important}
+
+#servicos,#numeros,#contato,#resultados,.strip{background:transparent !important}
+.svc .n{border:2px solid var(--navy) !important;border-radius:10px !important}
+
+.diferencial{background:var(--cream2);border:2.5px solid var(--navy) !important;border-left:2.5px solid var(--navy) !important;box-shadow:6px 6px 0 var(--orange) !important}
+
+.faixa-bf{background:var(--navy) !important}
+.menu a.bf-link{background:var(--orange) !important}
 
 /* MOUSE VERDE ÁRVORE */
 html,body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cpath d='M4 2v18l5-4.5 3.6 7.6 3.2-1.5-3.6-7.5H19z' fill='%232E7D32' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2,auto}
