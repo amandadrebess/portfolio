@@ -749,12 +749,6 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
 <!-- 6. NÚMEROS E DEPOIMENTOS -->
 <section class="sec" id="numeros">
   <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Números e depoimentos</span>
-      <h2 class="title">Resultado que <em>se vê e se ouve</em></h2>
-    </div>
-    <div class="metrics" id="metrics"></div>
-    <p class="reveal" style="margin:-24px 0 clamp(36px,5vw,60px)"><a class="btn btn-ghost" href="metricas.html">Ver métricas do Instagram</a></p>
     <h3 class="sub-title reveal">Quem já trabalhou comigo</h3>
     <div class="quotes" id="quotes"></div>
   </div>
@@ -1124,7 +1118,7 @@ $("#services").addEventListener("click", e => {
 try { const wa = document.getElementById("criarWa"); if (wa && typeof PERFIL !== "undefined" && PERFIL.whatsapp) wa.href = "https://wa.me/" + PERFIL.whatsapp + "?text=" + encodeURIComponent("Oi, Amanda! Vi o seu portfólio e quero criar um conteúdo para a minha marca."); } catch (e) {}
 
 /* Métricas, resultados e depoimentos */
-$("#metrics").innerHTML = METRICAS.map(m => `
+if ($("#metrics")) $("#metrics").innerHTML = METRICAS.map(m => `
   <div class="metric glass reveal">
     <strong data-count="${m.valor}" data-pre="${m.prefixo}" data-suf="${m.sufixo}">${m.prefixo}${fmt(m.valor)}${m.sufixo}</strong>
     <span>${esc(m.rotulo)}</span>
