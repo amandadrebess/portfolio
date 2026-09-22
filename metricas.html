@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#fffaf0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Poppins:wght@400;500;600&family=Caveat:wght@700&display=swap" rel="stylesheet">
 <style>
 
 :root{
@@ -396,6 +396,41 @@ footer{border-top:1px solid var(--glass-line);padding:38px 0;background:#ffe9c2}
 @media (max-width:1020px){.kpis{grid-template-columns:repeat(2,1fr)}.aud{grid-template-columns:1fr}}
 @media (max-width:860px){.tops,.prints{grid-template-columns:1fr;max-width:420px;margin-inline:auto}}
 @media (max-width:620px){.kpis{grid-template-columns:1fr}.cols{height:220px}}
+
+/* ===== POP MARIANA: amarelo, vermelho, azul e rosa-choque, com contorno preto grosso (mesmo estilo do portfólio) ===== */
+:root{
+  --bg:#ffe14d; --pink:#ff4fa3; --pink-soft:#ff3b3b; --teal:#2f6fed; --teal-d:#2f6fed; --lime:#ffd400; --orange:#ff3b3b; --red:#ff3b3b;
+  --navy:#151515; --cream2:#ffffff;
+}
+body{background:var(--bg)}
+.eyebrow{color:#2f6fed}
+.title em,.page-hero h1 span,.hero h1 .l2{font-family:'Caveat',cursive;font-weight:700;font-style:normal;color:#ff4fa3;font-size:1.15em}
+.page-hero h1 span{display:inline}
+.nav{background:#fff !important;border-bottom:2px solid var(--navy)}
+.brand span{color:var(--pink-soft)}
+.menu a:hover{background:var(--lime);color:var(--navy)}
+
+.glass{background:var(--cream2) !important;border:2.5px solid var(--navy) !important;border-radius:18px !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;box-shadow:6px 6px 0 var(--navy) !important}
+
+.btn{border-radius:14px !important;border:2.5px solid var(--navy) !important;box-shadow:4px 4px 0 var(--navy);transition:transform .15s,box-shadow .15s !important;font-weight:900}
+.btn:hover{transform:translate(2px,2px) !important;box-shadow:2px 2px 0 var(--navy)}
+.btn-lime{background:var(--pink-soft) !important;color:#fff !important}
+.btn-pink{background:#2f6fed !important;color:#fff !important}
+.btn-ghost{background:#fff !important;color:var(--navy) !important;border-color:var(--navy) !important;backdrop-filter:none !important}
+
+.stat strong,.metric strong{color:#2f6fed}
+.metric{border-top:0 !important}
+.metric:nth-child(1) strong{color:var(--pink-soft)}
+.metric:nth-child(2) strong{color:#2f6fed}
+.metric:nth-child(3) strong{color:var(--pink)}
+.metric:nth-child(4) strong{color:#1f9d55}
+
+.meter{background:rgba(21,21,21,.12)}
+.meter i{background:#2f6fed}
+
+.pill.glass{box-shadow:4px 4px 0 var(--navy) !important}
+.glow-pink,.glow-lime{display:none}
+.strip{background:#fff3b0 !important}
 </style>
 </head>
 <body>
