@@ -364,13 +364,6 @@ footer{border-top:1px solid var(--glass-line);padding:22px 0;background:#ffe9c2}
 }
 .overlay.open{display:flex;animation:fade .3s both}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.capture{
-  position:relative;width:min(390px,100%);padding:30px 24px 22px;background:rgba(255,250,240,.97);
-  border-color:var(--pink);box-shadow:0 20px 50px rgba(31,42,68,.25);max-height:100%;overflow:auto;
-}
-.capture h2{font-size:1.35rem;margin-bottom:6px}
-.capture h2 em{font-style:normal;color:var(--teal-d)}
-.capture .lead{margin-bottom:14px;font-size:.84rem}
 .close{
   position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:1px solid var(--glass-line);
   background:var(--glass);color:var(--cream);font-size:1.3rem;cursor:pointer;line-height:1;
@@ -813,34 +806,6 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
   <div class="vbox" role="dialog" aria-modal="true" aria-label="Player de vídeo">
     <button class="close" id="vClose" aria-label="Fechar vídeo">×</button>
     <div class="vframe" id="vFrame"></div>
-  </div>
-</div>
-
-<!-- CARD DE CAPTURA (aparece após 7 segundos, uma vez por visita) -->
-<div class="overlay" id="overlay" aria-hidden="true">
-  <div class="capture glass" role="dialog" aria-modal="true" aria-labelledby="capTitle">
-    <button class="close" id="capClose" aria-label="Fechar">×</button>
-    <div id="capBody">
-      <h2 id="capTitle">Quer meu <em>mídia kit</em> completo?</h2>
-      <p class="lead">Deixe seu nome e e-mail e eu te envio com formatos e cases. Qualquer dúvida sobre valores, é só me chamar.</p>
-      <form id="capForm" novalidate>
-        <div class="field">
-          <label for="kNome">Nome</label>
-          <input id="kNome" type="text" autocomplete="name" placeholder="Seu nome" required>
-        </div>
-        <div class="field">
-          <label for="kEmail">E-mail</label>
-          <input id="kEmail" type="email" autocomplete="email" placeholder="seuemail@email.com" required>
-        </div>
-        <p id="kErr" role="alert" style="color:var(--pink-soft);min-height:1.4em;margin-bottom:8px;font-size:.88rem"></p>
-        <button class="btn btn-lime" type="submit" style="width:100%">Quero receber</button>
-      </form>
-    </div>
-    <div class="ok" id="capOk" role="status">
-      <div class="tick" aria-hidden="true">✓</div>
-      <h3>Pedido recebido!</h3>
-      <p>Em breve o mídia kit chega no seu e-mail.</p>
-    </div>
   </div>
 </div>
 
@@ -1297,60 +1262,7 @@ $("#vClose").addEventListener("click", fecharVideo);
 vOv.addEventListener("click", e => { if (e.target === vOv) fecharVideo(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && vOv.classList.contains("open")) fecharVideo(); });
 
-/* Card de captura: 7 segundos, uma vez por visita */
-const overlay = $("#overlay");
-let ultimoFoco = null;
-function abrirCard() {
-  ultimoFoco = document.activeElement;
-  overlay.classList.add("open");
-  overlay.setAttribute("aria-hidden", "false");
-  $("#kNome").focus();
-}
-function fecharCard() {
-  overlay.classList.remove("open");
-  overlay.setAttribute("aria-hidden", "true");
-  if (ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
-}
-let jaViu = false;
-try { jaViu = sessionStorage.getItem("capturaVista") === "1"; } catch (e) {}
-if (!jaViu) {
-  const mostrarCard = () => {
-    if (vOv.classList.contains("open")) { setTimeout(mostrarCard, 5000); return; }
-    abrirCard();
-    try { sessionStorage.setItem("capturaVista", "1"); } catch (e) {}
-  };
-  setTimeout(mostrarCard, 7000);
-}
-$("#capClose").addEventListener("click", fecharCard);
-overlay.addEventListener("click", e => { if (e.target === overlay) fecharCard(); });
-document.addEventListener("keydown", e => {
-  if (!overlay.classList.contains("open")) return;
-  if (e.key === "Escape") fecharCard();
-  if (e.key === "Tab") { /* mantém o foco dentro do card */
-    const f = [...overlay.querySelectorAll("button,input")].filter(x => x.offsetParent !== null);
-    if (!f.length) return;
-    const p = f[0], u = f[f.length - 1];
-    if (e.shiftKey && document.activeElement === p) { e.preventDefault(); u.focus(); }
-    else if (!e.shiftKey && document.activeElement === u) { e.preventDefault(); p.focus(); }
-  }
-});
-$("#capForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  if (!$("#kNome").value.trim() || !/^\S+@\S+\.\S+$/.test($("#kEmail").value)) {
-    $("#kErr").textContent = "Informe seu nome e um e-mail válido.";
-    return;
-  }
-  const agora = new Date(), hoje = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2, "0") + "-" + String(agora.getDate()).padStart(2, "0");
-  try {
-    await BANCO.enviarContato({ nome: $("#kNome").value.trim().slice(0, 120), email: $("#kEmail").value.trim().slice(0, 200), obs: "Pediu o mídia kit pelo site", situacao: "lead", ultimo_contato: hoje });
-  } catch (erro) {
-    $("#kErr").textContent = "Não consegui enviar agora. Tente de novo em instantes.";
-    return;
-  }
-  $("#capBody").style.display = "none";
-  $("#capOk").classList.add("show");
-  setTimeout(fecharCard, 2600);
-});/* ---- Faixa do topo: contagem para a Black Friday (4ª sexta-feira de novembro) ---- */
+/* ---- Faixa do topo: contagem para a Black Friday (4ª sexta-feira de novembro) ---- */
 (function () {
   const faixa = document.getElementById("faixaBF"), trilha = document.getElementById("bfTrilha");
   if (!faixa || !trilha) return;
