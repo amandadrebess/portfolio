@@ -766,8 +766,16 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
             <input id="cEmail" name="email" type="email" autocomplete="email" placeholder="seuemail@email.com" required>
           </div>
           <div class="field">
-            <label for="cMsg">Mensagem</label>
-            <textarea id="cMsg" name="mensagem" placeholder="Conte sobre a marca, o produto e o que você precisa" required></textarea>
+            <label for="cMarca">Marca / Empresa</label>
+            <input id="cMarca" name="marca" type="text" placeholder="Nome da marca">
+          </div>
+          <div class="field">
+            <label for="cOrcamento">Orçamento estimado</label>
+            <input id="cOrcamento" name="orcamento" type="text" placeholder="Ex: R$ 1.000 a R$ 5.000">
+          </div>
+          <div class="field">
+            <label for="cMsg">Conta sobre o projeto</label>
+            <textarea id="cMsg" name="mensagem" placeholder="Categoria, formato, prazo, objetivo da campanha..." required></textarea>
           </div>
           <p id="cErr" role="alert" style="color:var(--pink-soft);min-height:1.5em;margin-bottom:8px;font-size:.9rem"></p>
           <button class="btn btn-lime" type="submit">Enviar mensagem</button>
@@ -1202,10 +1210,16 @@ form.addEventListener("submit", async e => {
   botao.disabled = true;
   $("#cErr").textContent = "";
   const agora = new Date(), hoje = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2, "0") + "-" + String(agora.getDate()).padStart(2, "0");
+  const marca = form.marca.value.trim(), orcamento = form.orcamento.value.trim();
+  const partes = [
+    marca ? "Marca/empresa: " + marca : "",
+    orcamento ? "Orçamento estimado: " + orcamento : "",
+    "Mensagem pelo site: " + form.mensagem.value.trim()
+  ].filter(Boolean);
   try {
     await BANCO.enviarContato({
       nome: form.nome.value.trim().slice(0, 120), email: form.email.value.trim().slice(0, 200),
-      obs: ("Mensagem pelo site: " + form.mensagem.value.trim()).slice(0, 2000), situacao: "lead", ultimo_contato: hoje
+      obs: partes.join("\n").slice(0, 2000), situacao: "lead", ultimo_contato: hoje
     });
     form.style.display = "none";
     const c = $("#contactOk");
