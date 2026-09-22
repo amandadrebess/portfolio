@@ -239,6 +239,8 @@ section{scroll-margin-top:calc(var(--nav-h) + var(--faixa-h))}
 @media (max-width:560px){.cartao-v{flex-basis:calc((100% - 12px) / 2.3)}}
 .cartao-v .ph{aspect-ratio:9/16;width:100%;text-decoration:none;border-radius:14px}
 .cartao-v .ph img{-webkit-user-drag:none;user-select:none}
+.preview-yt{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;z-index:1}
+.ph.pre-ativa .play{opacity:0}
 .cartao-v .rotulo{position:absolute;left:0;right:0;bottom:0;z-index:2;background:rgba(31,42,68,.62);color:#fff;padding:8px 10px}
 .cartao-v .rotulo b{display:block;font-family:'Montserrat',sans-serif;font-size:.8rem;line-height:1.2}
 .cartao-v .rotulo span{display:block;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-top:2px}
@@ -610,7 +612,7 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
         <a href="#trabalhos">Trabalhos</a>
         <a href="#servicos">Criar juntos</a>
         <a href="#contato">Contato</a>
-        <a href="metricas.html">Métricas</a>
+        <a href="metricas.html">Área do influ</a>
         <a href="blackfriday.html" class="bf-link">Black Friday</a>
       </div>
     </nav>
@@ -978,7 +980,7 @@ const igLink = `https://instagram.com/${PERFIL.instagram.replace("@", "")}`;
 $("#linkWa").href = waLink;
 $("#linkMail").href = `mailto:${PERFIL.email}`;
 $("#linkIg").href = igLink;
-$("#footLinks").innerHTML = `<li><a href="metricas.html">Métricas</a>
+$("#footLinks").innerHTML = `<li><a href="metricas.html">Área do influ</a>
         <a href="blackfriday.html" class="bf-link">Black Friday</a></li>` +
   `<li><a href="${igLink}" target="_blank" rel="noopener">Instagram ${esc(PERFIL.instagram)}</a></li>` +
   `<li><a href="${waLink}" target="_blank" rel="noopener">WhatsApp</a></li>` +
@@ -1040,8 +1042,8 @@ function montarFiltros() {
 function cartaoVideo(t, i) {
   const id = ytId(t.video), capa = t.capa || (id ? ytThumb(id) : ""), nome = t.titulo || `Vídeo de ${t.nicho}`;
   return `<figure class="cartao-v">
-      <a class="ph work-vid js-video" style="${grad(i)}" href="${esc(t.video)}" target="_blank" rel="noopener" draggable="false" aria-label="Assistir: ${esc(nome)}">
-        ${capa ? `<img src="${esc(capa)}" ${t.capa ? "" : `data-yt="${id}"`} alt="Capa do vídeo ${esc(nome)}, nicho ${esc(t.nicho)}" loading="lazy" draggable="false">` : ""}
+      <a class="ph work-vid js-video" style="${grad(i)}" href="${esc(t.video)}" target="_blank" rel="noopener" draggable="false" aria-label="Assistir: ${esc(nome)}" ${id ? `data-ytid="${id}"` : ""}>
+        ${capa ? `<img src="${esc(capa)}" ${t.capa ? "" : `data-yt="${id}"`} alt="Capa do vídeo ${esc(nome)}, nicho ${esc(t.nicho)}" loading="lazy" draggable="false" onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')">` : ""}
         <span class="play sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
         <span class="rotulo"><b>${esc(t.marca || nome)}</b><span>${esc(cap(t.nicho))}</span></span>
       </a>
@@ -1082,6 +1084,43 @@ function ligarFaixa(f) {
   window.addEventListener("pointerup", soltar); window.addEventListener("pointercancel", soltar);
   tr.addEventListener("click", e => { if (arrastou) { e.preventDefault(); e.stopPropagation(); } }, true);
   estado(); setTimeout(estado, 400);
+}
+/* Ao passar o mouse num vídeo da galeria, ele começa a tocar (sem som) como prévia.
+   Clicar continua abrindo o vídeo inteiro, com som, na telinha do site. */
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  let phAtual = null, temporizador = null;
+  const comecarPreview = ph => {
+    if (!ph.isConnected || ph.querySelector(".preview-yt")) return;
+    const id = ph.dataset.ytid; if (!id) return;
+    const ifr = document.createElement("iframe");
+    ifr.className = "preview-yt";
+    ifr.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3&disablekb=1`;
+    ifr.setAttribute("allow", "autoplay; encrypted-media");
+    ifr.setAttribute("tabindex", "-1");
+    ifr.setAttribute("aria-hidden", "true");
+    ph.appendChild(ifr);
+    ph.classList.add("pre-ativa");
+  };
+  const pararPreview = ph => {
+    const ifr = ph.querySelector(".preview-yt");
+    if (ifr) ifr.remove();
+    ph.classList.remove("pre-ativa");
+  };
+  galeria.addEventListener("pointerover", e => {
+    const ph = e.target.closest(".ph[data-ytid]");
+    if (!ph || ph === phAtual) return;
+    if (phAtual) { pararPreview(phAtual); clearTimeout(temporizador); }
+    phAtual = ph;
+    temporizador = setTimeout(() => comecarPreview(ph), 350);
+  });
+  galeria.addEventListener("pointerout", e => {
+    const ph = e.target.closest(".ph[data-ytid]"); if (!ph) return;
+    const indoPara = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest(".ph") : null;
+    if (indoPara === ph) return;
+    clearTimeout(temporizador);
+    pararPreview(ph);
+    if (phAtual === ph) phAtual = null;
+  });
 }
 /* clicar num nicho leva até a linha dele */
 filtros.addEventListener("click", e => {
