@@ -801,6 +801,7 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
         <a class="btn btn-lime" id="linkWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
         <a class="btn btn-pink" id="linkMail" href="#" data-en="Email">E-mail</a>
         <a class="btn btn-ghost" id="linkIg" href="#" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn btn-ghost" id="linkTiktok" href="#" target="_blank" rel="noopener">TikTok</a>
       </div>
     </div>
   </div>
@@ -835,6 +836,7 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
 const PERFIL = {
   nome: "AMANDA DREBES",
   instagram: "@amandadrebess",
+  tiktok: "@amandadrebess",
   email: "amandadrebes9@gmail.com",
   whatsapp: "5551980216628", // só números, com 55 na frente
   cidade: "Curitiba"
@@ -966,17 +968,20 @@ const setYear = () => { $("#year").textContent = new Date().getFullYear(); };
 
 /* Links de contato */
 const igLink = `https://instagram.com/${PERFIL.instagram.replace("@", "")}`;
+const ttLink = `https://tiktok.com/${PERFIL.tiktok.startsWith("@") ? PERFIL.tiktok : "@" + PERFIL.tiktok}`;
 function renderRodape() {
   const msgWa = LANG === "en" ? "Hi, Amanda! I saw your portfolio and I'd like to talk about a project." : "Oi, Amanda! Vi seu portfólio e quero conversar sobre um projeto.";
   const waLink = `https://wa.me/${PERFIL.whatsapp}?text=${encodeURIComponent(msgWa)}`;
   $("#linkWa").href = waLink;
   $("#linkMail").href = `mailto:${PERFIL.email}`;
   $("#linkIg").href = igLink;
+  if ($("#linkTiktok")) $("#linkTiktok").href = ttLink;
   const tArea = LANG === "en" ? "Creator hub" : "Área do influ";
   const tMail = LANG === "en" ? "Email" : "E-mail";
   $("#footLinks").innerHTML = `<li><a href="metricas.html">${tArea}</a>
         <a href="blackfriday.html" class="bf-link">Black Friday</a></li>` +
     `<li><a href="${igLink}" target="_blank" rel="noopener">Instagram ${esc(PERFIL.instagram)}</a></li>` +
+    `<li><a href="${ttLink}" target="_blank" rel="noopener">TikTok ${esc(PERFIL.tiktok)}</a></li>` +
     `<li><a href="${waLink}" target="_blank" rel="noopener">WhatsApp</a></li>` +
     `<li><a href="mailto:${PERFIL.email}">${tMail}</a></li>`;
 }
