@@ -752,7 +752,7 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
     <div class="sec-head reveal">
       <span class="eyebrow">Contato</span>
       <h2 class="title">Bora criar <em>juntos?</em></h2>
-      <p class="lead">Conte um pouco sobre a sua marca e eu respondo rapidinho.</p>
+      <p class="lead">Conte um pouco sobre a sua marca. Eu respondo em até 48 horas.</p>
     </div>
     <div class="contact-grid">
       <div class="glass reveal" style="padding:0">
@@ -1086,25 +1086,11 @@ mostrar();
 
 /* Serviços */
 $("#services").innerHTML = SERVICOS.map((s, i) => {
-  const id = ytId(s.video || ""), capa = id ? ytThumb(id) : "";
-  const exemplo = id
-    ? `<a class="svc-video js-video" href="${esc(s.video)}" target="_blank" rel="noopener" aria-label="Assistir o exemplo de ${esc(s.titulo)}">
-         <img src="${esc(capa)}" data-yt="${id}" alt="Capa do vídeo de exemplo de ${esc(s.titulo)}" loading="lazy">
-         <span class="play sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span></a>
-       ${s.resultado ? `<p class="svc-res">${esc(s.resultado)}</p>` : ""}`
-    : `<div class="svc-breve"><span>Em breve</span><p>Aqui vai um vídeo que performou.</p></div>`;
   return `<article class="svc glass reveal">
     <div class="n" aria-hidden="true">${String(i + 1).padStart(2, "0")}</div>
     <h3>${esc(s.titulo)}</h3><p>${esc(s.texto)}</p>
-    <button type="button" class="svc-ver" aria-expanded="false" aria-controls="svc-ex-${i}">Ver exemplo <b aria-hidden="true">+</b></button>
-    <div class="svc-exemplo" id="svc-ex-${i}" hidden>${exemplo}</div>
   </article>`;
 }).join("");
-$("#services").addEventListener("click", e => {
-  const b = e.target.closest(".svc-ver"); if (!b) return;
-  const painel = document.getElementById(b.getAttribute("aria-controls")), abrir = painel.hidden;
-  painel.hidden = !abrir; b.setAttribute("aria-expanded", abrir); b.classList.toggle("aberto", abrir);
-});
 /* botão "Quero criar com você" leva para o WhatsApp, se o número estiver no perfil */
 try { const wa = document.getElementById("criarWa"); if (wa && typeof PERFIL !== "undefined" && PERFIL.whatsapp) wa.href = "https://wa.me/" + PERFIL.whatsapp + "?text=" + encodeURIComponent("Oi, Amanda! Vi o seu portfólio e quero criar um conteúdo para a minha marca."); } catch (e) {}
 
