@@ -548,7 +548,7 @@ a,button,[role="button"],label,select,summary,.cartao-v,.btn{cursor:url("data:im
 
 /* ===== POP MARIANA: amarelo, vermelho, azul e rosa-choque, com contorno preto grosso ===== */
 :root{
-  --bg:#ffe14d; --cream2:#ffffff; --navy:#151515;
+  --bg:#fff6da; --cream2:#ffffff; --navy:#151515;
   --orange:#ff3b3b; --pink:#ff4fa3; --purple:#2f6fed; --lime:#ffd400; --teal-d:#2f6fed; --pink-soft:#ff3b3b;
 }
 body{background:var(--bg)}
@@ -572,7 +572,7 @@ h1 .l2{color:var(--purple);-webkit-text-stroke:2px var(--navy)}
 .btn-pink{background:var(--purple) !important;color:#fff !important}
 .btn-ghost{background:#fff !important;color:var(--navy) !important}
 
-.strip{background:#fff3b0 !important}
+.strip{background:#fef1c7 !important}
 #servicos,#numeros,#contato,#resultados{background:transparent !important}
 
 .svc:nth-child(6n+1) .n{background:var(--orange) !important;color:#fff !important}
@@ -1385,6 +1385,7 @@ function aplicarIdioma(lang) {
   montarFiltros();
   mostrar();
   renderRodape();
+  revelar(document.querySelectorAll("#services .reveal, #gallery .reveal, #filters .reveal"));
 }
 $("#langSwitch")?.addEventListener("click", e => {
   const b = e.target.closest(".lang-btn"); if (!b) return;
